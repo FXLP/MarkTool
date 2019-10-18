@@ -79,13 +79,14 @@ export const constantRoutes = [
         path: 'dashboard',
         component: () => import('@/views/dashboard/index'),
         name: 'Dashboard',
-        meta: { title: 'Dashboard', icon: 'dashboard', affix: true }
+        meta: { title: '首页', icon: 'guide', affix: true }
       }
     ]
   },
   {
     path: '/documentation',
     component: Layout,
+    hidden: true,
     children: [
       {
         path: 'index',
@@ -99,6 +100,7 @@ export const constantRoutes = [
     path: '/guide',
     component: Layout,
     redirect: '/guide/index',
+    hidden: true,
     children: [
       {
         path: 'index',
@@ -130,11 +132,136 @@ export const constantRoutes = [
  */
 export const asyncRoutes = [
   {
+    path: '/taskManagement',
+    component: Layout,
+    // redirect: '/permission/page',
+    alwaysShow: true, // will always show the root menu
+    name: '任务管理',
+    meta: {
+      title: '任务管理',
+      icon: 'list',
+      roles: ['admin'] // you can set roles in root nav
+    },
+    children: [
+      {
+        path: 'taskList',
+        component: () => import('@/views/taskManagement/taskList'),
+        name: '任务列表',
+        meta: {
+          title: '任务列表',
+          roles: ['admin'] // or you can only set roles in sub nav
+        }
+      },
+      {
+        path: 'newTask',
+        component: () => import('@/views/taskManagement/newTask'),
+        name: '新建任务',
+        meta: {
+          title: '新建任务'
+          // if do not set roles, means: this page does not require permission
+        }
+      },
+      {
+        path: 'assignments',
+        component: () => import('@/views/taskManagement/assignments'),
+        name: '分配任务',
+        meta: {
+          title: '分配任务',
+          roles: ['admin']
+        }
+      }
+    ]
+  },
+  {
+    path: '/specification',
+    component: Layout,
+    // redirect: '/permission/page',
+    alwaysShow: true, // will always show the root menu
+    name: '标注规范',
+    meta: {
+      title: '标注规范',
+      icon: 'edit',
+      roles: ['admin'] // you can set roles in root nav
+    },
+    children: [
+      {
+        path: 'specificationList',
+        component: () => import('@/views/specification/specificationList'),
+        name: '规范列表',
+        meta: {
+          title: '规范列表',
+          roles: ['admin'] // or you can only set roles in sub nav
+        }
+      },
+      {
+        path: 'newSpecification',
+        component: () => import('@/views/specification/newSpecification'),
+        name: '新建规范',
+        meta: {
+          title: '新建规范'
+          // if do not set roles, means: this page does not require permission
+        }
+      }
+    ]
+  },
+
+  {
+    path: '/personnel',
+    component: Layout,
+    // redirect: '/permission/page',
+    alwaysShow: true, // will always show the root menu
+    name: '人员管理',
+    meta: {
+      title: '人员管理',
+      icon: 'peoples',
+      roles: ['admin'] // you can set roles in root nav
+    },
+    children: [
+      {
+        path: 'personnelList',
+        component: () => import('@/views/personnel/personnelList'),
+        name: '标注人员列表',
+        meta: {
+          title: '标注人员列表',
+          roles: ['admin'] // or you can only set roles in sub nav
+        }
+      }
+    ]
+  },
+
+  {
+    path: '/label',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/label/index'),
+        name: '标注任务',
+        meta: { title: '标注任务', icon: 'form', roles: ['admin', 'editor'] }
+      }
+    ]
+  },
+
+  {
+    path: '/review',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/review/index'),
+        name: '审核任务',
+        meta: { title: '审核任务', icon: 'skill', roles: ['admin', 'editor'] }
+      }
+    ]
+  },
+
+  {
     path: '/permission',
     component: Layout,
     redirect: '/permission/page',
     alwaysShow: true, // will always show the root menu
     name: 'Permission',
+    hidden: true,
     meta: {
       title: 'Permission',
       icon: 'lock',
@@ -195,6 +322,7 @@ export const asyncRoutes = [
     component: Layout,
     redirect: '/example/list',
     name: 'Example',
+    hidden: true,
     meta: {
       title: 'Example',
       icon: 'example'
@@ -240,6 +368,7 @@ export const asyncRoutes = [
     component: Layout,
     redirect: 'noRedirect',
     name: 'ErrorPages',
+    hidden: true,
     meta: {
       title: 'Error Pages',
       icon: '404'
@@ -263,6 +392,7 @@ export const asyncRoutes = [
   {
     path: '/error-log',
     component: Layout,
+    hidden: true,
     children: [
       {
         path: 'log',
@@ -360,25 +490,12 @@ export const asyncRoutes = [
   },
 
   {
-    path: '/clipboard',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/clipboard/index'),
-        name: 'ClipboardDemo',
-        meta: { title: 'Clipboard', icon: 'clipboard' }
-      }
-    ]
-  },
-
-  {
     path: 'external-link',
     component: Layout,
     children: [
       {
-        path: 'https://github.com/PanJiaChen/vue-element-admin',
-        meta: { title: 'External Link', icon: 'link' }
+        path: 'https://www.cnki.net/',
+        meta: { title: '中国知网', icon: 'link' }
       }
     ]
   },
