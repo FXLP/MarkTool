@@ -64,7 +64,7 @@
           <el-button
             size="mini"
             type="danger"
-            @click="handleModifyStatus(scope.row,'草稿')"
+            @click="handleDelete(scope.$index)"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -77,7 +77,7 @@
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {
-  name: 'CommanderReview',
+  name: 'TaskList',
   components: { Pagination },
   data() {
     return {
@@ -124,7 +124,7 @@ export default {
         }
       })
     //   var _this = this
-    // this.$http.post('http://localhost:7788/api/taskFormal/getAllByStage', this.$qs.stringify({stage: '待代表团团长审核'}) )
+    // this.$http.post('http://localhost:7788/api/taskFormal/getAllByStage', this.$qs.stringify({stage: 's'}) )
     // .then(res => {
     //   console.log(res.data)
     //   _this.list = res.data.data
@@ -138,13 +138,8 @@ export default {
     downloadResult(index, row) { // 下载标注结果
 
     },
-    handleModifyStatus(row, status) {
-      this.$message({
-        message: '操作成功',
-        type: 'success'
-      })
-      row.taskStage = status // change task state
-      console.log(row.taskStage)
+    handleDelete(index) {
+      this.list.splice(index, 1)
     }
   }
 }
