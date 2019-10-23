@@ -34,7 +34,7 @@
       >
         <template slot-scope="scope">
           <div slot="reference" class="name-wrapper">
-            <span>{{ scope.row.MarkerName }}</span>
+            <span>{{ scope.row.name }}</span>
           </div>
         </template>
       </el-table-column>
@@ -82,14 +82,14 @@ export default {
   data() {
     return {
       list: [
-        { taskTime: '2019.10.21 13:39', taskid: '111', taskTitle: 'test file1', MarkerName: 'lyp', taskStage: '未标注' },
-        { taskTime: '2019.10.20 14:39', taskid: '222', taskTitle: 'test file2', MarkerName: 'lyp', taskStage: '未标注' },
-        { taskTime: '2019.10.19 13:39', taskid: '123', taskTitle: 'test file3', MarkerName: 'lyp', taskStage: '未标注' },
-        { taskTime: '2019.10.22 19:39', taskid: '145', taskTitle: 'test file4', MarkerName: 'lyp', taskStage: '未标注' },
-        { taskTime: '2019.10.15 18:39', taskid: '155', taskTitle: 'test file5', MarkerName: 'lyp', taskStage: '已标注' },
-        { taskTime: '2019.10.18 14:39', taskid: '126', taskTitle: 'test file6', MarkerName: 'lyp', taskStage: '已标注' },
-        { taskTime: '2019.10.27 16:39', taskid: '189', taskTitle: 'test file7', MarkerName: 'lyp', taskStage: '已标注' },
-        { taskTime: '2019.10.16 20:39', taskid: '201', taskTitle: 'test file8', MarkerName: 'lyp', taskStage: '已标注' }
+        { taskTime: '2019.10.21 13:39', taskid: '111', taskTitle: 'test file1', name: 'lyp', taskStage: '未标注' },
+        { taskTime: '2019.10.20 14:39', taskid: '222', taskTitle: 'test file2', name: 'lyp', taskStage: '未标注' },
+        { taskTime: '2019.10.19 13:39', taskid: '123', taskTitle: 'test file3', name: 'lyp', taskStage: '未标注' },
+        { taskTime: '2019.10.22 19:39', taskid: '145', taskTitle: 'test file4', name: 'lyp', taskStage: '未标注' },
+        { taskTime: '2019.10.15 18:39', taskid: '155', taskTitle: 'test file5', name: 'lyp', taskStage: '已标注' },
+        { taskTime: '2019.10.18 14:39', taskid: '126', taskTitle: 'test file6', name: 'lyp', taskStage: '已标注' },
+        { taskTime: '2019.10.27 16:39', taskid: '189', taskTitle: 'test file7', name: 'lyp', taskStage: '已标注' },
+        { taskTime: '2019.10.16 20:39', taskid: '201', taskTitle: 'test file8', name: 'lyp', taskStage: '已标注' }
       ],
       total: 100,
       listLoading: true,
@@ -104,7 +104,7 @@ export default {
   methods: {
     getList() {
       return this.request({
-        url: this.serverUrl + '/taskFormal/getAllByStage',
+        url: this.serverUrl + '/taskFormal/getAllTask',
         method: 'post',
         params: { Stage: '' }
       }).then(res => {
@@ -124,7 +124,7 @@ export default {
         }
       })
     //   var _this = this
-    // this.$http.post('http://localhost:7788/api/taskFormal/getAllByStage', this.$qs.stringify({stage: 's'}) )
+    // this.$http.post('http://localhost:7788/api/taskFormal/getAllTask', this.$qs.stringify({}) )
     // .then(res => {
     //   console.log(res.data)
     //   _this.list = res.data.data
@@ -132,7 +132,7 @@ export default {
     // })
     },
     goToDetail(index, row) {
-      const p = '/task/propodetail/' + this.list[index].propoId
+      const p = '/task/taskDetail/' + this.list[index].taskId
       this.$router.push({ path: p })
     },
     downloadResult(index, row) { // 下载标注结果
