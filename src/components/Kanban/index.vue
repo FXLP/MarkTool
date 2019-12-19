@@ -10,7 +10,7 @@
       :set-data="setData"
     >
       <div v-for="element in list" :key="element.id" class="board-item">
-        {{ element.name }} {{ element.id }}
+        {{ element.name }}
       </div>
     </draggable>
   </div>

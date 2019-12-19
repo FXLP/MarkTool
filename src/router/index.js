@@ -238,6 +238,13 @@ export const asyncRoutes = [
         component: () => import('@/views/label/index'),
         name: '标注任务',
         meta: { title: '标注任务', icon: 'form', roles: ['admin', 'editor'] }
+      },
+      {
+        path: 'labeling',
+        component: () => import('@/views/label/labeling'),
+        name: '进行标注',
+        hidden: true,
+        meta: { title: '进行标注', roles: ['admin', 'editor'] }
       }
     ]
   },
