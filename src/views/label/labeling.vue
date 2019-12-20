@@ -4,16 +4,33 @@
       <Kanban :key="1" :list="tableData" class="kanban todo" header-text="标注数据列表" />
     </el-aside>
     <el-container>
-      <div class="components-container" width="1600px">
-        <el-tabs type="border-card">
-          <el-tab-pane>
-            <span slot="label"> 我的行程</span>
-            测试文本：一致性 Consistency 与现实生活一致：与现实生活的流程、逻辑保持一致，遵循用户习惯的语言和概念；在界面中一致：所有的元素和结构需保持一致，比如：设计样式、图标和文本、元素的位置等。
-          </el-tab-pane>
-          <el-tab-pane label="消息中心">消息中心</el-tab-pane>
-          <el-tab-pane label="角色管理">一致性 Consistency 与现实生活一致：与现实生活的流程、逻辑保持一致，遵循用户习惯的语言和概念；在界面中一致：所有的元素和结构需保持一致，比如：设计样式、图标和文本、元素的位置等。</el-tab-pane>
-          <el-tab-pane label="定时任务补偿">定时任务补偿</el-tab-pane>
-        </el-tabs>
+      <div class="components-container" width="1000px">
+        <el-card class="box-card" style="height:400px">
+          <el-tabs type="border-card">
+            <el-tab-pane label="实体统计">
+              实体统计
+            </el-tab-pane>
+            <el-tab-pane label="字典标注">字典标注</el-tab-pane>
+            <el-tab-pane label="模型标注">模型标注</el-tab-pane>
+            <el-tab-pane label="事件标注">事件标注</el-tab-pane>
+            <el-tab-pane label="关系标注">关系标注</el-tab-pane>
+          </el-tabs>
+        </el-card>
+        <el-card class="box-card" style="height:300px">
+          <div class="text item">
+            {{ showdata }}
+          </div>
+        </el-card>
+        <div style="text-align:center">
+          <div style="float: left;">
+            <el-button type="primary" icon="el-icon-arrow-left">上一条</el-button>
+          </div>
+          <div style="float: right;">
+            <el-button type="primary">下一条<i class="el-icon-arrow-right el-icon--right" /></el-button>
+          </div>
+          <el-button type="primary" style="text-align:center" icon="el-icon-check">提交</el-button>
+        </div>
+
       </div>
     </el-container>
   </el-container>
@@ -75,7 +92,8 @@ import splitPane from 'vue-splitpane'
             {
                 name: '金陵尚府小区门口,报警人家人（杨...', id: 14
             }
-        ]
+        ],
+        showdata: '金陵尚府小区门口,报警人家人（杨某某，32岁，智商有点问题，六合人）昨天晚上在上述地址被民警带走，需要联系。（接警台电话：28020）'
       }
     }
   }
@@ -134,5 +152,13 @@ import splitPane from 'vue-splitpane'
     height: 50vh;
   }
 
+  .text {
+    font-size: 14px;
+  }
+
+  .box-card {
+    width: 480px;
+    margin-top: 50px;
+  }
 }
 </style>
