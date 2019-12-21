@@ -172,7 +172,7 @@ const carouselPrefix = '?imageView2/2/h/440'
       },
       handleModelAnnotation(index, row) {
         console.log(index, row);
-         this.$message({ message: '标注成功！', type: 'success' });
+        this.$message({ message: '标注成功！', type: 'success' });
       },
       handleEventAnnotation() {
         this.Event_annotation = false;

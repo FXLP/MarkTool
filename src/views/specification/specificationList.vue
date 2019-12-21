@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
-    <el-button size="mini" type="primary">
-      规范列表
+    <el-button size="mini" type="primary" @click="newSpecification()">
+      新建规范
     </el-button>
     <el-table :data="list.slice((page-1)*limit,page*limit)" style="width: 98%">
       <el-table-column
@@ -131,6 +131,9 @@ export default {
     },
     handleDelete(index) {
       this.list.splice(index, 1)
+    },
+    newSpecification() {
+      this.$router.push({ path: '/specification/newSpecification' })
     }
   }
 }
