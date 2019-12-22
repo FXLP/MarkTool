@@ -135,7 +135,7 @@
           </el-tabs>
         </el-card>
         <el-card class="box-card" style="height:300px">
-          <div class="text item">
+          <div>
             {{ showdata }}
           </div>
         </el-card>
