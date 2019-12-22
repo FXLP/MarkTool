@@ -1,6 +1,7 @@
 <template>
   <div class="app-container">
     <el-button size="mini" type="primary" @click="newSpecification()">
+      <i class="el-icon-plus" />
       新建规范
     </el-button>
     <el-table :data="list.slice((page-1)*limit,page*limit)" style="width: 98%">
@@ -16,7 +17,8 @@
       </el-table-column>
       <el-table-column
         label="规范编号"
-        width="80"
+        width="120"
+        sortable
       >
         <template slot-scope="scope">
           <span>{{ scope.row.id }}</span>
@@ -126,7 +128,8 @@ export default {
     // })
     },
     goToDetail(index, row) {
-      const p = '/Specification/SpecificationDetail/' + this.list[index].id
+      // const p = '/specification/specificationDetail/' + this.list[index].id
+      const p = '/specification/specificationDetail/'
       this.$router.push({ path: p })
     },
     handleDelete(index) {

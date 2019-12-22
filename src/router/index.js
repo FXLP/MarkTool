@@ -202,6 +202,15 @@ export const asyncRoutes = [
           title: '新建规范'
           // if do not set roles, means: this page does not require permission
         }
+      },
+      {
+        path: 'specificationDetail',
+        component: () => import('@/views/specification/specificationDetail'),
+        name: '规范详情',
+        hidden: true,
+        meta: {
+          title: '规范详情'
+        }
       }
     ]
   },
