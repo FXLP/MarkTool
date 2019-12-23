@@ -101,17 +101,29 @@
         <el-form ref="form4" :model="form4" label-width="100px" style="margin:100px" class="demo-ruleForm">
           <el-form-item label="标注者A" prop="annotator1">
             <div style="width:40%">
-              <el-input v-model="form4.annotator1" />
+              <el-select v-model="form4.annotator1">
+                <el-option label="林宇翩" value="林宇翩" />
+                <el-option label="蔡婷婷" value="蔡婷婷" />
+                <el-option label="梁明" value="梁明" />
+              </el-select>
             </div>
           </el-form-item>
           <el-form-item label="标注者B" prop="annotator2">
             <div style="width:40%">
-              <el-input v-model="form4.annotator2" />
+              <el-select v-model="form4.annotator2">
+                <el-option label="林宇翩" value="林宇翩" />
+                <el-option label="蔡婷婷" value="蔡婷婷" />
+                <el-option label="梁明" value="梁明" />
+              </el-select>
             </div>
           </el-form-item>
           <el-form-item label="审核者" prop="inspector">
             <div style="width:40%">
-              <el-input v-model="form4.inspector" />
+              <el-select v-model="form4.inspector">
+                <el-option label="马老师" value="马老师" />
+                <el-option label="阮老师" value="阮老师" />
+                <el-option label="叶老师" value="叶老师" />
+              </el-select>
             </div>
           </el-form-item>
           <el-form-item v-if="form1.taskType == '地雷任务'" label="地雷任务答案">
