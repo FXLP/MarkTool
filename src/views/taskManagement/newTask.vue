@@ -8,6 +8,7 @@
         <el-step title="步骤 4" />
       </el-steps>
       <div v-if="active == 0" style="width">
+        <!-- 步骤1 -->
         <el-form ref="form1" :model="form1" label-width="100px" style="margin:100px" class="demo-ruleForm">
           <el-form-item label="任务名称" prop="taskTitle">
             <div style="width:40%">
@@ -48,6 +49,89 @@
           </el-form-item>
         </el-form>
       </div>
+      <div v-if="active == 1" style="width">
+        <!-- 步骤2 -->
+        <el-form ref="form2" :model="form2" label-width="100px" style="margin:100px" class="demo-ruleForm">
+          <el-form-item label="每轮标注数量" prop="labelTotalNumber">
+            <div style="width:40%">
+              <el-input v-model="form2.labelTotalNumber" />
+            </div>
+          </el-form-item>
+          <el-form-item label="待标注文件">
+            <el-upload
+              class="upload-demo"
+              drag
+              action="https://jsonplaceholder.typicode.com/posts/"
+              multiple
+            >
+              <i class="el-icon-upload" />
+              <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+            </el-upload>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="onSubmitForm2">确定</el-button>
+            <el-button @click="resetForm('form2')">重置</el-button>
+            <el-button type="primary" plain @click="last()">上一步</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+      <div v-if="active == 2" style="width">
+        <!-- 步骤3 -->
+        <el-form ref="form3" :model="form3" label-width="100px" style="margin:100px" class="demo-ruleForm">
+          <el-form-item label="上传字典文件">
+            <el-upload
+              class="upload-demo"
+              drag
+              action="https://jsonplaceholder.typicode.com/posts/"
+              multiple
+            >
+              <i class="el-icon-upload" />
+              <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+            </el-upload>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="onSubmitForm3">确定</el-button>
+            <el-button @click="resetForm('form3')">重置</el-button>
+            <el-button type="primary" plain @click="last()">上一步</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+      <div v-if="active == 3" style="width">
+        <!-- 步骤4 -->
+        <el-form ref="form4" :model="form4" label-width="100px" style="margin:100px" class="demo-ruleForm">
+          <el-form-item label="标注者A" prop="annotator1">
+            <div style="width:40%">
+              <el-input v-model="form4.annotator1" />
+            </div>
+          </el-form-item>
+          <el-form-item label="标注者B" prop="annotator2">
+            <div style="width:40%">
+              <el-input v-model="form4.annotator2" />
+            </div>
+          </el-form-item>
+          <el-form-item label="审核者" prop="inspector">
+            <div style="width:40%">
+              <el-input v-model="form4.inspector" />
+            </div>
+          </el-form-item>
+          <el-form-item v-if="form1.taskType == '地雷任务'" label="地雷任务答案">
+            <el-upload
+              class="upload-demo"
+              drag
+              action="https://jsonplaceholder.typicode.com/posts/"
+              multiple
+            >
+              <i class="el-icon-upload" />
+              <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+            </el-upload>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="onSubmitForm4">确定</el-button>
+            <el-button @click="resetForm('form4')">重置</el-button>
+            <el-button type="primary" plain @click="last()">上一步</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
     </el-card>
   </div>
 </template>
@@ -59,10 +143,20 @@ export default {
       active: 0,
       form1: {
         taskTitle: '',
-        taskType: '',
+        taskType: '地雷任务',
         labelType: '',
         labelSpecification: '',
         labelModel: ''
+      },
+      form2: {
+        labelTotalNumber: 100
+      },
+      form3: {},
+      form4: {
+        annotator1: '林宇翩',
+        annotator2: '蔡婷婷',
+        inspector: '马老师'
+        // dilei_answer: ''
       }
     }
   },
@@ -79,6 +173,24 @@ export default {
     },
     onSubmitForm1() {
       this.active++
+    },
+    onSubmitForm2() {
+      this.active++
+    },
+    onSubmitForm3() {
+      this.active++
+    },
+    onSubmitForm4() {
+      this.active++
+      this.$message({ message: '成功新建标注任务！', type: 'success' })
+      this.$confirm('恭喜你成功新建了一个标注任务！', '提示', {
+        confirmButtonText: '查看任务列表',
+        cancelButtonText: '继续创建任务'
+      }).then(() => {
+        this.$router.push({ path: '/taskManagement/taskList' })
+      }).catch(() => {
+        this.active = 0
+      })
     }
   }
 }
