@@ -174,6 +174,7 @@ export const asyncRoutes = [
         path: 'taskDetails',
         component: () => import('@/views/taskManagement/taskDetails'),
         name: '任务详情',
+        hidden: true,
         meta: {
           title: '任务详情',
           roles: ['admin']

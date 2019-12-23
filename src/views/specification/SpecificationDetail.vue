@@ -4,7 +4,7 @@
       <el-button size="big" type="danger" la>规范名：{{ specification.specificationName }}</el-button>
       <el-row :gutter="20" style="margin-top:20px;">
         <el-col :span="12">
-          <el-card class="box-card">
+          <el-card>
             <div slot="header" class="clearfix">
               <span>实体集合元组</span>
             </div>
@@ -35,7 +35,7 @@
           </el-card>
         </el-col>
         <el-col :span="12">
-          <el-card class="box-card">
+          <el-card>
             <div slot="header" class="clearfix">
               <span>关系集合</span>
             </div>
