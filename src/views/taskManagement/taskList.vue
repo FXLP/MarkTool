@@ -21,16 +21,24 @@
         </template>
       </el-table-column>
       <el-table-column
-        label="需标注文件"
-        width="360"
+        label="任务名"
+        width="300"
       >
         <template slot-scope="scope">
           <span>{{ scope.row.taskTitle }}</span>
         </template>
       </el-table-column>
       <el-table-column
+        label="需标注文件"
+        width="300"
+      >
+        <template slot-scope="scope">
+          <span>{{ scope.row.taskFlie }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
         label="标注者"
-        width="120"
+        width="220"
       >
         <template slot-scope="scope">
           <div slot="reference" class="name-wrapper">
@@ -38,10 +46,17 @@
           </div>
         </template>
       </el-table-column>
-
+      <el-table-column
+        label="审核者"
+        width="100"
+      >
+        <template slot-scope="scope">
+          <span>{{ scope.row.checkerName }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         label="标注状态"
-        width="180"
+        width="120"
       >
         <template slot-scope="scope">
           <span>{{ scope.row.taskStage }}</span>
@@ -82,14 +97,18 @@ export default {
   data() {
     return {
       list: [
-        { taskTime: '2019.10.21 13:39', taskid: '111', taskTitle: 'test file1', name: 'lyp', taskStage: '未标注' },
-        { taskTime: '2019.10.20 14:39', taskid: '222', taskTitle: 'test file2', name: 'lyp', taskStage: '未标注' },
-        { taskTime: '2019.10.19 13:39', taskid: '123', taskTitle: 'test file3', name: 'lyp', taskStage: '未标注' },
-        { taskTime: '2019.10.22 19:39', taskid: '145', taskTitle: 'test file4', name: 'lyp', taskStage: '未标注' },
-        { taskTime: '2019.10.15 18:39', taskid: '155', taskTitle: 'test file5', name: 'lyp', taskStage: '已标注' },
-        { taskTime: '2019.10.18 14:39', taskid: '126', taskTitle: 'test file6', name: 'lyp', taskStage: '已标注' },
-        { taskTime: '2019.10.27 16:39', taskid: '189', taskTitle: 'test file7', name: 'lyp', taskStage: '已标注' },
-        { taskTime: '2019.10.16 20:39', taskid: '201', taskTitle: 'test file8', name: 'lyp', taskStage: '已标注' }
+        { taskTime: '2019.10.21 13:39', taskTitle: '1月诈骗案件', taskid: '11', taskFlie: 'test file1', name: '林宇翩，梁明', checkerName: '马老师', taskStage: '待标注' },
+        { taskTime: '2019.10.20 14:39', taskTitle: '2月诈骗案件', taskid: '22', taskFlie: 'test file2', name: '林宇翩，蔡婷婷', checkerName: '马老师', taskStage: '待标注' },
+        { taskTime: '2019.10.19 13:39', taskTitle: '3月诈骗案件', taskid: '13', taskFlie: 'test file3', name: '林宇翩，梁明', checkerName: '马老师', taskStage: '标注中' },
+        { taskTime: '2019.10.22 19:39', taskTitle: '4月诈骗案件', taskid: '15', taskFlie: 'test file4', name: '林宇翩，蔡婷婷', checkerName: '马老师', taskStage: '标注中' },
+        { taskTime: '2019.10.15 18:39', taskTitle: '5月诈骗案件', taskid: '18', taskFlie: 'test file5', name: '林宇翩，蔡婷婷', checkerName: '马老师', taskStage: '已完成' },
+        { taskTime: '2019.10.18 14:39', taskTitle: '6月诈骗案件', taskid: '16', taskFlie: 'test file6', name: '林宇翩，蔡婷婷', checkerName: '马老师', taskStage: '审核中' },
+        { taskTime: '2019.10.27 16:39', taskTitle: '7月诈骗案件', taskid: '9', taskFlie: 'test file7', name: '林宇翩，蔡婷婷', checkerName: '马老师', taskStage: '审核中' },
+        { taskTime: '2019.10.16 20:39', taskTitle: '8月诈骗案件', taskid: '20', taskFlie: 'test file8', name: '林宇翩，蔡婷婷', checkerName: '马老师', taskStage: '已完成' },
+        { taskTime: '2019.10.16 20:39', taskTitle: '9月诈骗案件', taskid: '20', taskFlie: 'test file9', name: '林宇翩，蔡婷婷', checkerName: '马老师', taskStage: '已完成' },
+        { taskTime: '2019.10.16 20:39', taskTitle: '10月诈骗案件', taskid: '21', taskFlie: 'test file10', name: '林宇翩，蔡婷婷', checkerName: '马老师', taskStage: '已完成' },
+        { taskTime: '2019.10.16 20:39', taskTitle: '11月诈骗案件', taskid: '22', taskFlie: 'test file11', name: '林宇翩，蔡婷婷', checkerName: '马老师', taskStage: '已完成' },
+        { taskTime: '2019.10.16 20:39', taskTitle: '12月诈骗案件', taskid: '25', taskFlie: 'test file12', name: '林宇翩，蔡婷婷', checkerName: '马老师', taskStage: '已完成' }
       ],
       total: 100,
       listLoading: true,
@@ -132,7 +151,8 @@ export default {
     // })
     },
     goToDetail(index, row) {
-      const p = '/task/taskDetail/' + this.list[index].taskId
+      // const p = '/task/taskDetail/' + this.list[index].taskId
+      const p = '/taskManagement/taskDetails/'
       this.$router.push({ path: p })
     },
     downloadResult(index, row) { // 下载标注结果

@@ -88,16 +88,16 @@ export default {
   data() {
     return {
       list: [
-        { deadline: '2019.10.21', Id: '1', finishednumber: '12', missionName: '医疗', totalnumber: '230' },
-        { deadline: '2019.10.20', Id: '2', finishednumber: '18', missionName: '医疗', totalnumber: '40' },
-        { deadline: '2019.10.19', Id: '3', finishednumber: '18', missionName: '医疗', totalnumber: '40' },
-        { deadline: '2019.10.22', Id: '4', finishednumber: '12', missionName: '医疗', totalnumber: '80' },
-        { deadline: '2019.10.15', Id: '5', finishednumber: '20', missionName: '医疗', totalnumber: '20' },
-        { deadline: '2019.10.18', Id: '6', finishednumber: '15', missionName: '医疗', totalnumber: '90' },
-        { deadline: '2019.10.27', Id: '7', finishednumber: '13', missionName: '医疗', totalnumber: '100' },
-        { deadline: '2019.10.16', Id: '8', finishednumber: '15', missionName: '医疗', totalnumber: '130' },
-        { deadline: '2019.10.21', Id: '9', finishednumber: '12', missionName: '医疗', totalnumber: '230' },
-        { deadline: '2019.10.20', Id: '10', finishednumber: '18', missionName: '医疗', totalnumber: '40' }
+        { deadline: '2019.10.21', Id: '1', finishednumber: '12', missionName: '诈骗', totalnumber: '230' },
+        { deadline: '2019.10.20', Id: '2', finishednumber: '18', missionName: '诈骗', totalnumber: '40' },
+        { deadline: '2019.10.19', Id: '3', finishednumber: '18', missionName: '盗窃', totalnumber: '40' },
+        { deadline: '2019.10.22', Id: '4', finishednumber: '12', missionName: '盗窃', totalnumber: '80' },
+        { deadline: '2019.10.15', Id: '5', finishednumber: '20', missionName: '诈骗', totalnumber: '20' },
+        { deadline: '2019.10.18', Id: '6', finishednumber: '15', missionName: '诈骗', totalnumber: '90' },
+        { deadline: '2019.10.27', Id: '7', finishednumber: '13', missionName: '盗窃', totalnumber: '100' },
+        { deadline: '2019.10.16', Id: '8', finishednumber: '15', missionName: '盗窃', totalnumber: '130' },
+        { deadline: '2019.10.21', Id: '9', finishednumber: '12', missionName: '诈骗', totalnumber: '230' },
+        { deadline: '2019.10.20', Id: '10', finishednumber: '18', missionName: '诈骗', totalnumber: '40' }
       ],
       total: 100,
       listLoading: true,

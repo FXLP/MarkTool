@@ -56,7 +56,7 @@
             size="mini"
             type="primary"
             @click="goToDetail(scope.$index, scope.row)"
-          >查看</el-button>
+          >详情</el-button>
           <el-button
             size="mini"
             type="danger"

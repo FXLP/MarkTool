@@ -169,6 +169,15 @@ export const asyncRoutes = [
           title: '分配任务',
           roles: ['admin']
         }
+      },
+      {
+        path: 'taskDetails',
+        component: () => import('@/views/taskManagement/taskDetails'),
+        name: '任务详情',
+        meta: {
+          title: '任务详情',
+          roles: ['admin']
+        }
       }
     ]
   },
