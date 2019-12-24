@@ -150,7 +150,6 @@
 <script>
 import { getSpecificationById } from '@/api/specification'
 export default {
-  name: 'SpecificationDetail',
   components: {
   },
   data() {
