@@ -5,7 +5,6 @@ import Layout from '@/layout'
 const tableRouter = {
   path: '/table',
   component: Layout,
-  hidden: true,
   redirect: '/table/complex-table',
   name: 'Table',
   meta: {

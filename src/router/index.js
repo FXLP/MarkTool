@@ -7,10 +7,10 @@ Vue.use(Router)
 import Layout from '@/layout'
 
 /* Router Modules */
-import componentsRouter from './modules/components'
-import chartsRouter from './modules/charts'
-import tableRouter from './modules/table'
-import nestedRouter from './modules/nested'
+// import componentsRouter from './modules/components'
+// import chartsRouter from './modules/charts'
+// import tableRouter from './modules/table'
+// import nestedRouter from './modules/nested'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -340,10 +340,10 @@ export const asyncRoutes = [
   },
 
   /** when your routing map is too long, you can split it into small modules **/
-  componentsRouter,
-  chartsRouter,
-  nestedRouter,
-  tableRouter,
+  // componentsRouter,
+  // chartsRouter,
+  // nestedRouter,
+  // tableRouter,
 
   {
     path: '/example',
@@ -435,6 +435,7 @@ export const asyncRoutes = [
   {
     path: '/excel',
     component: Layout,
+    hidden: true,
     redirect: '/excel/export-excel',
     name: 'Excel',
     meta: {
@@ -472,6 +473,7 @@ export const asyncRoutes = [
   {
     path: '/zip',
     component: Layout,
+    hidden: true,
     redirect: '/zip/download',
     alwaysShow: true,
     name: 'Zip',
@@ -489,6 +491,7 @@ export const asyncRoutes = [
   {
     path: '/pdf',
     component: Layout,
+    hidden: true,
     redirect: '/pdf/index',
     children: [
       {
