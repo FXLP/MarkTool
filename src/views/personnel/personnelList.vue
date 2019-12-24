@@ -93,17 +93,23 @@
       :before-close="handleClose"
     >
       <el-form label="left" label-width="100px" :model="personInformation">
-        <el-form-item label="姓名">
-          <el-input v-model="personInformation.name" />
-        </el-form-item>
         <el-form-item label="工号">
           <el-input v-model="personInformation.personId" />
+        </el-form-item>
+        <el-form-item label="用户名">
+          <el-input v-model="personInformation.userName" />
+        </el-form-item>
+        <el-form-item label="姓名">
+          <el-input v-model="personInformation.name" />
         </el-form-item>
         <el-form-item label="联系电话">
           <el-input v-model="personInformation.telephone" />
         </el-form-item>
-        <el-form-item label="完成总数">
+        <el-form-item label="电子邮箱">
           <el-input v-model="personInformation.email" />
+        </el-form-item>
+        <el-form-item label="身份">
+          <el-input v-model="personInformation.identity" />
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -140,10 +146,12 @@ export default {
       search: '',
       addDialog: false,
       personInformation: {
+        userName: '',
         name: '',
         personId: '',
         telephone: '',
-        email: 0
+        email: '',
+        identity: ''
       }
     }
   },
@@ -186,6 +194,18 @@ export default {
       this.list.splice(index, 1)
     },
     addPerson() {
+      this.list.push({
+        registeredTime: Date.now(),
+        name: this.personInformation.name,
+        personId: this.personInformation.personId,
+        userName: this.personInformation.userName,
+        telephone: this.personInformation.telephone,
+        email: this.personInformation.email,
+        identity: this.personInformation.identity
+        // key: Date.now()
+      })
+      console.log(this.list)
+      this.$message({ message: '成功新增人员！', type: 'success' })
       this.addDialog = false
     }
   }
