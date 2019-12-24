@@ -241,9 +241,9 @@ export const asyncRoutes = [
       {
         path: 'personnelList',
         component: () => import('@/views/personnel/personnelList'),
-        name: '标注人员列表',
+        name: '人员列表',
         meta: {
-          title: '标注人员列表',
+          title: '人员列表',
           roles: ['admin'] // or you can only set roles in sub nav
         }
       }

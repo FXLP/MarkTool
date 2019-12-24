@@ -17,10 +17,20 @@
       </el-table-column>
       <el-table-column
         label="工号"
-        width="80"
+        width="120"
       >
         <template slot-scope="scope">
           <span>{{ scope.row.personId }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="用户名"
+        width="120"
+      >
+        <template slot-scope="scope">
+          <div slot="reference" class="name-wrapper">
+            <span>{{ scope.row.userName }}</span>
+          </div>
         </template>
       </el-table-column>
       <el-table-column
@@ -35,19 +45,28 @@
       </el-table-column>
       <el-table-column
         label="联系电话"
-        width="360"
+        width="240"
       >
         <template slot-scope="scope">
           <span>{{ scope.row.telephone }}</span>
         </template>
       </el-table-column>
       <el-table-column
-        label="完成总数"
-        width="180"
+        label="电子邮箱"
+        width="240"
         sortable
       >
         <template slot-scope="scope">
-          <span>{{ scope.row.finishednumber }}</span>
+          <span>{{ scope.row.email }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="身份"
+        width="200"
+        sortable
+      >
+        <template slot-scope="scope">
+          <span>{{ scope.row.identity }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -68,9 +87,9 @@
       </el-table-column>
     </el-table>
     <el-dialog
-      title="人员信息"
+      title="新增人员的信息"
       :visible.sync="addDialog"
-      width="50%"
+      width="40%"
       :before-close="handleClose"
     >
       <el-form label="left" label-width="100px" :model="personInformation">
@@ -84,7 +103,7 @@
           <el-input v-model="personInformation.telephone" />
         </el-form-item>
         <el-form-item label="完成总数">
-          <el-input v-model="personInformation.finishednumber" />
+          <el-input v-model="personInformation.email" />
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -105,14 +124,14 @@ export default {
   data() {
     return {
       list: [
-        { registeredTime: '2019.10.21', personId: '1', telephone: '15678941612', name: 'lyp', finishednumber: '23' },
-        { registeredTime: '2019.10.20', personId: '2', telephone: '18945627893', name: 'lyp', finishednumber: '15' },
-        { registeredTime: '2019.10.19', personId: '3', telephone: '18823567894', name: 'lyp', finishednumber: '4' },
-        { registeredTime: '2019.10.22', personId: '4', telephone: '12345657878', name: 'lyp', finishednumber: '8' },
-        { registeredTime: '2019.10.15', personId: '5', telephone: '12345677889', name: 'lyp', finishednumber: '2' },
-        { registeredTime: '2019.10.18', personId: '6', telephone: '15548962345', name: 'lyp', finishednumber: '9' },
-        { registeredTime: '2019.10.27', personId: '7', telephone: '13545456262', name: 'lyp', finishednumber: '10' },
-        { registeredTime: '2019.10.16', personId: '8', telephone: '18959594545', name: 'lyp', finishednumber: '13' }
+        { registeredTime: '2019.10.21', personId: '1', telephone: '15678941612', userName: 'lyp', name: '林宇翩', email: '541654646@126.com', identity: '标注者,审核者' },
+        { registeredTime: '2019.10.20', personId: '2', telephone: '18945627893', userName: 'ctt', name: '蔡婷婷', email: '541678646@126.com', identity: '标注者' },
+        { registeredTime: '2019.10.19', personId: '3', telephone: '18823567894', userName: 'zxx', name: '周晓晓', email: '541612646@126.com', identity: '标注者' },
+        { registeredTime: '2019.10.22', personId: '4', telephone: '12345657878', userName: 'lmm', name: '梁明明', email: '541679646@126.com', identity: '标注者,审核者' },
+        { registeredTime: '2019.10.15', personId: '5', telephone: '12345677889', userName: 'lyp', name: '林宇翩', email: '541654646@126.com', identity: '标注者,审核者' },
+        { registeredTime: '2019.10.18', personId: '6', telephone: '15548962345', userName: 'lyp', name: '林宇翩', email: '541654646@126.com', identity: '标注者,审核者' },
+        { registeredTime: '2019.10.27', personId: '7', telephone: '13545456262', userName: 'lyp', name: '林宇翩', email: '541654646@126.com', identity: '标注者,审核者' },
+        { registeredTime: '2019.10.16', personId: '8', telephone: '18959594545', userName: 'lyp', name: '林宇翩', email: '541654646@126.com', identity: '标注者,审核者' }
       ],
       total: 100,
       listLoading: true,
@@ -124,7 +143,7 @@ export default {
         name: '',
         personId: '',
         telephone: '',
-        finishednumber: 0
+        email: 0
       }
     }
   },
@@ -162,8 +181,6 @@ export default {
     // })
     },
     modify(index, row) {
-      const p = '/person/personDetail/' + this.list[index].personId
-      this.$router.push({ path: p })
     },
     handleDelete(index) {
       this.list.splice(index, 1)
