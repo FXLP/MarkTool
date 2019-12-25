@@ -208,7 +208,6 @@ export const asyncRoutes = [
         path: 'newSpecification',
         component: () => import('@/views/specification/newSpecification'),
         name: '新建规范',
-        hidden: true,
         meta: {
           title: '新建规范'
           // if do not set roles, means: this page does not require permission

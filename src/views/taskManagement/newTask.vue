@@ -24,9 +24,10 @@
           </el-form-item>
           <el-form-item label="标注类型" prop="labelType">
             <el-radio-group v-model="form1.labelType">
-              <el-radio label="命名实体识别" />
-              <el-radio label="关系抽取" />
-              <el-radio label="文本分类" />
+              <el-radio label="命名实体识别" value="NER" />
+              <el-radio label="关系抽取" value="RE" />
+              <el-radio label="文本分类" value="CLASSIFY" />
+              <el-radio label="事件标注" value="EVENT" />
             </el-radio-group>
           </el-form-item>
           <el-form-item label="标注规范" prop="labelSpecification">
