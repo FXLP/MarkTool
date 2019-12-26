@@ -50,34 +50,54 @@
     </div>
     <div v-if="active == 1" style="width">
       <el-form ref="form2" :model="form2" label-width="400px" class="demo-dynamic">
-        <el-form-item label="创建实体集合元组" style="width:1200px">
-          <el-button circle size="mini" type="primary" @click="newEntityGroup()"><i class="el-icon-plus" /></el-button>
-        </el-form-item>
-        <el-form-item
-          v-for="(entityGroup, index) in form2.entityGroups"
-          :key="entityGroup.key"
-          :label="'实体集'+(index+1)"
-          :prop="'entityGroups.'+index+'.name'"
-          :rules="{
-            required: true, message: '实体集名不能为空', trigger: 'blur'
-          }"
-        >
-          <el-input v-model="entityGroup.name" style="width:800px" /><el-button type="danger" size="mini" icon="el-icon-delete" circle @click.prevent="removeEntityGroup(entityGroup)" />
-        </el-form-item>
-        <el-form-item label="创建关系集合" style="width:1000px">
-          <el-button circle size="mini" type="primary" @click="newRelationship()"><i class="el-icon-plus" /></el-button>
-        </el-form-item>
-        <el-form-item
-          v-for="(relationship, index) in form2.relationships"
-          :key="relationship.key"
-          :label="'关系名'+(index+1)"
-          :prop="'relationships.'+index+'.Rname'"
-          :rules="{
-            required: true, message: '关系名不能为空', trigger: 'blur'
-          }"
-        >
-          <el-input v-model="relationship.Rname" style="width:800px" /><el-button type="danger" size="mini" icon="el-icon-delete" circle @click.prevent="removeRelationship(relationship)" />
-        </el-form-item>
+        <div v-if="specification.labelType != '文本分类' ">
+          <el-form-item label="创建实体集合元组" style="width:1200px">
+            <el-button circle size="mini" type="primary" @click="newEntityGroup()"><i class="el-icon-plus" /></el-button>
+          </el-form-item>
+          <el-form-item
+            v-for="(entityGroup, index) in form2.entityGroups"
+            :key="entityGroup.key"
+            :label="'实体集'+(index+1)"
+            :prop="'entityGroups.'+index+'.name'"
+            :rules="{
+              required: true, message: '实体集名不能为空', trigger: 'blur'
+            }"
+          >
+            <el-input v-model="entityGroup.name" style="width:800px" /><el-button type="danger" size="mini" icon="el-icon-delete" circle @click.prevent="removeEntityGroup(entityGroup)" />
+          </el-form-item>
+        </div>
+        <div v-if="specification.labelType == '关系抽取'">
+          <el-form-item label="创建关系集合" style="width:1000px">
+            <el-button circle size="mini" type="primary" @click="newRelationship()"><i class="el-icon-plus" /></el-button>
+          </el-form-item>
+          <el-form-item
+            v-for="(relationship, index) in form2.relationships"
+            :key="relationship.key"
+            :label="'关系名'+(index+1)"
+            :prop="'relationships.'+index+'.Rname'"
+            :rules="{
+              required: true, message: '关系名不能为空', trigger: 'blur'
+            }"
+          >
+            <el-input v-model="relationship.Rname" style="width:800px" /><el-button type="danger" size="mini" icon="el-icon-delete" circle @click.prevent="removeRelationship(relationship)" />
+          </el-form-item>
+        </div>
+        <div v-if="specification.labelType == '文本分类'">
+          <el-form-item label="创建分类标签集合" style="width:1000px">
+            <el-button circle size="mini" type="primary" @click="newClasses()"><i class="el-icon-plus" /></el-button>
+          </el-form-item>
+          <el-form-item
+            v-for="(classe, index) in form2.classes"
+            :key="classe.key"
+            :label="'分类标签名'+(index+1)"
+            :prop="'classes.'+index+'.className'"
+            :rules="{
+              required: true, message: '分类标签名不能为空', trigger: 'blur'
+            }"
+          >
+            <el-input v-model="classe.className" style="width:800px" /><el-button type="danger" size="mini" icon="el-icon-delete" circle @click.prevent="removeclass(classe)" />
+          </el-form-item>
+        </div>
         <el-form-item>
           <el-button type="primary" @click="onSubmitForm2">确定</el-button>
           <el-button @click="resetForm('form2')">重置</el-button>
@@ -90,12 +110,12 @@
     </div>
     <div v-if="active == 2">
       <div class="app-container">
+        <el-button type="danger">规范名：{{ specification.specificationName }}</el-button>
+        <el-button type="primary" @click="submit(specification,form2)">立即创建</el-button>
+        <el-button type="primary" plain @click="last()">上一步</el-button>
         <div style="text-align:center">
-          <el-button type="danger">规范名：{{ specification.specificationName }}</el-button>
-          <el-button type="primary" @click="submit(specification,form2)">立即创建</el-button>
-          <el-button type="primary" plain @click="last()">上一步</el-button>
           <el-row :gutter="20" style="margin-top:20px;">
-            <el-col :span="12">
+            <el-col v-if="specification.labelType != '文本分类' " :span="12">
               <el-card>
                 <div slot="header" class="clearfix">
                   <span>实体集合元组</span>
@@ -113,7 +133,7 @@
                     />
                     <el-table-column
                       label="操作"
-                      width="380"
+                      width="350"
                     >
                       <template>
                         <el-tooltip class="item" effect="dark" content="查看该实体集" placement="top">
@@ -126,7 +146,7 @@
                 </div>
               </el-card>
             </el-col>
-            <el-col :span="12">
+            <el-col v-if="specification.labelType == '关系抽取'" :span="12">
               <el-card>
                 <div slot="header" class="clearfix">
                   <span>关系集合</span>
@@ -152,6 +172,41 @@
                       label="后实体名"
                       width="200"
                     />
+                    <el-table-column
+                      label="操作"
+                      width="160"
+                    >
+                      <template>
+                        <el-button type="primary" plain icon="el-icon-edit" circle />
+                        <el-button type="danger" plain icon="el-icon-delete" circle />
+                      </template>
+                    </el-table-column>
+                  </el-table>
+                </div>
+              </el-card>
+            </el-col>
+            <el-col v-if="specification.labelType == '文本分类'" :span="12">
+              <el-card>
+                <div slot="header" class="clearfix">
+                  <span>分类标签集合</span>
+                </div>
+                <div class="component-item" style="height:600px;">
+                  <el-table
+                    :data="form2.classes"
+                    height="570"
+                    style="width: 100%; text-align:center"
+                  >
+                    <el-table-column
+                      prop="className"
+                      label="分类标签名"
+                      width="350"
+                    />
+                    <el-table-column
+                      prop="classColor"
+                      label="标签颜色"
+                      width="230"
+                    />
+                    <el-color-picker v-model="prop" />
                     <el-table-column
                       label="操作"
                       width="160"
@@ -254,7 +309,7 @@ export default {
       editEntityIndex: 0, // 编辑实体index
       specification: {
         specificationName: '诈骗案件',
-        labelType: '关系抽取',
+        labelType: '文本分类', // 命名实体识别 关系抽取 文本分类 事件标注
         specificationFile: ''
       },
       form2: {
@@ -476,6 +531,12 @@ export default {
             beginEntity: '民警姓名',
             endEntity: '出警结论'
           }
+        ],
+        classes: [
+          { className: '积极', classColor: '#9415E8' },
+          { className: '消极', classColor: '#9415E8' },
+          { className: '正常', classColor: '#9415E8' },
+          { className: '异常', classColor: '#9415E8' }
         ]
       },
       myBackToTopStyle: {
@@ -543,9 +604,21 @@ export default {
         this.form2.relationships.splice(index, 1)
       }
     },
+    removeclass(item) {
+      var index = this.form2.classes.indexOf(item)
+      if (index !== -1) {
+        this.form2.classes.splice(index, 1)
+      }
+    },
     newRelationship() {
       this.form2.relationships.push({
         Rname: '',
+        key: Date.now()
+      })
+    },
+    newClasses() {
+      this.form2.classes.push({
+        className: '',
         key: Date.now()
       })
     },
