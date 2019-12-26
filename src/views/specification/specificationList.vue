@@ -35,6 +35,15 @@
         </template>
       </el-table-column>
       <el-table-column
+        label="标注类型"
+        width="120"
+        sortable
+      >
+        <template slot-scope="scope">
+          <span>{{ scope.row.labelType }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
         label="规范描述"
         width="360"
       >
@@ -78,14 +87,14 @@ export default {
   data() {
     return {
       list: [
-        { generateTime: '2019.10.21', id: '1', name: '疾病标注', description: '23' },
-        { generateTime: '2019.10.20', id: '2', name: '患者标注', description: '15' },
-        { generateTime: '2019.10.19', id: '3', name: '医生标注', description: '4' },
-        { generateTime: '2019.10.22', id: '4', name: '药物标注', description: '8' },
-        { generateTime: '2019.10.15', id: '5', name: '疾病标注', description: '2' },
-        { generateTime: '2019.10.18', id: '6', name: '疾病标注', description: '9' },
-        { generateTime: '2019.10.27', id: '7', name: '疾病标注', description: '10' },
-        { generateTime: '2019.10.16', id: '8', name: '疾病标注', description: '13' }
+        { generateTime: '2019.10.21', id: '1', name: '疾病标注', labelType: '命名实体识别', description: '23' },
+        { generateTime: '2019.10.20', id: '2', name: '患者标注', labelType: '关系抽取', description: '15' },
+        { generateTime: '2019.10.19', id: '3', name: '医生标注', labelType: '文本分类', description: '4' },
+        { generateTime: '2019.10.22', id: '4', name: '药物标注', labelType: '事件标注', description: '8' },
+        { generateTime: '2019.10.15', id: '5', name: '疾病标注', labelType: '命名实体识别', description: '2' },
+        { generateTime: '2019.10.18', id: '6', name: '疾病标注', labelType: '关系抽取', description: '9' },
+        { generateTime: '2019.10.27', id: '7', name: '疾病标注', labelType: '文本分类', description: '10' },
+        { generateTime: '2019.10.16', id: '8', name: '疾病标注', labelType: '事件标注', description: '13' }
       ],
       total: 100,
       listLoading: true,

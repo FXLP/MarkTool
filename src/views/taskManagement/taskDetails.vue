@@ -3,7 +3,7 @@
     <el-row>
       <el-card class="box-card">
         <div slot="header" class="clearfix">
-          <el-button type="mini" class="pan-btn pink-btn">
+          <el-button type="success" class="pan-btn green-btn">
             基本信息
           </el-button>
         </div>
@@ -29,22 +29,22 @@
         </div>
         <div style="margin-bottom:70px;">
           <el-col :span="4" class="text-center">
-            {{ this.task.taskTitle }}
+            {{ task.taskTitle }}
           </el-col>
           <el-col :span="4" class="text-center">
-            {{ this.task.taskType }}
+            {{ task.taskType }}
           </el-col>
           <el-col :span="4" class="text-center">
-            {{ this.task.taskStage }}
+            {{ task.taskStage }}
           </el-col>
           <el-col :span="4" class="text-center">
-            {{ this.task.labelType }}
+            {{ task.labelType }}
           </el-col>
           <el-col :span="4" class="text-center">
-            {{ this.task.labelModel }}
+            {{ task.labelModel }}
           </el-col>
           <el-col :span="4" class="text-center">
-            {{ this.task.labelSpecification }}
+            {{ task.labelSpecification }}
           </el-col>
         </div>
       </el-card>
@@ -52,7 +52,7 @@
     <el-row style="margin-top:10px">
       <el-card class="box-card">
         <div slot="header" class="clearfix">
-          <el-button type="mini" class="pan-btn green-btn">
+          <el-button type="danger" class="pan-btn pink-btn">
             任务进度
           </el-button>
         </div>

@@ -254,7 +254,7 @@ export default {
       editEntityIndex: 0, // 编辑实体index
       specification: {
         specificationName: '诈骗案件',
-        labelType: '',
+        labelType: '关系抽取',
         specificationFile: ''
       },
       form2: {
@@ -522,7 +522,7 @@ export default {
       //   }
       // })
     },
-    resetForm(formName) {
+    resetForm(formName) { // 需要重写方法清除规范数据
       this.$refs[formName].resetFields()
     },
     removeEntityGroup(item) {

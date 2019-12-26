@@ -22,16 +22,8 @@
               <el-radio label="地雷任务" />
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="标注类型" prop="labelType">
-            <el-radio-group v-model="form1.labelType">
-              <el-radio label="命名实体识别" value="NER" />
-              <el-radio label="关系抽取" value="RE" />
-              <el-radio label="文本分类" value="CLASSIFY" />
-              <el-radio label="事件标注" value="EVENT" />
-            </el-radio-group>
-          </el-form-item>
           <el-form-item label="标注规范" prop="labelSpecification">
-            <el-radio-group v-model="form1.labelSpecification">
+            <el-radio-group v-model="form1.specification.specificationName">
               <el-radio label="诈骗" />
               <el-radio label="盗窃" />
             </el-radio-group>
@@ -53,6 +45,9 @@
       <div v-if="active == 1" style="width">
         <!-- 步骤2 -->
         <el-form ref="form2" :model="form2" label-width="100px" style="margin:100px" class="demo-ruleForm">
+          <el-form-item label="标注类型" prop="labelType">
+            {{ form1.specification.labelType }}
+          </el-form-item>
           <el-form-item label="每轮标注数量" prop="labelTotalNumber">
             <div style="width:40%">
               <el-input v-model="form2.labelTotalNumber" />
@@ -157,8 +152,10 @@ export default {
       form1: {
         taskTitle: '',
         taskType: '地雷任务',
-        labelType: '',
-        labelSpecification: '',
+        specification: {
+          specificationName: '',
+          labelType: '关系抽取'
+        },
         labelModel: ''
       },
       form2: {
