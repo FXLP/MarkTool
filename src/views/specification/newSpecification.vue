@@ -135,10 +135,8 @@
                       label="操作"
                       width="350"
                     >
-                      <template>
-                        <el-tooltip class="item" effect="dark" content="查看该实体集" placement="top">
-                          <el-button type="info" icon="el-icon-search" circle @click="editEntityGroupDialog=true" />
-                        </el-tooltip>
+                      <template slot-scope="scope">
+                        <el-button type="info" icon="el-icon-search" circle @click="modifyEntityGroup(scope.$index)" />
                         <el-button type="danger" icon="el-icon-delete" circle />
                       </template>
                     </el-table-column>
@@ -229,7 +227,7 @@
           >
             <!-- 每次点击打开实体集对话框需要更新参数editIndex -->
             <el-table
-              :data="form2.entityGroups[editIndex].entitys"
+              :data="form=form2.entityGroups[editIndex].entitys"
               height="600px"
             >
               <el-table-column
@@ -256,8 +254,8 @@
                 label="操作"
                 width="150px"
               >
-                <template>
-                  <el-button type="success" plain icon="el-icon-edit" circle @click="editEntityDialog=true" />
+                <template slot-scope="scope">
+                  <el-button type="success" plain icon="el-icon-edit" circle @click="modifyEntity(scope.$index)" />
                   <el-button type="danger" plain icon="el-icon-delete" circle />
                 </template>
               </el-table-column>
@@ -267,6 +265,7 @@
               :visible.sync="editEntityDialog"
               width="40%"
               append-to-body
+              :before-close="handleClose"
             >
               <el-form ref="form" :model="form=form2.entityGroups[editIndex].entitys[editEntityIndex]" label-width="150px">
                 <!-- 每次点击打开编辑实体对话框需要更新参数editEntityIndex -->
@@ -281,8 +280,8 @@
                 </el-form-item>
               </el-form>
               <span slot="footer" class="dialog-footer">
-                <el-button @click="editEntityDialog = false">关闭</el-button>
-                <el-button type="primary" @click="editEntityDialog = false">保存</el-button>
+                <el-button @click="closeEdit()">关闭</el-button>
+                <el-button type="primary" @click="saveEditEntity()">保存</el-button>
               </span>
             </el-dialog>
             <span slot="footer" class="dialog-footer">
@@ -586,6 +585,14 @@ export default {
     resetForm(formName) { // 需要重写方法清除规范数据
       this.$refs[formName].resetFields()
     },
+    handleClose(done) {
+      this.$confirm('确认关闭？')
+        .then(_ => {
+          this.editEntityIndex = 0
+          done()
+        })
+        .catch(_ => {})
+    },
     removeEntityGroup(item) {
       var index = this.form2.entityGroups.indexOf(item)
       if (index !== -1) {
@@ -630,6 +637,26 @@ export default {
     },
     last() {
       this.active--
+    },
+    modifyEntity(index) {
+      this.editEntityIndex = index
+      this.editEntityDialog = true
+    },
+    modifyEntityGroup($index) {
+      this.editIndex = $index
+      console.log(this.editIndex)
+      this.editEntityGroupDialog = true
+      console.log(this.editEntityGroupDialog)
+    },
+    saveEditEntity() {
+      this.editEntityIndex = 0
+      console.log('reset editEntityIndex = 0')
+      this.editEntityDialog = false
+    },
+    closeEdit() {
+      this.editEntityIndex = 0
+      console.log('reset editEntityIndex = 0')
+      this.editEntityDialog = false
     }
   }
 }
