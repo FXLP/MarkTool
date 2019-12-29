@@ -117,6 +117,37 @@
         <el-button type="primary" @click="addPerson()">确 定</el-button>
       </span>
     </el-dialog>
+    <el-dialog
+      title="编辑人员信息"
+      :visible.sync="editDialog"
+      width="40%"
+      :before-close="handleClose"
+    >
+      <el-form label="left" label-width="100px" :model="personInformation">
+        <el-form-item label="工号">
+          <el-input v-model="personInformation.personId" />
+        </el-form-item>
+        <el-form-item label="用户名">
+          <el-input v-model="personInformation.userName" />
+        </el-form-item>
+        <el-form-item label="姓名">
+          <el-input v-model="personInformation.name" />
+        </el-form-item>
+        <el-form-item label="联系电话">
+          <el-input v-model="personInformation.telephone" />
+        </el-form-item>
+        <el-form-item label="电子邮箱">
+          <el-input v-model="personInformation.email" />
+        </el-form-item>
+        <el-form-item label="身份">
+          <el-input v-model="personInformation.identity" />
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="editDialog = false">取 消</el-button>
+        <el-button type="primary" @click="editPerson()">确 定</el-button>
+      </span>
+    </el-dialog>
     <pagination v-show="total>0" :total="total" @pagination="getList" />
   </div>
 </template>
@@ -145,6 +176,8 @@ export default {
       limit: 10,
       search: '',
       addDialog: false,
+      editDialog: false,
+      editIndex: 0,
       personInformation: {
         userName: '',
         name: '',
@@ -189,6 +222,9 @@ export default {
     // })
     },
     modify(index, row) {
+      this.editIndex = index
+      this.editDialog = true
+      console.log('修改人员' + index + '的信息')
     },
     handleDelete(index) {
       this.list.splice(index, 1)
@@ -207,6 +243,17 @@ export default {
       console.log(this.list)
       this.$message({ message: '成功新增人员！', type: 'success' })
       this.addDialog = false
+    },
+    editPerson() {
+      this.list[this.editIndex].name = this.personInformation.name
+      this.list[this.editIndex].personId = this.personInformation.personId
+      this.list[this.editIndex].userName = this.personInformation.userName
+      this.list[this.editIndex].telephone = this.personInformation.telephone
+      this.list[this.editIndex].email = this.personInformation.email
+      this.list[this.editIndex].identity = this.personInformation.identity
+      console.log(this.list)
+      this.$message({ message: '编辑成功！', type: 'success' })
+      this.editDialog = false
     }
   }
 }
