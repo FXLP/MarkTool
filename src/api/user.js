@@ -8,11 +8,14 @@ export function login(data) {
   })
 }
 
-export function getInfo(token) {
+export function getRoles(token) {
   return request({
-    url: '/user/info',
+    url: '/api/roles/',
     method: 'get',
-    params: { token }
+    headers: {
+      Authorization: 'TOKEN ' + token,
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
   })
 }
 
