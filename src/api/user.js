@@ -35,7 +35,7 @@ export function getEpoch(userid) {
 
 export function getDoc(epochid) {
   return request({
-    url: '/api/epoches/' + epochid + '/docs/',
+    url: '/api/projects/epoches/' + epochid + '/docs/',
     method: 'get'
   })
 }

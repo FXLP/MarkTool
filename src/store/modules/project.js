@@ -1,4 +1,4 @@
-import { getProject, getTemplate } from '@/api/project'
+import { getProject, getTemplate, getTemplatedet } from '@/api/project'
 
 const state = {
   projectid: '',
@@ -29,6 +29,17 @@ const actions = {
   getTemplate({ commit, state }) {
     return new Promise((resolve, reject) => {
       getTemplate(state.templateid).then(response => {
+        // console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  getTemplatedet({ commit, state }) {
+    return new Promise((resolve, reject) => {
+      getTemplatedet(state.templateid).then(response => {
         // console.log(response)
         const data = response
         resolve(data)

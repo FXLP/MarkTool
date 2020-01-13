@@ -12,27 +12,12 @@
       <div class="components-container" width="1000px">
         <el-card class="box-card" style="height:400px">
           <el-tabs type="border-card">
-            <el-tab-pane label="实体统计">
-              <el-collapse v-model="activeName" accordion>
-                <el-collapse-item title="嫌疑人" name="1">
-                  {{ statistics }}
-                </el-collapse-item>
-                <el-collapse-item title="受害人" name="2">
-                  <div>控制反馈：通过界面样式和交互动效让用户可以清晰的感知自己的操作；</div>
-                  <div>页面反馈：操作后，通过页面元素的变化清晰地展现当前状态。</div>
-                </el-collapse-item>
-                <el-collapse-item title="民警" name="3">
-                  <div>简化流程：设计简洁直观的操作流程；</div>
-                  <div>清晰明确：语言表达清晰且表意明确，让用户快速理解进而作出决策；</div>
-                  <div>帮助用户识别：界面简单直白，让用户快速识别而非回忆，减少用户记忆负担。</div>
-                </el-collapse-item>
-                <el-collapse-item title="警情信息" name="4">
-                  <div>用户决策：根据场景可给予用户操作建议或安全提示，但不能代替用户进行决策；</div>
-                  <div>结果可控：用户可以自由的进行操作，包括撤销、回退和终止当前操作等。</div>
-                </el-collapse-item>
+            <el-tab-pane v-if="template_type=='NER'|'RE'" label="实体统计">
+              <el-collapse v-for="item in options" :key="item.id" v-model="activeName" accordion>
+                <el-collapse-item :title="item.label" :name="item.label" />
               </el-collapse>
             </el-tab-pane>
-            <el-tab-pane label="自动标注">
+            <el-tab-pane v-if="template_type!='NER'" label="自动标注">
               <div class="user-images">
                 <el-carousel :interval="6000" type="card" height="220px">
                   <el-carousel-item v-for="item in carouselImages" :key="item">
@@ -136,7 +121,7 @@
                 </span>
               </el-dialog>
             </el-tab-pane>
-            <el-tab-pane label="关系标注">关系标注</el-tab-pane>
+            <el-tab-pane v-if="template_type!='NER'" label="关系标注">关系标注</el-tab-pane>
           </el-tabs>
         </el-card>
         <el-card class="box-card" style="height:300px">
@@ -182,6 +167,8 @@ const carouselPrefix = '?imageView2/2/h/440'
       this.template = this.$route.query.template
       this.state = this.$route.query.state
       this.epochid = this.$route.query.epochid
+      console.log(this.epochid);
+      
       this.getDoc()
       this.getTemplate()
       
@@ -246,17 +233,24 @@ const carouselPrefix = '?imageView2/2/h/440'
       },
       getDoc(){
         this.$store.commit('user/SET_EPOCHID', this.epochid)
-        // this.$store.dispatch('user/getDoc').then((response) =>{
-        //   console.log(response);
-        //   const list = response
-        //   for (let i = 0; i < list.length; i++) {
-        //     list[i].key = i
-        //   }
-        //   this.tableData = list
-        // })
+        this.$store.dispatch('user/getDoc').then((response) =>{
+          console.log(response);
+          const list = response
+          for (let i = 0; i < list.length; i++) {
+            list[i].key = i
+          }
+          this.tableData = list
+          this.showdata = this.tableData[0].content
+        })
       },
       getTemplate(){
-        this.$store.commit('project/SET_TEMPLATEID', 4)
+        this.$store.commit('project/SET_TEMPLATEID', 3)
+        this.$store.dispatch('project/getTemplatedet').then((response) =>{
+          console.log(response);
+          this.template_type = response.template_type
+          console.log(this.template_type);
+          
+        })
         this.$store.dispatch('project/getTemplate').then((response) =>{
           console.log(response);
           const list = response
@@ -325,6 +319,7 @@ const carouselPrefix = '?imageView2/2/h/440'
         epochid:0, 
         state:'',
         template:0,
+        template_type:'',
         selecttext:"",
         labelshow:1,
         selectvalue:"",
@@ -350,7 +345,7 @@ const carouselPrefix = '?imageView2/2/h/440'
                 content: '像是有人拿着刀，找准了我们最弱最不设防的部分温柔地刺进去，然后拉出来，血 肉模糊，然后再刺进去，一直到最后痛苦变得麻木，现在变得模糊，未来变得没有人可以知道结局。', id: 5, key:1
             },
             {
-                content: 'Even now there is still hope left.', id: 6, key:2
+                content: '一直到最后痛苦变得麻木，现在变得模糊，未来变得没有人可以知道结局', id: 6, key:2
             },
         ],
         showdata_pre:'<div class="labelcontent">',
@@ -573,6 +568,6 @@ html{
   width: 100%;
 }
 .right-container{
-  width: 80%;
+  width: 100%;
 }
 </style>

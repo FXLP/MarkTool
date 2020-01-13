@@ -9,7 +9,14 @@ export function getProject(projectid) {
 
 export function getTemplate(templateid) {
   return request({
-    url: '/api/templates/' + templateid + '/classifications/',
+    url: '/api/templates/' + templateid + '/entitygroups/',
+    method: 'get'
+  })
+}
+
+export function getTemplatedet(templateid) {
+  return request({
+    url: '/api/templates/' + templateid + '/',
     method: 'get'
   })
 }

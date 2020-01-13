@@ -125,7 +125,7 @@ export default {
         query: {
           template: row.template,
           state: row.state,
-          epochid: row.Id
+          epochid: row.id
         }
       })
     },
