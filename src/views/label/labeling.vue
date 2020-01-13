@@ -1,9 +1,14 @@
 <template>
   <el-container style="height: 850px">
     <el-aside width="400px" style="background-color: white ">
-      <Kanban :key="1" :list="tableData" class="kanban todo" header-text="标注数据列表" />
+      <div class="aside-container">
+        <div class="aside-title">标注数据列表</div>
+        <el-card v-for="data in tableData" :key="data.id" class="box-card asidelist" @click.native="aside_click(data.key)">
+          {{ data.content }}
+        </el-card>
+      </div>
     </el-aside>
-    <el-container>
+    <el-container class="right-container">
       <div class="components-container" width="1000px">
         <el-card class="box-card" style="height:400px">
           <el-tabs type="border-card">
@@ -135,16 +140,22 @@
           </el-tabs>
         </el-card>
         <el-card class="box-card" style="height:300px">
-          <div>
-            {{ showdata }}
+          <div class="labelcontent1" v-html="showdata_pre+showdata+showdata_back" />
+          <div class="block">
+            <el-cascader
+              v-model="selectvalue"
+              expand-trigger="hover"
+              :options="options"
+              @change="selectchange"
+            />
           </div>
         </el-card>
         <div style="text-align:center">
           <div style="float: left;">
-            <el-button type="primary" icon="el-icon-arrow-left">上一条</el-button>
+            <el-button type="primary" icon="el-icon-arrow-left" @click="last_doc">上一条</el-button>
           </div>
           <div style="float: right;">
-            <el-button type="primary">下一条<i class="el-icon-arrow-right el-icon--right" /></el-button>
+            <el-button type="primary" @click="next_doc">下一条<i class="el-icon-arrow-right el-icon--right" /></el-button>
           </div>
           <el-button type="primary" style="text-align:center" icon="el-icon-check">提交</el-button>
         </div>
@@ -158,12 +169,139 @@
 /* eslint-disable */ 
 import Kanban from '@/components/Kanban'
 import splitPane from 'vue-splitpane'
+import $ from 'jquery'
 const carouselPrefix = '?imageView2/2/h/440'
   export default {
     components: {
         Kanban,splitPane
     },
+    created(){
+      
+    },
+    mounted() { //标注实现
+      this.template = this.$route.query.template
+      this.state = this.$route.query.state
+      this.epochid = this.$route.query.epochid
+      this.getDoc()
+      this.getTemplate()
+      
+      let that=this;
+      var mouseX=0;
+      var mouseY=0;
+      this.$nextTick(function () { //检测鼠标事件
+        $('body').mousemove(function(e) { //鼠标位置
+            e = e || window.event;
+            mouseX = e.pageX || e.clientX + document.body.scroolLeft;
+            mouseY = e.pageY || e.clientY + document.body.scrollTop;
+        });
+        $("div.labelcontent1").on('mouseup','.labelcontent',function () {
+          console.log(mouseX,mouseY);
+          
+          $("div.block").css({
+            position:"absolute",
+            top:mouseY-120,
+            left:mouseX-560,
+          })
+                    
+         if(window.getSelection().toString()!=""){
+           that.selecttext = window.getSelection().toString();
+          setTimeout(() => {
+            $("div.el-input").trigger("click")
+          }, 200);
+           
+         }
+        //   var content = window.getSelection().toString();
+        //   console.log(content);
+        //   //console.log(that.showdata);
+        //   var str = that.showdata.split(content);
+        //   var str_new = "";
+        //   for (let index = 0; index < str.length-1; index++) {
+        //     str_new += str[index]+'<div class="labelstyle">'+content+'<div class="deletelabel">x</div></div>';
+        //   }
+        //   str_new += str[str.length-1]
+        //   that.showdata = str_new;
+        //   console.log(that.showdata);
+        //   }
+        })
+        $("div.labelcontent1").on('mouseup','.deletelabel',function () {
+          console.log($(this).parent()[0].outerHTML);
+          var deletestr = $(this).parent()[0].outerHTML;
+          var content = $(this).parent()[0].innerText;
+          content = content.split('\nx');
+          var str =  that.showdata.split(deletestr);
+          console.log(str);
+          var new_str = ""
+          for (let i = 0; i < str.length-1; i++) { // 将删除的词的样式去除后连接起来
+            new_str+=str[i]+content[0]
+          }
+          new_str +=str[str.length-1];
+        //  console.log(deletestr,str,new_str)
+          that.showdata = new_str;
+        })
+      })
+    },
     methods: {
+      test(){
+        log(1);
+      },
+      getDoc(){
+        this.$store.commit('user/SET_EPOCHID', this.epochid)
+        // this.$store.dispatch('user/getDoc').then((response) =>{
+        //   console.log(response);
+        //   const list = response
+        //   for (let i = 0; i < list.length; i++) {
+        //     list[i].key = i
+        //   }
+        //   this.tableData = list
+        // })
+      },
+      getTemplate(){
+        this.$store.commit('project/SET_TEMPLATEID', 4)
+        this.$store.dispatch('project/getTemplate').then((response) =>{
+          console.log(response);
+          const list = response
+          for (let i = 0; i < list.length; i++) {
+            list[i].label = list[i].name
+            list[i].value = list[i].color
+          }
+          this.options = list
+        })
+      },
+      next_doc(){
+        let length = this.tableData.length - 1
+        if(this.docid+1<=length)
+        {
+          this.docid++ 
+        }
+        this.showdata = this.tableData[this.docid].content
+      },
+      last_doc(){
+        if(this.docid-1>=0)
+        {
+          this.docid-- 
+        }
+        this.showdata = this.tableData[this.docid].content
+      },
+      aside_click(id){
+        console.log(id)
+        this.docid = id
+        this.showdata = this.tableData[id].content
+      },
+      selectchange(){
+        console.log(123);
+        console.log(this.selectvalue)
+        var content = this.selecttext
+        console.log(content);
+        //console.log(that.showdata);
+        var str = this.showdata.split(content);
+        var str_new = "";
+        for (let index = 0; index < str.length-1; index++) {
+          str_new += str[index]+'<div class="labelstyle" style="background:' +this.selectvalue+'">'+content+'<div class="deletelabel">x</div></div>';
+        }
+        str_new += str[str.length-1]
+        this.showdata = str_new;
+        console.log(this.showdata);
+      },
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
@@ -176,54 +314,47 @@ const carouselPrefix = '?imageView2/2/h/440'
       },
       handleEventAnnotation() {
         this.Event_annotation = false;
+      },
+      handleClose(){
+        console.log(11);
       }
     },
     data() {
       return {
+        docid:0,
+        epochid:0, 
+        state:'',
+        template:0,
+        selecttext:"",
+        labelshow:1,
+        selectvalue:"",
+        options:[
+           { 
+              "id": 7,
+              "label": "111",
+              "value": "#ffffff",
+              "create_date": "2019-12-26T03:08:44.338102Z", 
+              "template": 12 },
+            { "id": 8,
+              "label": "3333", 
+              "value": "#fefefe", 
+              "create_date": "2019-12-26T03:08:44.341134Z", 
+              "template": 12
+            }
+          ], 
         tableData: [
             {
-                name: '堂子街5号,报警人称家里老头走失了...', id: 1
+                content: '金陵尚府小区门口,报警人家人（杨某某，32岁，智商有点问题，六合人）昨天晚上在上述地址被民警带走，需要联系。（接警台电话：28020）', id: 3, key:0
             },
             {
-                name: '象房村50号空军干休所,报警人亲戚...', id: 2
+                content: '像是有人拿着刀，找准了我们最弱最不设防的部分温柔地刺进去，然后拉出来，血 肉模糊，然后再刺进去，一直到最后痛苦变得麻木，现在变得模糊，未来变得没有人可以知道结局。', id: 5, key:1
             },
             {
-                name: '新街口德基广场旁边工商银行内,我...', id: 3
+                content: 'Even now there is still hope left.', id: 6, key:2
             },
-            {
-                name: '市中医院呼吸科,12点有位病患叫李...', id: 4
-            },
-            {
-                name: '金陵尚府小区门口,报警人家人（杨...', id: 5
-            },
-            {
-                name: '金陵尚府小区门口,报警人家人（杨...', id: 6
-            },
-            {
-                name: '金陵尚府小区门口,报警人家人（杨...', id: 7
-            },
-            {
-                name: '金陵尚府小区门口,报警人家人（杨...', id: 8
-            },
-            {
-                name: '金陵尚府小区门口,报警人家人（杨...', id: 9
-            },
-            {
-                name: '金陵尚府小区门口,报警人家人（杨...', id: 10
-            },
-            {
-                name: '金陵尚府小区门口,报警人家人（杨...', id: 11
-            },
-            {
-                name: '金陵尚府小区门口,报警人家人（杨...', id: 12
-            },
-            {
-                name: '金陵尚府小区门口,报警人家人（杨...', id: 13
-            },
-            {
-                name: '金陵尚府小区门口,报警人家人（杨...', id: 14
-            }
         ],
+        showdata_pre:'<div class="labelcontent">',
+        showdata_back:'</div>',
         showdata: '金陵尚府小区门口,报警人家人（杨某某，32岁，智商有点问题，六合人）昨天晚上在上述地址被民警带走，需要联系。（接警台电话：28020）',
         activeName: '4',
         statistics: "姓名: 张三,李四,王五---电话号码: 156496845936,16549846536---支付宝号: 156496845936,16549846536---微信: 56449996465465,45644984932161654,4748489484844,7898791316461---QQ: 1564649987,1654654965,1656498498---银行卡号: 356465494965649489---",
@@ -320,9 +451,13 @@ const carouselPrefix = '?imageView2/2/h/440'
       }
     }
   }
+
 </script>
 
 <style lang="scss">
+html{
+  z-index: 0.5
+}
   .el-table .warning-row {
     background: #f9944a;
   }
@@ -336,6 +471,7 @@ const carouselPrefix = '?imageView2/2/h/440'
     .board-column-header {
       background: #4A9FF9;
     }
+    min-height: 90%;
   }
     &.working {
     .board-column-header {
@@ -383,5 +519,60 @@ const carouselPrefix = '?imageView2/2/h/440'
     width: 480px;
     margin-top: 50px;
   }
+}
+.labelcontent{
+    line-height: 175%;
+    font-size:20px;
+    z-index: 1;
+}
+.labelstyle{
+  background: #F38181;
+  border-radius: 4px;
+  display: inline-flex;
+  box-shadow: 1px 1px 5px #888888;
+  margin-left:3px;
+  margin-right:3px;
+}
+.deletelabel{
+  margin-left: 2px;
+  margin-right:2px;
+  cursor: pointer;
+}
+.el-input{
+  visibility: hidden;
+  display: none;
+}
+.aside-container{
+  min-height: 90%;
+  min-width: 300px;
+  height: auto;
+  overflow: hidden;
+  background: #f0f0f0;
+  border-radius: 3px;
+  margin-top:20px;
+}
+.aside-title{
+  background: #4A9FF9;
+  height: 50px;
+  line-height: 50px;
+  overflow: hidden;
+  padding: 0 20px;
+  text-align: center;
+  color: #fff;
+  border-radius: 3px 3px 0 0;
+}
+.asidelist{
+  margin-bottom:3px;
+  margin-top:3px;
+  cursor: pointer;
+}
+.asidelist .el-card__body{
+  white-space: nowrap; 
+  overflow: hidden;
+  text-overflow:ellipsis;
+  width: 100%;
+}
+.right-container{
+  width: 80%;
 }
 </style>

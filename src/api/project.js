@@ -6,3 +6,10 @@ export function getProject(projectid) {
     method: 'get'
   })
 }
+
+export function getTemplate(templateid) {
+  return request({
+    url: '/api/templates/' + templateid + '/classifications/',
+    method: 'get'
+  })
+}

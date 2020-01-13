@@ -25,3 +25,17 @@ export function logout() {
     method: 'post'
   })
 }
+
+export function getEpoch(userid) {
+  return request({
+    url: '/api/annotators/'/* + userid +*/ + '2/epoches/',
+    method: 'get'
+  })
+}
+
+export function getDoc(epochid) {
+  return request({
+    url: '/api/epoches/' + epochid + '/docs/',
+    method: 'get'
+  })
+}

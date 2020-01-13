@@ -1,4 +1,4 @@
-import { login, logout, getRoles } from '@/api/user'
+import { login, logout, getRoles, getEpoch, getDoc } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
@@ -7,7 +7,9 @@ const state = {
   name: '',
   avatar: '',
   introduction: '',
-  roles: []
+  roles: [],
+  userid: '',
+  epochid: ''
 }
 
 const mutations = {
@@ -25,6 +27,12 @@ const mutations = {
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles
+  },
+  SET_USERID: (state, userid) => {
+    state.userid = userid
+  },
+  SET_EPOCHID: (state, epochid) => {
+    state.epochid = epochid
   }
 }
 
@@ -36,6 +44,7 @@ const actions = {
       login({ username: username.trim(), password: password }).then(response => {
         console.log(response)
         const data = response
+        commit('SET_USERID', data.user_id)
         commit('SET_TOKEN', data.token)
         setToken(data.token)
         resolve()
@@ -64,6 +73,37 @@ const actions = {
         // commit('SET_NAME', name)
         // commit('SET_AVATAR', avatar)
         // commit('SET_INTRODUCTION', introduction)
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  // 获取user epoch
+  getEpoch({ commit, state }) {
+    return new Promise((resolve, reject) => {
+      getEpoch(state.userid).then(response => {
+        const list = response
+        for (let i = 0; i < list.length; i++) {
+          list[i].missionName = 'ner_project'
+          list[i].template = 3
+          list[i].project_type = 'NON_ACTIVE_LEARNING'
+        }
+        // console.log(list)
+        const data = list
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  getDoc({ commit, state }) {
+    return new Promise((resolve, reject) => {
+      getDoc(state.epochid).then(response => {
+        // console.log(response)
+        const data = response
         resolve(data)
       }).catch(error => {
         reject(error)

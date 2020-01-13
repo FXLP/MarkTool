@@ -4,7 +4,7 @@
       标注任务总览
     </el-button>
     <el-table :data="list.slice((page-1)*limit,page*limit)" style="width: 98%">
-      <el-table-column
+      <!-- <el-table-column
         label="截止时间"
         width="120"
         sortable
@@ -13,18 +13,18 @@
           <i class="el-icon-time" />
           <span style="margin-left: 10px">{{ scope.row.deadline | parseTime('{y}-{m}-{d}') }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column
         label="任务ID"
-        width="80"
+        min-width="65"
       >
         <template slot-scope="scope">
-          <span>{{ scope.row.Id }}</span>
+          <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
       <el-table-column
         label="任务名称"
-        width="120"
+        min-width="80"
       >
         <template slot-scope="scope">
           <div slot="reference" class="missionName-wrapper">
@@ -33,29 +33,37 @@
         </template>
       </el-table-column>
       <el-table-column
-        label="已标注条数"
-        width="180"
+        label="任务状态"
+        min-width="120"
       >
         <template slot-scope="scope">
-          <span>{{ scope.row.finishednumber }}</span>
+          <span>{{ scope.row.state }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="已标注条数"
+        min-width="100"
+      >
+        <template slot-scope="scope">
+          <span>{{ scope.row.annotate_progress.finish_num }}</span>
         </template>
       </el-table-column>
       <el-table-column
         label="总标注条数"
-        width="180"
+        min-width="120"
         sortable
       >
         <template slot-scope="scope">
-          <span>{{ scope.row.totalnumber }}</span>
+          <span>{{ scope.row.annotate_progress.total_num }}</span>
         </template>
       </el-table-column>
       <el-table-column
         label="任务进度"
-        width="600"
+        min-width="150"
         sortable
       >
         <template slot-scope="scope">
-          <el-progress :percentage="scope.row.finishednumber/scope.row.totalnumber*100" :format="format" />
+          <el-progress :percentage="scope.row.annotate_progress.finish_num/scope.row.annotate_progress.total_num*100" :format="format" />
         </template>
       </el-table-column>
       <el-table-column
@@ -88,16 +96,8 @@ export default {
   data() {
     return {
       list: [
-        { deadline: '2019.10.21', Id: '1', finishednumber: '12', missionName: '诈骗', totalnumber: '230' },
-        { deadline: '2019.10.20', Id: '2', finishednumber: '18', missionName: '诈骗', totalnumber: '40' },
-        { deadline: '2019.10.19', Id: '3', finishednumber: '18', missionName: '盗窃', totalnumber: '40' },
-        { deadline: '2019.10.22', Id: '4', finishednumber: '12', missionName: '盗窃', totalnumber: '80' },
-        { deadline: '2019.10.15', Id: '5', finishednumber: '20', missionName: '诈骗', totalnumber: '20' },
-        { deadline: '2019.10.18', Id: '6', finishednumber: '15', missionName: '诈骗', totalnumber: '90' },
-        { deadline: '2019.10.27', Id: '7', finishednumber: '13', missionName: '盗窃', totalnumber: '100' },
-        { deadline: '2019.10.16', Id: '8', finishednumber: '15', missionName: '盗窃', totalnumber: '130' },
-        { deadline: '2019.10.21', Id: '9', finishednumber: '12', missionName: '诈骗', totalnumber: '230' },
-        { deadline: '2019.10.20', Id: '10', finishednumber: '18', missionName: '诈骗', totalnumber: '40' }
+        { id: 197, annotate_progress: { finish_num: '12', total_num: '230' }, missionName: '诈骗', state: 'ANNOTATING', project_type: 'NON_ACTIVE_LEARNING', project: 5, template: 9 },
+        { id: 197, annotate_progress: { finish_num: '12', total_num: '230' }, missionName: '诈骗', state: 'ANNOTATING', project_type: 'NON_ACTIVE_LEARNING', project: 5, template: 9 }
       ],
       total: 100,
       listLoading: true,
@@ -111,29 +111,23 @@ export default {
   },
   methods: {
     getList() {
-      return this.request({
-        url: this.serverUrl + '/personFormal/getAll',
-        method: 'post',
-        params: { }
-      }).then(res => {
-        console.log(res)
-        if (res.code !== 0) {
-          this.$message({
-            type: 'warning',
-            message: '更新列表失败'
-          })
-        } else {
-          this.list = res.data
-          this.total = res.data.length
-          this.$message({
-            type: 'success',
-            message: '更新列表成功'
-          })
-        }
+      this.$store.dispatch('user/getEpoch').then((response) => {
+        this.list = response
       })
     },
     mark(index, row) { // need jump to with mission ID
-      this.$router.push({ path: '/label/labeling' })
+      // console.log(row)
+      // console.log(this.$store.getters.userid)
+      // var list = this.$store.dispatch('user/getEpoch')
+      // console.log(list)
+      this.$router.push({
+        path: '/label/labeling',
+        query: {
+          template: row.template,
+          state: row.state,
+          epochid: row.Id
+        }
+      })
     },
     handleCommit(index) {
       this.list.splice(index, 1)
