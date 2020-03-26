@@ -14,6 +14,7 @@ const getters = {
   permission_routes: state => state.permission.routes,
   errorLogs: state => state.errorLog.logs,
   projectid: state => state.project.projectid,
-  templateid: state => state.project.templateid
+  templateid: state => state.project.templateid,
+  templatedetaillist: state => state.project.detaillist
 }
 export default getters

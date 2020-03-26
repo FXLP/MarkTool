@@ -28,14 +28,89 @@ export function logout() {
 
 export function getEpoch(userid) {
   return request({
-    url: '/api/annotators/'/* + userid +*/ + '2/epoches/',
+    url: '/api/annotators/' + userid + '/epoches/',
     method: 'get'
   })
 }
 
 export function getDoc(epochid) {
   return request({
-    url: '/api/projects/epoches/' + epochid + '/docs/',
+    url: '/api/annotators/epoches/' + epochid + '/docs/',
+    method: 'get'
+  })
+}
+
+export function labelentity(docid, data) {
+  return request({
+    url: '/api/projects/docs/' + docid + '/annotations/entities/',
+    method: 'post',
+    data: data
+  })
+}
+
+export function deleteentity(docid, entityid) {
+  return request({
+    url: '/api/projects/docs/' + docid + '/annotations/entities/' + entityid + '/',
+    method: 'delete'
+  })
+}
+
+export function labelevent(docid, data) {
+  return request({
+    url: '/api/projects/docs/' + docid + '/annotations/events/',
+    method: 'post',
+    data: data
+  })
+}
+
+export function deleteevent(docid, eventid) {
+  return request({
+    url: '/api/projects/docs/' + docid + '/annotations/events/' + eventid + '/',
+    method: 'delete'
+  })
+}
+
+export function labelrelation(docid, data) {
+  return request({
+    url: '/api/projects/docs/' + docid + '/annotations/relations/',
+    method: 'post',
+    data: data
+  })
+}
+
+export function deletere(docid, reid) {
+  return request({
+    url: '/api/projects/docs/' + docid + '/annotations/relations/' + reid + '/',
+    method: 'delete'
+  })
+}
+
+export function labelclass(docid, data) {
+  return request({
+    url: '/api/projects/docs/' + docid + '/annotations/classifications/',
+    method: 'post',
+    data: data
+  })
+}
+
+export function deleteclass(docid, classid) {
+  return request({
+    url: '/api/projects/docs/' + docid + '/annotations/classifications/' + classid + '/',
+    method: 'delete'
+  })
+}
+
+export function labelconfirm(docid, data) {
+  return request({
+    url: '/api/projects/docs/' + docid + '/annotations/confirmations/',
+    method: 'post',
+    data: data
+  })
+}
+
+export function getuserlabel(docid, userid) {
+  return request({
+    url: '/api/projects/docs/' + docid + '/annotator/' + userid + '/annotations/',
     method: 'get'
   })
 }

@@ -1,8 +1,11 @@
-import { getProject, getTemplate, getTemplatedet } from '@/api/project'
+import { getProject, getTemplate, getallTemplate, getTemplatedet, getentitys, getallProject, newTemplate, newEntitygroup, newEntitys, newEventgroup, getEventgroup, newClass, getClass, newRe, getRe, getEventEntitys, newEventEntitys, getReEntitys, newReEntitys, template_use, project_use, newProject, uploadlabelfile, uploaddicfile, fenpeiepoch } from '@/api/project'
+import qs from 'qs'
+import { template } from '@babel/core'
 
 const state = {
   projectid: '',
-  templateid: ''
+  templateid: '',
+  detaillist: {}
 }
 
 const mutations = {
@@ -11,13 +14,16 @@ const mutations = {
   },
   SET_TEMPLATEID: (state, templateid) => {
     state.templateid = templateid
+  },
+  SET_DETAIL: (state, list) => {
+    state.detaillist = list
   }
 }
 
 const actions = {
-  getProject({ commit, state }) {
+  getallProject({ commit, state }) {
     return new Promise((resolve, reject) => {
-      getProject(state.projectid).then(response => {
+      getallProject().then(response => {
         // console.log(response)
         const data = response
         resolve(data)
@@ -26,9 +32,10 @@ const actions = {
       })
     })
   },
-  getTemplate({ commit, state }) {
+  getProject({ commit, state }, id) {
     return new Promise((resolve, reject) => {
-      getTemplate(state.templateid).then(response => {
+      const projectid = id
+      getProject(projectid).then(response => {
         // console.log(response)
         const data = response
         resolve(data)
@@ -37,10 +44,292 @@ const actions = {
       })
     })
   },
-  getTemplatedet({ commit, state }) {
+  newProject({ commit, state }, data) {
     return new Promise((resolve, reject) => {
-      getTemplatedet(state.templateid).then(response => {
+      const newdata = data
+      newProject(newdata).then(response => {
         // console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  getTemplate({ commit, state }, templatid) {
+    return new Promise((resolve, reject) => {
+      const id = templatid
+      getTemplate(id).then(response => {
+        // console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  getallTemplate({ commit, state }) {
+    return new Promise((resolve, reject) => {
+      getallTemplate().then(response => {
+        // console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  getTemplatedet({ commit, state }, id) {
+    return new Promise((resolve, reject) => {
+      const templateid = id
+      getTemplatedet(templateid).then(response => {
+        // console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  getentitys({ commit, state }, entityid) {
+    return new Promise((resolve, reject) => {
+      const id = entityid
+      getentitys(id).then(response => {
+        // console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  newTemplate({ commit }, templateinfo) {
+    console.log(212)
+    const name = templateinfo.name
+    const template_type = templateinfo.template_type
+    return new Promise((resolve, reject) => {
+      newTemplate(name, template_type).then(response => {
+        console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  newEntitygroup({ commit, state }, Entityinfo) {
+    const Entitylist = Entityinfo.list
+    const templateid = Entityinfo.id
+    console.log(33, templateid)
+    return new Promise((resolve, reject) => {
+      newEntitygroup(templateid, Entitylist).then(response => {
+        console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  newEntitys({ commit, state }, data) {
+    const list = data.list
+    const entityid = data.id
+    return new Promise((resolve, reject) => {
+      newEntitys(entityid, list).then(response => {
+        console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  newEventgroup({ commit, state }, Eventinfo) {
+    const Eventlist = Eventinfo.list
+    const templateid = Eventinfo.id
+    console.log(33, templateid)
+    return new Promise((resolve, reject) => {
+      newEventgroup(templateid, Eventlist).then(response => {
+        console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  getEventgroup({ commit, state }, templateid) {
+    return new Promise((resolve, reject) => {
+      const id = templateid
+      getEventgroup(id).then(response => {
+        // console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  newClass({ commit, state }, Classinfo) {
+    const Classlist = Classinfo.list
+    const templateid = Classinfo.id
+    // console.log(33, templateid)
+    return new Promise((resolve, reject) => {
+      newClass(templateid, Classlist).then(response => {
+        console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  getClass({ commit, state }, templateid) {
+    return new Promise((resolve, reject) => {
+      const id = templateid
+      getClass(id).then(response => {
+        // console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  newRe({ commit, state }, Reinfo) {
+    const Relist = Reinfo.list
+    const templateid = Reinfo.id
+    // console.log(33, templateid)
+    return new Promise((resolve, reject) => {
+      newRe(templateid, Relist).then(response => {
+        console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  getRe({ commit, state }, templateid) {
+    return new Promise((resolve, reject) => {
+      const id = templateid
+      getRe(id).then(response => {
+        // console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  newEventEntitys({ commit, state }, data) {
+    const list = data.list
+    const entityid = data.id
+    return new Promise((resolve, reject) => {
+      newEventEntitys(entityid, list).then(response => {
+        console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  getEventEntitys({ commit, state }, entityid) {
+    return new Promise((resolve, reject) => {
+      const id = entityid
+      getEventEntitys(id).then(response => {
+        // console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  newReEntitys({ commit, state }, data) {
+    const list = data.list
+    const entityid = data.id
+    return new Promise((resolve, reject) => {
+      newReEntitys(entityid, list).then(response => {
+        console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  getReEntitys({ commit, state }, entityid) {
+    return new Promise((resolve, reject) => {
+      const id = entityid
+      getReEntitys(id).then(response => {
+        // console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  template_use({ commit, state }, data) {
+    const input = data.input
+    const id = data.id
+    return new Promise((resolve, reject) => {
+      template_use(id, input).then(response => {
+        console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  project_use({ commit, state }, data) {
+    const input = data.input
+    const id = data.id
+    return new Promise((resolve, reject) => {
+      project_use(id, input).then(response => {
+        console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  uploadlabelfile({ commit, state }, data) {
+    const formData = data.formdata
+    const project_id = data.id
+    return new Promise((resolve, reject) => {
+      uploadlabelfile(project_id, formData).then(response => {
+        console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  uploaddicfile({ commit, state }, data) {
+    const formData = data.formdata
+    const project_id = data.id
+    return new Promise((resolve, reject) => {
+      uploaddicfile(project_id, formData).then(response => {
+        console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  fenpeiepoch({ commit, state }, data) {
+    const formData = data.formdata
+    const project_id = data.id
+    return new Promise((resolve, reject) => {
+      fenpeiepoch(project_id, formData).then(response => {
+        console.log(response)
         const data = response
         resolve(data)
       }).catch(error => {

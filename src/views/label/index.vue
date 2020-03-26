@@ -1,9 +1,15 @@
 <template>
   <div class="app-container">
-    <el-button size="mini" type="primary">
+    <el-button
+      size="mini"
+      type="primary"
+    >
       标注任务总览
     </el-button>
-    <el-table :data="list.slice((page-1)*limit,page*limit)" style="width: 98%">
+    <el-table
+      :data="list.slice((page-1)*limit,page*limit)"
+      style="width: 98%"
+    >
       <!-- <el-table-column
         label="截止时间"
         width="120"
@@ -27,7 +33,10 @@
         min-width="80"
       >
         <template slot-scope="scope">
-          <div slot="reference" class="missionName-wrapper">
+          <div
+            slot="reference"
+            class="missionName-wrapper"
+          >
             <span>{{ scope.row.missionName }}</span>
           </div>
         </template>
@@ -63,7 +72,10 @@
         sortable
       >
         <template slot-scope="scope">
-          <el-progress :percentage="scope.row.annotate_progress.finish_num/scope.row.annotate_progress.total_num*100" :format="format" />
+          <el-progress
+            :percentage="percent(scope.row.annotate_progress.finish_num,scope.row.annotate_progress.total_num)"
+            :format="format"
+          />
         </template>
       </el-table-column>
       <el-table-column
@@ -74,16 +86,24 @@
             size="mini"
             type="primary"
             @click="mark(scope.$index, scope.row)"
-          >标注</el-button>
+          >
+            标注
+          </el-button>
           <el-button
             size="mini"
             type="success"
             @click="handleCommit(scope.$index)"
-          >提交</el-button>
+          >
+            提交
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
-    <pagination v-show="total>0" :total="total" @pagination="getList" />
+    <pagination
+      v-show="total>0"
+      :total="total"
+      @pagination="getList"
+    />
   </div>
 </template>
 
@@ -102,7 +122,7 @@ export default {
       total: 100,
       listLoading: true,
       page: 1,
-      limit: 10,
+      limit: 20,
       search: ''
     }
   },
@@ -111,9 +131,26 @@ export default {
   },
   methods: {
     getList() {
-      this.$store.dispatch('user/getEpoch').then((response) => {
+      this.$store.dispatch('user/getEpoch', 2).then((response) => {
         this.list = response
+        for (let i = 0; i < this.list.length; i++) {
+          this.$store.dispatch('project/getProject', this.list[i].project).then((response1) => {
+            this.list[i].template = response1.template
+            this.list[i].missionName = response1.name
+            this.$store.dispatch('project/getTemplatedet', response1.template).then((response2) => {
+              this.list[i].template_type = response2.template_type
+            })
+          })
+          console.log(this.list)
+        }
       })
+    },
+    percent(a, b) {
+      if (b === 0) {
+        return 0
+      } else {
+        return a / b * 100
+      }
     },
     mark(index, row) { // need jump to with mission ID
       // console.log(row)
@@ -125,7 +162,8 @@ export default {
         query: {
           template: row.template,
           state: row.state,
-          epochid: row.id
+          epochid: row.id,
+          template_type: row.template_type
         }
       })
     },

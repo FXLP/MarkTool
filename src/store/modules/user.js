@@ -1,4 +1,4 @@
-import { login, logout, getRoles, getEpoch, getDoc } from '@/api/user'
+import { login, logout, getRoles, getEpoch, getDoc, labelentity, deleteentity, labelevent, labelrelation, labelclass, deleteclass, deleteevent, labelconfirm, getuserlabel, deletere } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
@@ -81,15 +81,10 @@ const actions = {
   },
 
   // 获取user epoch
-  getEpoch({ commit, state }) {
+  getEpoch({ commit, state }, id) {
     return new Promise((resolve, reject) => {
-      getEpoch(state.userid).then(response => {
+      getEpoch(id).then(response => {
         const list = response
-        for (let i = 0; i < list.length; i++) {
-          list[i].missionName = 'ner_project'
-          list[i].template = 3
-          list[i].project_type = 'NON_ACTIVE_LEARNING'
-        }
         // console.log(list)
         const data = list
         resolve(data)
@@ -163,6 +158,146 @@ const actions = {
       dispatch('tagsView/delAllViews', null, { root: true })
 
       resolve()
+    })
+  },
+  labelentity({ commit }, data) {
+    // console.log(212)
+    const id = data.id
+    const list = data.list
+    return new Promise((resolve, reject) => {
+      labelentity(id, list).then(response => {
+        console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  deleteentity({ commit }, data) {
+    // console.log(212)
+    const docid = data.docid
+    const entityid = data.entityid
+    return new Promise((resolve, reject) => {
+      deleteentity(docid, entityid).then(response => {
+        console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  labelevent({ commit }, data) {
+    // console.log(212)
+    const id = data.id
+    const list = data.list
+    return new Promise((resolve, reject) => {
+      labelevent(id, list).then(response => {
+        console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  labelrelation({ commit }, data) {
+    // console.log(212)
+    const id = data.id
+    const list = data.list
+    return new Promise((resolve, reject) => {
+      labelrelation(id, list).then(response => {
+        console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  labelclass({ commit }, data) {
+    // console.log(212)
+    const id = data.id
+    const list = data.list
+    return new Promise((resolve, reject) => {
+      labelclass(id, list).then(response => {
+        console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  deleteclass({ commit }, data) {
+    // console.log(212)
+    const docid = data.docid
+    const classid = data.classid
+    return new Promise((resolve, reject) => {
+      deleteclass(docid, classid).then(response => {
+        console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  deleteevent({ commit }, data) {
+    // console.log(212)
+    const docid = data.docid
+    const eventid = data.eventid
+    return new Promise((resolve, reject) => {
+      deleteevent(docid, eventid).then(response => {
+        console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  deletere({ commit }, data) {
+    // console.log(212)
+    const docid = data.docid
+    const reid = data.retid
+    return new Promise((resolve, reject) => {
+      deletere(docid, reid).then(response => {
+        console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  labelconfirm({ commit }, data) {
+    // console.log(212)
+    const id = data.id
+    const list = data.list
+    return new Promise((resolve, reject) => {
+      labelconfirm(id, list).then(response => {
+        console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  getuserlabel({ commit }, data) {
+    // console.log(212)
+    const docid = data.docid
+    const userid = data.userid
+    return new Promise((resolve, reject) => {
+      getuserlabel(docid, userid).then(response => {
+        console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
     })
   }
 }

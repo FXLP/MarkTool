@@ -1,8 +1,16 @@
 <template>
   <div class="app-container">
-    <el-button size="mini" type="primary">任务列表</el-button>
-    <el-table :data="list.slice((page-1)*limit,page*limit)" style="width: 98%">
-      <el-table-column
+    <el-button
+      size="mini"
+      type="primary"
+    >
+      任务列表
+    </el-button>
+    <el-table
+      :data="list.slice((page-1)*limit,page*limit)"
+      style="width: 98%"
+    >
+      <!-- <el-table-column
         label="创建时间"
         width="120"
         sortable
@@ -11,80 +19,89 @@
           <i class="el-icon-time" />
           <span style="margin-left: 10px">{{ scope.row.taskTime | parseTime('{y}-{m}-{d}') }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column
         label="序号"
-        width="80"
+        width="120"
       >
         <template slot-scope="scope">
-          <span>{{ scope.row.taskid }}</span>
+          <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
       <el-table-column
         label="任务名"
-        width="300"
+        width="250"
       >
         <template slot-scope="scope">
-          <span>{{ scope.row.taskTitle }}</span>
+          <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
       <el-table-column
-        label="需标注文件"
-        width="300"
+        label="任务类型"
+        width="280"
       >
         <template slot-scope="scope">
-          <span>{{ scope.row.taskFlie }}</span>
+          <span>{{ scope.row.project_type }}</span>
         </template>
       </el-table-column>
       <el-table-column
         label="标注者"
-        width="220"
+        width="150"
       >
-        <template slot-scope="scope">
-          <div slot="reference" class="name-wrapper">
-            <span>{{ scope.row.name }}</span>
+        <template>
+          <div
+            slot="reference"
+            class="name-wrapper"
+          >
+            <span>{{ }}</span>
           </div>
         </template>
       </el-table-column>
       <el-table-column
         label="审核者"
-        width="100"
+        width="150"
       >
-        <template slot-scope="scope">
-          <span>{{ scope.row.checkerName }}</span>
+        <template>
+          <span>{{ }}</span>
         </template>
       </el-table-column>
-      <el-table-column
+      <!-- <el-table-column
         label="标注状态"
         width="120"
       >
         <template slot-scope="scope">
           <span>{{ scope.row.taskStage }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column
         align="right"
+        width="120"
+        label="操作"
       >
-        <template slot-scope="scope">
-          <el-button
+        <template>
+          <!-- <el-button
             size="mini"
             type="primary"
             @click="goToDetail(scope.$index, scope.row)"
-          >查看</el-button>
+          >详情</el-button>
           <el-button
             size="mini"
             type="success"
             @click="downloadResult(scope.$index, scope.row)"
-          >下载</el-button>
-          <el-button
+          >下载</el-button> -->
+          <!-- <el-button
             size="mini"
             type="danger"
             @click="handleDelete(scope.$index)"
-          >删除</el-button>
+          >删除</el-button> -->
         </template>
       </el-table-column>
     </el-table>
-    <pagination v-show="total>0" :total="total" @pagination="getList" />
+    <pagination
+      v-show="total>0"
+      :total="total"
+      @pagination="getList"
+    />
   </div>
 </template>
 
@@ -97,18 +114,10 @@ export default {
   data() {
     return {
       list: [
-        { taskTime: '2019.10.21 13:39', taskTitle: '1月诈骗案件', taskid: '11', taskFlie: 'test file1', name: '林宇翩，梁明', checkerName: '马老师', taskStage: '待标注' },
-        { taskTime: '2019.10.20 14:39', taskTitle: '2月诈骗案件', taskid: '22', taskFlie: 'test file2', name: '林宇翩，蔡婷婷', checkerName: '马老师', taskStage: '待标注' },
-        { taskTime: '2019.10.19 13:39', taskTitle: '3月诈骗案件', taskid: '13', taskFlie: 'test file3', name: '林宇翩，梁明', checkerName: '马老师', taskStage: '标注中' },
-        { taskTime: '2019.10.22 19:39', taskTitle: '4月诈骗案件', taskid: '15', taskFlie: 'test file4', name: '林宇翩，蔡婷婷', checkerName: '马老师', taskStage: '标注中' },
-        { taskTime: '2019.10.15 18:39', taskTitle: '5月诈骗案件', taskid: '18', taskFlie: 'test file5', name: '林宇翩，蔡婷婷', checkerName: '马老师', taskStage: '已完成' },
-        { taskTime: '2019.10.18 14:39', taskTitle: '6月诈骗案件', taskid: '16', taskFlie: 'test file6', name: '林宇翩，蔡婷婷', checkerName: '马老师', taskStage: '审核中' },
-        { taskTime: '2019.10.27 16:39', taskTitle: '7月诈骗案件', taskid: '9', taskFlie: 'test file7', name: '林宇翩，蔡婷婷', checkerName: '马老师', taskStage: '审核中' },
-        { taskTime: '2019.10.16 20:39', taskTitle: '8月诈骗案件', taskid: '20', taskFlie: 'test file8', name: '林宇翩，蔡婷婷', checkerName: '马老师', taskStage: '已完成' },
-        { taskTime: '2019.10.16 20:39', taskTitle: '9月诈骗案件', taskid: '20', taskFlie: 'test file9', name: '林宇翩，蔡婷婷', checkerName: '马老师', taskStage: '已完成' },
-        { taskTime: '2019.10.16 20:39', taskTitle: '10月诈骗案件', taskid: '21', taskFlie: 'test file10', name: '林宇翩，蔡婷婷', checkerName: '马老师', taskStage: '已完成' },
-        { taskTime: '2019.10.16 20:39', taskTitle: '11月诈骗案件', taskid: '22', taskFlie: 'test file11', name: '林宇翩，蔡婷婷', checkerName: '马老师', taskStage: '已完成' },
-        { taskTime: '2019.10.16 20:39', taskTitle: '12月诈骗案件', taskid: '25', taskFlie: 'test file12', name: '林宇翩，蔡婷婷', checkerName: '马老师', taskStage: '已完成' }
+        { taskTime: '2019.10.21 13:39', project_type: '', name: '1月诈骗案件', id: '11', taskFlie: 'test file1', labelname: '林宇翩，梁明', checkerName: '马老师', taskStage: '待标注' },
+        { taskTime: '2019.10.20 14:39', project_type: '', name: '2月诈骗案件', id: '22', taskFlie: 'test file2', labelname: '林宇翩，蔡婷婷', checkerName: '马老师', taskStage: '待标注' },
+        { taskTime: '2019.10.19 13:39', project_type: '', name: '3月诈骗案件', id: '13', taskFlie: 'test file3', labelname: '林宇翩，梁明', checkerName: '马老师', taskStage: '标注中' },
+        { taskTime: '2019.10.22 19:39', project_type: '', name: '4月诈骗案件', id: '15', taskFlie: 'test file4', labelname: '林宇翩，蔡婷婷', checkerName: '马老师', taskStage: '标注中' }
       ],
       total: 100,
       listLoading: true,
@@ -122,33 +131,14 @@ export default {
   },
   methods: {
     getList() {
-      return this.request({
-        url: this.serverUrl + '/taskFormal/getAllTask',
-        method: 'post',
-        params: { Stage: '' }
-      }).then(res => {
-        console.log(res)
-        if (res.code !== 0) {
-          this.$message({
-            type: 'warning',
-            message: '更新列表失败'
-          })
-        } else {
-          this.list = res.data
-          this.total = res.data.length
-          this.$message({
-            type: 'success',
-            message: '更新列表成功'
-          })
-        }
-      })
-    //   var _this = this
-    // this.$http.post('http://localhost:7788/api/taskFormal/getAllTask', this.$qs.stringify({}) )
-    // .then(res => {
-    //   console.log(res.data)
-    //   _this.list = res.data.data
-    //   _this.total = res.data.data.length
-    // })
+      this.$store.dispatch('project/getallProject')
+        .then((response) => {
+          console.log(response)
+          this.list = response
+        })
+        .catch(() => {
+          console.log('error')
+        })
     },
     goToDetail(index, row) {
       // const p = '/task/taskDetail/' + this.list[index].taskId

@@ -276,8 +276,15 @@ export const asyncRoutes = [
       {
         path: 'index',
         component: () => import('@/views/review/index'),
+        name: '审核任务列表',
+        meta: { title: '审核任务列表', icon: 'skill', roles: ['admin', 'editor'] }
+      },
+      {
+        path: 'reviewing',
+        component: () => import('@/views/review/reviewing'),
         name: '审核任务',
-        meta: { title: '审核任务', icon: 'skill', roles: ['admin', 'editor'] }
+        hidden: true,
+        meta: { title: '审核任务', roles: ['admin', 'editor'] }
       }
     ]
   },
@@ -325,18 +332,18 @@ export const asyncRoutes = [
     ]
   },
 
-  {
-    path: '/icon',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/icons/index'),
-        name: 'Icons',
-        meta: { title: 'Icons', icon: 'icon', noCache: true }
-      }
-    ]
-  },
+  // {
+  //   path: '/icon',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       component: () => import('@/views/icons/index'),
+  //       name: 'Icons',
+  //       meta: { title: 'Icons', icon: 'icon', noCache: true }
+  //     }
+  //   ]
+  // },
 
   /** when your routing map is too long, you can split it into small modules **/
   // componentsRouter,
@@ -507,29 +514,29 @@ export const asyncRoutes = [
     hidden: true
   },
 
-  {
-    path: '/theme',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/theme/index'),
-        name: 'Theme',
-        meta: { title: 'Theme', icon: 'theme' }
-      }
-    ]
-  },
+  // {
+  //   path: '/theme',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       component: () => import('@/views/theme/index'),
+  //       name: 'Theme',
+  //       meta: { title: 'Theme', icon: 'theme' }
+  //     }
+  //   ]
+  // },
 
-  {
-    path: 'external-link',
-    component: Layout,
-    children: [
-      {
-        path: 'https://www.cnki.net/',
-        meta: { title: '中国知网', icon: 'link' }
-      }
-    ]
-  },
+  // {
+  //   path: 'external-link',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'https://www.cnki.net/',
+  //       meta: { title: '中国知网', icon: 'link' }
+  //     }
+  //   ]
+  // },
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }

@@ -1,12 +1,23 @@
 <template>
   <div class="app-container">
-    <el-steps :active="active" finish-status="success">
+    <el-steps
+      :active="active"
+      finish-status="success"
+    >
       <el-step title="步骤 1" />
       <el-step title="步骤 2" />
       <el-step title="步骤 3" />
     </el-steps>
-    <div v-if="active == 0" style="width">
-      <el-form ref="specification" :model="specification" label-width="400px" class="demo-dynamic">
+    <div
+      v-if="active == 0"
+      style="width"
+    >
+      <el-form
+        ref="specification"
+        :model="specification"
+        label-width="400px"
+        class="demo-dynamic"
+      >
         <el-form-item
           label="规范名称"
           prop="specificationName"
@@ -20,39 +31,82 @@
             <el-input v-model="specification.specificationName" />
           </div>
         </el-form-item>
-        <el-form-item label="标注类型" prop="labelType" style="margin-top:50px">
-          <el-radio-group v-model="specification.labelType">
-            <el-radio label="命名实体识别" value="NER" />
-            <el-radio label="关系抽取" value="RE" />
-            <el-radio label="文本分类" value="CLASSIFY" />
-            <el-radio label="事件标注" value="EVENT" />
-          </el-radio-group>
-        </el-form-item>
         <el-form-item
-          label="上传标注规范文件"
+          label="标注类型"
+          prop="labelType"
           style="margin-top:50px"
         >
-          <el-upload
-            class="upload-demo"
-            drag
-            action="https://jsonplaceholder.typicode.com/posts/"
-            multiple
-          >
-            <i class="el-icon-upload" />
-            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-          </el-upload>
+          <el-radio-group v-model="specification.labelType">
+            <el-radio
+              label="命名实体识别"
+              value="NER"
+            />
+            <el-radio
+              label="关系抽取"
+              value="RE"
+            />
+            <el-radio
+              label="文本分类"
+              value="CLASSIFICATION"
+            />
+            <el-radio
+              label="事件标注"
+              value="EVENT"
+            />
+          </el-radio-group>
         </el-form-item>
+        <!-- <div v-if="specification.labelType=='命名实体识别'">
+          <el-form-item
+            label="上传标注规范文件"
+            style="margin-top:50px"
+          >
+            <el-upload
+              class="upload-demo"
+              drag
+              action="https://jsonplaceholder.typicode.com/posts/"
+              multiple
+            >
+              <i class="el-icon-upload" />
+              <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+            </el-upload>
+          </el-form-item>
+        </div> -->
         <el-form-item>
-          <el-button type="primary" @click="onSubmitForm1">确定</el-button>
-          <el-button @click="resetForm('specification')">重置</el-button>
+          <el-button
+            type="primary"
+            @click="onSubmitForm1"
+          >
+            确定
+          </el-button>
+          <el-button @click="resetForm('specification')">
+            重置
+          </el-button>
         </el-form-item>
       </el-form>
     </div>
-    <div v-if="active == 1" style="width">
-      <el-form ref="form2" :model="form2" label-width="400px" class="demo-dynamic">
-        <div v-if="specification.labelType != '文本分类' ">
-          <el-form-item label="创建实体集合元组" style="width:1200px">
-            <el-button circle size="mini" type="primary" @click="newEntityGroup()"><i class="el-icon-plus" /></el-button>
+    <div
+      v-if="active == 1"
+      style="width"
+    >
+      <el-form
+        ref="form2"
+        :model="form2"
+        label-width="400px"
+        class="demo-dynamic"
+      >
+        <div v-if="specification.labelType != '文本分类'">
+          <el-form-item
+            label="创建实体集合元组"
+            style="width:1200px"
+          >
+            <el-button
+              circle
+              size="mini"
+              type="primary"
+              @click="newEntityGroup()"
+            >
+              <i class="el-icon-plus" />
+            </el-button>
           </el-form-item>
           <el-form-item
             v-for="(entityGroup, index) in form2.entityGroups"
@@ -63,12 +117,31 @@
               required: true, message: '实体集名不能为空', trigger: 'blur'
             }"
           >
-            <el-input v-model="entityGroup.name" style="width:800px" /><el-button type="danger" size="mini" icon="el-icon-delete" circle @click.prevent="removeEntityGroup(entityGroup)" />
+            <el-input
+              v-model="entityGroup.name"
+              style="width:50%"
+            /><el-button
+              type="danger"
+              size="mini"
+              icon="el-icon-delete"
+              circle
+              @click.prevent="removeEntityGroup(entityGroup)"
+            />
           </el-form-item>
         </div>
         <div v-if="specification.labelType == '关系抽取'">
-          <el-form-item label="创建关系集合" style="width:1000px">
-            <el-button circle size="mini" type="primary" @click="newRelationship()"><i class="el-icon-plus" /></el-button>
+          <el-form-item
+            label="创建关系集合"
+            style="width:1000px"
+          >
+            <el-button
+              circle
+              size="mini"
+              type="primary"
+              @click="newRelationship()"
+            >
+              <i class="el-icon-plus" />
+            </el-button>
           </el-form-item>
           <el-form-item
             v-for="(relationship, index) in form2.relationships"
@@ -79,48 +152,131 @@
               required: true, message: '关系名不能为空', trigger: 'blur'
             }"
           >
-            <el-input v-model="relationship.Rname" style="width:800px" /><el-button type="danger" size="mini" icon="el-icon-delete" circle @click.prevent="removeRelationship(relationship)" />
+            <el-input
+              v-model="relationship.Rname"
+              style="width:800px"
+            /><el-button
+              type="danger"
+              size="mini"
+              icon="el-icon-delete"
+              circle
+              @click.prevent="removeRelationship(relationship)"
+            />
           </el-form-item>
         </div>
         <div v-if="specification.labelType == '文本分类'">
-          <el-form-item label="创建分类标签集合" style="width:1000px">
-            <el-button circle size="mini" type="primary" @click="newClasses()"><i class="el-icon-plus" /></el-button>
+          <el-form-item
+            label="创建分类标签集合"
+            style="width:1000px"
+          >
+            <el-button
+              circle
+              size="mini"
+              type="primary"
+              @click="newClasses()"
+            >
+              <i class="el-icon-plus" />
+            </el-button>
           </el-form-item>
           <el-form-item
             v-for="(classe, index) in form2.classes"
             :key="classe.key"
             :label="'分类标签名'+(index+1)"
-            :prop="'classes.'+index+'.className'"
+            :prop="classe.name"
             :rules="{
               required: true, message: '分类标签名不能为空', trigger: 'blur'
             }"
           >
-            <el-input v-model="classe.className" style="width:800px" /><el-button type="danger" size="mini" icon="el-icon-delete" circle @click.prevent="removeclass(classe)" />
+            <el-input
+              v-model="classe.name"
+              style="width:800px"
+            /><el-button
+              type="danger"
+              size="mini"
+              icon="el-icon-delete"
+              circle
+              @click.prevent="removeclass(classe)"
+            />
           </el-form-item>
         </div>
         <el-form-item>
-          <el-button type="primary" @click="onSubmitForm2">确定</el-button>
-          <el-button @click="resetForm('form2')">重置</el-button>
-          <el-button type="primary" plain @click="last()">上一步</el-button>
+          <el-button
+            type="primary"
+            @click="onSubmitForm2"
+          >
+            确定
+          </el-button>
+          <el-button @click="resetForm('form2')">
+            重置
+          </el-button>
+          <el-button
+            type="primary"
+            plain
+            @click="last()"
+          >
+            上一步
+          </el-button>
         </el-form-item>
       </el-form>
-      <el-tooltip placement="top" content="回到顶部">
-        <back-to-top :custom-style="myBackToTopStyle" :visibility-height="300" :back-position="50" transition-name="fade" />
+      <el-tooltip
+        placement="top"
+        content="回到顶部"
+      >
+        <back-to-top
+          :custom-style="myBackToTopStyle"
+          :visibility-height="300"
+          :back-position="50"
+          transition-name="fade"
+        />
       </el-tooltip>
     </div>
     <div v-if="active == 2">
       <div class="app-container">
-        <el-button type="danger">规范名：{{ specification.specificationName }}</el-button>
-        <el-button type="primary" @click="submit(specification,form2)">立即创建</el-button>
-        <el-button type="primary" plain @click="last()">上一步</el-button>
+        <el-button type="danger">
+          规范名：{{ specification.specificationName }}
+        </el-button>
+        <el-button
+          v-if="!(specification.labelType == '关系抽取' && reform3change == 0)"
+          type="primary"
+          @click="submit(specification,form2)"
+        >
+          立即创建
+        </el-button>
+        <el-button
+          type="primary"
+          plain
+          @click="last()"
+        >
+          上一步
+        </el-button>
+        <el-button
+          type="primary"
+          plain
+          @click="reformchange()"
+        >
+          下一步
+        </el-button>
         <div style="text-align:center">
-          <el-row :gutter="20" style="margin-top:20px;">
-            <el-col v-if="specification.labelType != '文本分类' " :span="12">
+          <el-row
+            :gutter="20"
+            style="margin-top:20px;"
+          >
+            <el-col
+              v-if="specification.labelType != '文本分类' && specification.labelType != '关系抽取' || (specification.labelType == '关系抽取' && reform3change == 0)"
+              :span="12"
+              style="width:100%"
+            >
               <el-card>
-                <div slot="header" class="clearfix">
+                <div
+                  slot="header"
+                  class="clearfix"
+                >
                   <span>实体集合元组</span>
                 </div>
-                <div class="component-item" style="height:600px;">
+                <div
+                  class="component-item"
+                  style="height:600px;"
+                >
                   <el-table
                     :data="form2.entityGroups"
                     height="570"
@@ -136,20 +292,48 @@
                       width="350"
                     >
                       <template slot-scope="scope">
-                        <el-button type="info" icon="el-icon-search" circle @click="modifyEntityGroup(scope.$index)" />
-                        <el-button type="danger" icon="el-icon-delete" circle />
+                        <el-button
+                          type="info"
+                          icon="el-icon-search"
+                          circle
+                          @click="modifyEntityGroup(scope.$index)"
+                        />
+                        <el-button
+                          type="danger"
+                          icon="el-icon-delete"
+                          circle
+                        />
                       </template>
                     </el-table-column>
                   </el-table>
                 </div>
               </el-card>
             </el-col>
-            <el-col v-if="specification.labelType == '关系抽取'" :span="12">
+            <el-col
+              v-if="specification.labelType == '关系抽取' && reform3change == 1"
+              :span="12"
+              style="width:100%"
+            >
               <el-card>
-                <div slot="header" class="clearfix">
+                <div
+                  slot="header"
+                  class="clearfix"
+                >
                   <span>关系集合</span>
                 </div>
-                <div class="component-item" style="height:600px;">
+                <div
+                  class="component-item"
+                  style="height:600px;"
+                >
+                  <!-- <el-select v-model="changeid" placeholder="选择实体组">
+                    <el-option
+                      v-for="item in regetgroup"
+                      :key="item.name"
+                      :label="item.name"
+                      :value="item.id"
+                      :change="getreentity(item.id)"
+                    />
+                  </el-select> -->
                   <el-table
                     :data="form2.relationships"
                     height="570"
@@ -158,60 +342,118 @@
                     <el-table-column
                       prop="Rname"
                       label="关系名"
-                      width="200"
+                      min-width="300"
                     />
                     <el-table-column
                       prop="beginEntity"
                       label="前实体名"
-                      width="200"
-                    />
+                      min-width="300"
+                    >
+                      <template slot-scope="scope">
+                        <el-select
+                          v-model="scope.row.beginEntity"
+                          placeholder="请选择"
+                        >
+                          <el-option-group
+                            v-for="group in form2.entityGroups"
+                            :key="group.name"
+                            :label="group.name"
+                          >
+                            <el-option
+                              v-for="item in group.entitys"
+                              :key="item.name"
+                              :label="item.name"
+                              :value="item.id"
+                            />
+                          </el-option-group>
+                        </el-select>
+                      </template>
+                    </el-table-column>
                     <el-table-column
                       prop="endEntity"
                       label="后实体名"
-                      width="200"
-                    />
+                      min-width="300"
+                    >
+                      <template slot-scope="scope">
+                        <el-select
+                          v-model="scope.row.endEntity"
+                          placeholder="请选择"
+                        >
+                          <el-option-group
+                            v-for="group in form2.entityGroups"
+                            :key="group.id"
+                            :label="group.name"
+                          >
+                            <el-option
+                              v-for="item in group.entitys"
+                              :key="item.id"
+                              :label="item.name"
+                              :value="item.id"
+                            />
+                          </el-option-group>
+                        </el-select>
+                      </template>
+                    </el-table-column>
                     <el-table-column
                       label="操作"
-                      width="160"
+                      min-width="150"
                     >
-                      <template>
-                        <el-button type="primary" plain icon="el-icon-edit" circle />
-                        <el-button type="danger" plain icon="el-icon-delete" circle />
+                      <template slot-scope="scope">
+                        <el-button
+                          type="primary"
+                          icon="el-icon-circle-plus-outline"
+                          circle
+                          @click="addre(scope.$index)"
+                        />
+                        <el-button
+                          type="danger"
+                          icon="el-icon-delete"
+                          circle
+                          @click="deletere(scope.$index)"
+                        />
                       </template>
                     </el-table-column>
                   </el-table>
                 </div>
               </el-card>
             </el-col>
-            <el-col v-if="specification.labelType == '文本分类'" :span="12">
+            <el-col
+              v-if="specification.labelType == '文本分类'"
+              :span="12"
+            >
               <el-card>
-                <div slot="header" class="clearfix">
+                <div
+                  slot="header"
+                  class="clearfix"
+                >
                   <span>分类标签集合</span>
                 </div>
-                <div class="component-item" style="height:600px;">
+                <div
+                  class="component-item"
+                  style="height:600px;"
+                >
                   <el-table
                     :data="form2.classes"
                     height="570"
                     style="width: 100%; text-align:center"
                   >
                     <el-table-column
-                      prop="className"
+                      prop="name"
                       label="分类标签名"
-                      width="350"
+                      min-width="350"
                     />
                     <el-table-column
-                      prop="classColor"
+                      prop="color"
                       label="标签颜色"
-                      width="230"
+                      min-width="230"
                     />
-                    <el-color-picker v-model="prop" />
                     <el-table-column
-                      label="操作"
-                      width="160"
+                      label="更改颜色"
+                      min-width="160"
                     >
-                      <template>
-                        <el-button type="primary" plain icon="el-icon-edit" circle />
-                        <el-button type="danger" plain icon="el-icon-delete" circle />
+                      <template slot-scope="scope">
+                        <el-color-picker v-model="scope.row.color" />
+                        <!-- <el-button type="danger" plain icon="el-icon-delete" circle /> -->
                       </template>
                     </el-table-column>
                   </el-table>
@@ -225,6 +467,14 @@
             width="800px"
             :before-close="handleClose"
           >
+            <el-button
+              circle
+              size="mini"
+              type="primary"
+              @click="newEntity()"
+            >
+              <i class="el-icon-plus" />
+            </el-button>
             <!-- 每次点击打开实体集对话框需要更新参数editIndex -->
             <el-table
               :data="form=form2.entityGroups[editIndex].entitys"
@@ -234,29 +484,43 @@
                 label="实体名称"
                 width="200px"
               >
-                <template slot-scope="scope">{{ scope.row.entityName }}</template>
+                <template slot-scope="scope">
+                  {{ scope.row.name }}
+                </template>
               </el-table-column>
-              <el-table-column
+              <!-- <el-table-column
                 label="实体英文名"
                 width="200px"
               >
                 <template slot-scope="scope">{{ scope.row.entityMatchName }}</template>
-              </el-table-column>
+              </el-table-column> -->
               <el-table-column
                 label="实体颜色"
-                width="200px"
+                min-width="200px"
               >
                 <template slot-scope="scope">
-                  <el-color-picker v-model="scope.row.entityColor" />
+                  <el-color-picker v-model="scope.row.color" />
                 </template>
               </el-table-column>
               <el-table-column
                 label="操作"
-                width="150px"
+                min-width="150px"
               >
                 <template slot-scope="scope">
-                  <el-button type="success" plain icon="el-icon-edit" circle @click="modifyEntity(scope.$index)" />
-                  <el-button type="danger" plain icon="el-icon-delete" circle />
+                  <el-button
+                    type="success"
+                    plain
+                    icon="el-icon-edit"
+                    circle
+                    @click="modifyEntity(scope.$index)"
+                  />
+                  <el-button
+                    type="danger"
+                    plain
+                    icon="el-icon-delete"
+                    circle
+                    @click="deleteEntity(scope.$index)"
+                  />
                 </template>
               </el-table-column>
             </el-table>
@@ -267,26 +531,42 @@
               append-to-body
               :before-close="handleClose"
             >
-              <el-form ref="form" :model="form=form2.entityGroups[editIndex].entitys[editEntityIndex]" label-width="150px">
+              <el-form
+                ref="form"
+                :model="form=form2.entityGroups[editIndex].entitys[editEntityIndex]"
+                label-width="150px"
+              >
                 <!-- 每次点击打开编辑实体对话框需要更新参数editEntityIndex -->
                 <el-form-item label="实体名称">
-                  <el-input v-model="form.entityName" />
+                  <el-input v-model="form.name" />
                 </el-form-item>
-                <el-form-item label="实体英文名">
+                <!-- <el-form-item label="实体英文名">
                   <el-input v-model="form.entityMatchName" />
-                </el-form-item>
+                </el-form-item> -->
                 <el-form-item label="实体颜色">
-                  <el-color-picker v-model="form.entityColor" />
+                  <el-color-picker v-model="form.color" />
                 </el-form-item>
               </el-form>
-              <span slot="footer" class="dialog-footer">
+              <span
+                slot="footer"
+                class="dialog-footer"
+              >
                 <el-button @click="closeEdit()">关闭</el-button>
-                <el-button type="primary" @click="saveEditEntity()">保存</el-button>
+                <el-button
+                  type="primary"
+                  @click="saveEditEntity()"
+                >保存</el-button>
               </span>
             </el-dialog>
-            <span slot="footer" class="dialog-footer">
+            <span
+              slot="footer"
+              class="dialog-footer"
+            >
               <el-button @click="editEntityGroupDialog = false">取 消</el-button>
-              <el-button type="primary" @click="editEntityGroupDialog = false">确定</el-button>
+              <el-button
+                type="primary"
+                @click="editEntityGroupDialog = false"
+              >确定</el-button>
             </span>
           </el-dialog>
         </div>
@@ -297,10 +577,14 @@
 
 <script>
 import BackToTop from '@/components/BackToTop'
+import qs from 'qs'
 export default {
   components: { BackToTop },
   data() {
     return {
+      reform3change: 0,
+      changeid: '',
+      tempcolor: '',
       active: 0,
       editEntityGroupDialog: false,
       editEntityDialog: false,
@@ -314,228 +598,49 @@ export default {
       form2: {
         entityGroups: [
           {
-            name: '嫌疑人', // index = 0
+            name: 'name1', // index = 0
             entitys: [
               {
-                entityName: '嫌疑人姓名',
-                entityMatchName: 'suspectName',
-                entityColor: 'rgba(19, 206, 102, 0.8)'
+                id: 0,
+                name: 'entity1',
+                color: '#eeeeee'
               }, {
-                entityName: '嫌疑人姓名',
-                entityMatchName: 'suspectName',
-                entityColor: 'rgba(19, 206, 102, 0.8)'
-              }, {
-                entityName: '嫌疑人姓名',
-                entityMatchName: 'suspectName',
-                entityColor: 'rgba(19, 206, 102, 0.8)'
-              }, {
-                entityName: '嫌疑人姓名',
-                entityMatchName: 'suspectName',
-                entityColor: 'rgba(19, 206, 102, 0.8)'
-              }, {
-                entityName: '嫌疑人姓名',
-                entityMatchName: 'suspectName',
-                entityColor: 'rgba(19, 206, 102, 0.8)'
-              }, {
-                entityName: '嫌疑人姓名',
-                entityMatchName: 'suspectName',
-                entityColor: 'rgba(19, 206, 102, 0.8)'
-              }, {
-                entityName: '嫌疑人姓名',
-                entityMatchName: 'suspectName',
-                entityColor: 'rgba(19, 206, 102, 0.8)'
-              }, {
-                entityName: '嫌疑人姓名',
-                entityMatchName: 'suspectName',
-                entityColor: 'rgba(19, 206, 102, 0.8)'
-              }, {
-                entityName: '嫌疑人姓名',
-                entityMatchName: 'suspectName',
-                entityColor: 'rgba(19, 206, 102, 0.8)'
-              }, {
-                entityName: '嫌疑人姓名',
-                entityMatchName: 'suspectName',
-                entityColor: 'rgba(19, 206, 102, 0.8)'
-              }, {
-                entityName: '嫌疑人姓名',
-                entityMatchName: 'suspectName',
-                entityColor: 'rgba(19, 206, 102, 0.8)'
-              }, {
-                entityName: '嫌疑人姓名',
-                entityMatchName: 'suspectName',
-                entityColor: 'rgba(19, 206, 102, 0.8)'
+                id: 1,
+                name: 'entity2',
+                color: '#eeeeee'
               }
             ]
           },
           {
-            name: '受害人',
+            name: 'name2',
             entitys: [
               {
-                entityName: '',
-                entityMatchName: '',
-                entityColor: ''
-              }
-            ]
-          },
-          {
-            name: '民警',
-            entitys: [
-              {
-                entityName: '',
-                entityMatchName: '',
-                entityColor: ''
-              }
-            ]
-          },
-          {
-            name: '案件相关',
-            entitys: [
-              {
-                entityName: '',
-                entityMatchName: '',
-                entityColor: ''
-              }
-            ]
-          },
-          {
-            name: '嫌疑人',
-            entitys: [
-              {
-                entityName: '',
-                entityMatchName: '',
-                entityColor: ''
-              }
-            ]
-          },
-          {
-            name: '受害人',
-            entitys: [
-              {
-                entityName: '',
-                entityMatchName: '',
-                entityColor: ''
-              }
-            ]
-          },
-          {
-            name: '民警',
-            entitys: [
-              {
-                entityName: '',
-                entityMatchName: '',
-                entityColor: ''
-              }
-            ]
-          },
-          {
-            name: '案件相关',
-            entitys: [
-              {
-                entityName: '',
-                entityMatchName: '',
-                entityColor: ''
-              }
-            ]
-          },
-          {
-            name: '嫌疑人',
-            entitys: [
-              {
-                entityName: '',
-                entityMatchName: '',
-                entityColor: ''
-              }
-            ]
-          },
-          {
-            name: '受害人',
-            entitys: [
-              {
-                entityName: '',
-                entityMatchName: '',
-                entityColor: ''
-              }
-            ]
-          },
-          {
-            name: '民警',
-            entitys: [
-              {
-                entityName: '',
-                entityMatchName: '',
-                entityColor: ''
-              }
-            ]
-          },
-          {
-            name: '案件相关',
-            entitys: [
-              {
-                entityName: '',
-                entityMatchName: '',
-                entityColor: ''
+                id: 2,
+                name: 'entity1',
+                color: '#eeeeee'
+              }, {
+                id: 3,
+                name: 'entity2',
+                color: '#eeeeee'
               }
             ]
           }
-
         ],
         relationships: [
           {
-            Rname: '嫌疑人-诈骗手段',
-            beginEntity: '嫌疑人姓名',
-            endEntity: '诈骗手段'
+            Rname: '关系名',
+            beginEntity: '前实体名',
+            endEntity: '后实体名'
           },
           {
-            Rname: '嫌疑人-案发时间',
-            beginEntity: '嫌疑人姓名',
-            endEntity: '案发时间'
-          },
-          {
-            Rname: '受害人-报案时间',
-            beginEntity: '受害人姓名',
-            endEntity: '报案时间'
-          },
-          {
-            Rname: '受害人-支付方式',
-            beginEntity: '受害人姓名',
-            endEntity: '支付方式'
-          },
-          {
-            Rname: '民警-处警结论',
-            beginEntity: '民警姓名',
-            endEntity: '出警结论'
-          },
-          {
-            Rname: '嫌疑人-诈骗手段',
-            beginEntity: '嫌疑人姓名',
-            endEntity: '诈骗手段'
-          },
-          {
-            Rname: '嫌疑人-案发时间',
-            beginEntity: '嫌疑人姓名',
-            endEntity: '案发时间'
-          },
-          {
-            Rname: '受害人-报案时间',
-            beginEntity: '受害人姓名',
-            endEntity: '报案时间'
-          },
-          {
-            Rname: '受害人-支付方式',
-            beginEntity: '受害人姓名',
-            endEntity: '支付方式'
-          },
-          {
-            Rname: '民警-处警结论',
-            beginEntity: '民警姓名',
-            endEntity: '出警结论'
+            Rname: '关系名',
+            beginEntity: '前实体名',
+            endEntity: '后实体名'
           }
         ],
         classes: [
-          { className: '积极', classColor: '#9415E8' },
-          { className: '消极', classColor: '#9415E8' },
-          { className: '正常', classColor: '#9415E8' },
-          { className: '异常', classColor: '#9415E8' }
+          { name: '分类名', color: '#9415E8' },
+          { name: '分类名', color: '#9415E8' }
         ]
       },
       myBackToTopStyle: {
@@ -546,21 +651,135 @@ export default {
         'border-radius': '4px',
         'line-height': '45px', // 请保持与高度一致以垂直居中 Please keep consistent with height to center vertically
         background: '#e7eaf1'// 按钮的背景颜色 The background color of the button
-      }
+      },
+      newtemoutput: {
+        'id': 13,
+        'name': 'CLASSFISDF',
+        'template_type': 'CLASSIFICATION',
+        'create_date': '2019-12-26T02:58:46.729977Z',
+        'url': 'http://172.20.46.190:10000/api/templates/13/'
+      },
+      newgroupoutput: {
+        id: 13,
+        name: 'victim',
+        create_date: '2019-12-26T03:03:09.715976Z',
+        template: 9
+      },
+      regetgroup: [],
+      regetentity: []
     }
   },
   methods: {
     submit(specification, form2) {
-      this.active++
-      this.$message({ message: '成功新建标注规范！', type: 'success' })
-      this.$confirm('恭喜你成功新建了一个标注规范！', '提示', {
-        confirmButtonText: '查看规范列表',
-        cancelButtonText: '继续创建规范'
-      }).then(() => {
-        this.$router.push({ path: '/specification/specificationList' })
-      }).catch(() => {
-        this.active = 0
-      })
+      if (this.specification.labelType === '命名实体识别') {
+        for (let i = 0; i < this.form2.entityGroups.length; i++) {
+          const data = {
+            list: this.form2.entityGroups[i].entitys,
+            id: this.newgroupoutput[i].id
+          }
+          this.$store.dispatch('project/newEntitys', data)
+            .then((response) => {
+              console.log('newshiti', response)
+              if (i === this.form2.entityGroups.length - 1) {
+                this.finish()
+              }
+            })
+            .catch(() => {
+              console.log('error')
+            })
+        }
+        // this.finish()
+      } else if (this.specification.labelType === '关系抽取') {
+        // this.finish()
+        console.log(this.form2.relationships)
+        let p = 1 // 判断是否创建过这个关系
+        for (let i = 0; i < this.form2.relationships.length; i++) {
+          for (let k = i - 1; k >= 0; k--) {
+            if (this.form2.relationships[i].Rname === this.form2.relationships[k].Rname) {
+              p = 0
+            }
+          }
+          const data = {
+            list: {
+              name: this.form2.relationships[i].Rname
+            },
+            id: this.newtemoutput.id
+          }
+          if (p === 1) {
+            this.$store.dispatch('project/newRe', data)
+              .then((response) => {
+                for (let j = 0; j < this.form2.relationships.length; j++) {
+                  if (this.form2.relationships[j].Rname === response.name) {
+                    const data1 = {
+                      id: response.id,
+                      list: {
+                        start_entity: this.form2.relationships[j].beginEntity,
+                        end_entity: this.form2.relationships[j].endEntity
+                      }
+                    }
+                    this.$store.dispatch('project/newReEntitys', data1)
+                      .then((response) => {
+                        console.log('newshiti', response)
+                        if (i === this.form2.entityGroups.length - 1) {
+                          this.finish()
+                        }
+                      })
+                      .catch(() => {
+                        console.log('error')
+                      })
+                  }
+                }
+                if (i === this.form2.relationships.length - 1) {
+                  this.finish()
+                }
+              })
+              .catch(() => {
+                console.log('error')
+              })
+          }
+        }
+      } else if (this.specification.labelType === '文本分类') {
+        const data = {
+          list: this.form2.classes,
+          id: this.newtemoutput.id
+        }
+        this.$store.dispatch('project/newClass', data)
+          .then((response) => {
+            // console.log(1, response)
+            this.finish()
+          })
+          .catch(() => {
+            console.log('error')
+          })
+      } else {
+        for (let i = 0; i < this.form2.entityGroups.length; i++) {
+          const data = {
+            list: this.form2.entityGroups[i].entitys,
+            id: this.newgroupoutput[i].id
+          }
+          this.$store.dispatch('project/newEventEntitys', data)
+            .then((response) => {
+              console.log('newshiti', response)
+              if (i === this.form2.entityGroups.length - 1) {
+                this.finish()
+              }
+            })
+            .catch(() => {
+              console.log('error')
+            })
+        }
+        // this.finish()
+      }
+      // this.active++
+      // this.$message({ message: '成功新建标注规范！', type: 'success' })
+      // this.$confirm('恭喜你成功新建了一个标注规范！', '提示', {
+      //   confirmButtonText: '查看规范列表',
+      //   cancelButtonText: '继续创建规范'
+      // }).then(() => {
+      //   this.$router.push({ path: '/specification/specificationList' })
+      // }).catch(() => {
+      //   this.active = 0
+      // })
       // this.$refs[formName].validate((valid) => {
       //   if (valid) {
       //     this.$message({ message: '成功新建标注规范！', type: 'success' })
@@ -582,6 +801,35 @@ export default {
       //   }
       // })
     },
+    finish() {
+      const data = {
+        id: this.newtemoutput.id,
+        input: {
+          in_use: 1
+        }
+      }
+      this.$store.dispatch('project/template_use', data)
+        .then((response) => {
+          // console.log(1, response)
+          this.active++
+          this.reform3change = 0
+          this.$message({ message: '成功新建标注规范！', type: 'success' })
+          this.$confirm('恭喜你成功新建了一个标注规范！', '提示', {
+            confirmButtonText: '查看规范列表',
+            cancelButtonText: '继续创建规范'
+          }).then(() => {
+            this.$router.push({ path: '/specification/specificationList' })
+          }).catch(() => {
+            this.active = 0
+          })
+        })
+        .catch(() => {
+          console.log('error')
+        })
+    },
+    colorchange(row, color) {
+      console.log(row, color)
+    },
     resetForm(formName) { // 需要重写方法清除规范数据
       this.$refs[formName].resetFields()
     },
@@ -601,7 +849,7 @@ export default {
     },
     newEntityGroup() {
       this.form2.entityGroups.push({
-        name: '',
+        'name': '',
         key: Date.now()
       })
     },
@@ -619,28 +867,205 @@ export default {
     },
     newRelationship() {
       this.form2.relationships.push({
+        beginEntity: '',
+        endEntity: '',
         Rname: '',
         key: Date.now()
       })
     },
     newClasses() {
       this.form2.classes.push({
-        className: '',
+        name: 'name',
+        color: '#ffffff',
         key: Date.now()
       })
     },
-    onSubmitForm1() {
-      this.active++
+    addre(index) {
+      console.log(index)
+      this.form2.relationships.splice(index + 1, 0, {
+        Rname: this.form2.relationships[index].Rname,
+        beginEntity: '',
+        endEntity: '',
+        key: Date.now()
+      })
+    },
+    reformchange() {
+      for (let i = 0; i < this.form2.entityGroups.length; i++) {
+        const data = {
+          list: this.form2.entityGroups[i].entitys,
+          id: this.newgroupoutput[i].id
+        }
+        this.$store.dispatch('project/newEntitys', data)
+          .then((response) => {
+            console.log('newreshiti', response)
+            for (let j = 0; j < response.length; j++) {
+              for (let k = 0; k < this.form2.entityGroups[i].entitys.length; k++) {
+                if (response[j].name === this.form2.entityGroups[i].entitys[k].name) {
+                  this.form2.entityGroups[i].entitys[k].id = response[j].id
+                }
+              }
+            }
+            if (i === this.form2.entityGroups.length - 1) {
+              this.reform3change = 1
+            }
+          })
+          .catch(() => {
+            console.log('error')
+          })
+      }
+    },
+    deletere(index) {
+      var rname = this.form2.relationships[index].name
+      let num = 0
+      for (let i = 0; i < this.form2.relationships.length; i++) {
+        if (rname === this.form2.relationships[i].rname) {
+          num++
+        }
+      }
+      if (num === 1) {
+        this.$message('不能删除')
+      } else {
+        this.form2.relationships.splice(index, 1)
+      }
+    },
+    // getreentity(value) {
+    //   console.log('getre',value);
+    //   this.$store.dispatch('project/getTemplate', value)
+    //     .then((response) => {
+    //       // console.log(response)
+    //       const entityGroup = response
+    //       for (let index = 0; index < entityGroup.length; index++) {
+    //         this.$store.dispatch('project/getentitys', entityGroup[index].id)
+    //           .then((response) => {
+    //             entityGroup[index].entitys = response
+    //             for (let i = 0; i < entityGroup[index].entitys.length; i++) {
+    //               entityGroup[index].entitys[i].entityName = entityGroup[index].entitys[i].name
+    //               entityGroup[index].entitys[i].entityColor = entityGroup[index].entitys[i].color
+    //             }
+    //             // console.log(entityGroup)
+    //             this.regetentity = entityGroup
+    //           })
+    //           .catch(() => {
+    //             console.log('error')
+    //           })
+    //       }// for结束
+    //     })
+    //     .catch(() => {
+    //       console.log('error')
+    //     })
+    // },
+    onSubmitForm1() { // 新建模板
+      const newtemplatedata = {
+        name: this.specification.specificationName,
+        template_type: ''
+      }
+      if (this.specification.labelType === '命名实体识别') {
+        newtemplatedata.template_type = 'NER'
+      } else if (this.specification.labelType === '关系抽取') {
+        newtemplatedata.template_type = 'RE'
+      } else if (this.specification.labelType === '文本分类') {
+        newtemplatedata.template_type = 'CLASSIFICATION'
+      } else {
+        newtemplatedata.template_type = 'EVENT'
+      }
+      console.log(newtemplatedata)
+      this.$store.dispatch('project/newTemplate', newtemplatedata)
+        .then((response) => {
+          console.log(2, response)
+          this.newtemoutput = response
+          this.active++
+        })
+        .catch(() => {
+          console.log('error')
+        })
     },
     onSubmitForm2() {
-      this.active++
+      if (this.specification.labelType === '命名实体识别') {
+        const list = []
+        for (let i = 0; i < this.form2.entityGroups.length; i++) {
+          const group = {}
+          group.name = this.form2.entityGroups[i].name
+          list[i] = group
+        }
+        const data = {
+          list: list,
+          id: this.newtemoutput.id
+        }
+        this.$store.dispatch('project/newEntitygroup', data)
+          .then((response) => {
+            console.log(this.newtemoutput.id)
+            console.log(response)
+            this.newgroupoutput = response
+            this.active++
+          })
+          .catch(() => {
+            console.log('error')
+          })
+      } else if (this.specification.labelType === '关系抽取') {
+        const list = []
+        for (let i = 0; i < this.form2.entityGroups.length; i++) {
+          const group = {}
+          group.name = this.form2.entityGroups[i].name
+          list[i] = group
+        }
+        const data = {
+          list: list,
+          id: this.newtemoutput.id
+        }
+        this.$store.dispatch('project/newEntitygroup', data)
+          .then((response) => {
+            console.log(this.newtemoutput.id)
+            console.log(response)
+            this.newgroupoutput = response
+            this.active++
+          })
+          .catch(() => {
+            console.log('error')
+          })
+      } else if (this.specification.labelType === '文本分类') {
+        this.active++
+      } else {
+        const list = []
+        for (let i = 0; i < this.form2.entityGroups.length; i++) {
+          const group = {}
+          group.name = this.form2.entityGroups[i].name
+          list[i] = group
+        }
+        const data = {
+          list: list,
+          id: this.newtemoutput.id
+        }
+        this.$store.dispatch('project/newEventgroup', data)
+          .then((response) => {
+            console.log(this.newtemoutput.id)
+            console.log(response)
+            this.newgroupoutput = response
+            this.active++
+          })
+          .catch(() => {
+            console.log('error')
+          })
+      }
+      // this.active++
     },
     last() {
       this.active--
+      this.regetgroup = []
+      this.regetentity = []
     },
     modifyEntity(index) {
       this.editEntityIndex = index
       this.editEntityDialog = true
+    },
+    deleteEntity(index) {
+      this.form2.entityGroups[this.editIndex].entitys.splice(index, 1)
+    },
+    newEntity() {
+      this.form2.entityGroups[this.editIndex].entitys.push({
+        'name': '',
+        'color': '',
+        key: Date.now()
+      })
     },
     modifyEntityGroup($index) {
       this.editIndex = $index

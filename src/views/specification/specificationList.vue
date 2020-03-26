@@ -1,23 +1,30 @@
 <template>
   <div class="app-container">
-    <el-button size="mini" type="primary" @click="newSpecification()">
+    <el-button
+      size="mini"
+      type="primary"
+      @click="newSpecification()"
+    >
       <i class="el-icon-plus" />
       新建规范
     </el-button>
-    <el-table :data="list.slice((page-1)*limit,page*limit)" style="width: 98%">
+    <el-table
+      :data="list.slice((page-1)*limit,page*limit)"
+      style="width: 98%"
+    >
       <el-table-column
         label="生成时间"
-        width="120"
+        min-width="120"
         sortable
       >
         <template slot-scope="scope">
           <i class="el-icon-time" />
-          <span style="margin-left: 10px">{{ scope.row.generateTime | parseTime('{y}-{m}-{d}') }}</span>
+          <span style="margin-left: 10px">{{ scope.row.create_date | parseTime('{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
       <el-table-column
         label="规范编号"
-        width="120"
+        min-width="120"
         sortable
       >
         <template slot-scope="scope">
@@ -26,24 +33,27 @@
       </el-table-column>
       <el-table-column
         label="规范名"
-        width="120"
+        min-width="120"
       >
         <template slot-scope="scope">
-          <div slot="reference" class="name-wrapper">
+          <div
+            slot="reference"
+            class="name-wrapper"
+          >
             <span>{{ scope.row.name }}</span>
           </div>
         </template>
       </el-table-column>
       <el-table-column
         label="标注类型"
-        width="120"
+        min-width="200"
         sortable
       >
         <template slot-scope="scope">
-          <span>{{ scope.row.labelType }}</span>
+          <span>{{ scope.row.template_type }}</span>
         </template>
       </el-table-column>
-      <el-table-column
+      <!-- <el-table-column
         label="规范描述"
         width="360"
       >
@@ -55,7 +65,7 @@
             </div>
           </el-popover>
         </template>
-      </el-table-column>
+      </el-table-column> -->
 
       <el-table-column
         align="right"
@@ -65,16 +75,22 @@
             size="mini"
             type="primary"
             @click="goToDetail(scope.$index, scope.row)"
-          >详情</el-button>
-          <el-button
+          >
+            详情
+          </el-button>
+          <!-- <el-button
             size="mini"
             type="danger"
             @click="handleDelete(scope.$index)"
-          >删除</el-button>
+          >删除</el-button> -->
         </template>
       </el-table-column>
     </el-table>
-    <pagination v-show="total>0" :total="total" @pagination="getList" />
+    <pagination
+      v-show="total>0"
+      :total="total"
+      @pagination="getList"
+    />
   </div>
 </template>
 
@@ -87,19 +103,15 @@ export default {
   data() {
     return {
       list: [
-        { generateTime: '2019.10.21', id: '1', name: '疾病标注', labelType: '命名实体识别', description: '23' },
-        { generateTime: '2019.10.20', id: '2', name: '患者标注', labelType: '关系抽取', description: '15' },
-        { generateTime: '2019.10.19', id: '3', name: '医生标注', labelType: '文本分类', description: '4' },
-        { generateTime: '2019.10.22', id: '4', name: '药物标注', labelType: '事件标注', description: '8' },
-        { generateTime: '2019.10.15', id: '5', name: '疾病标注', labelType: '命名实体识别', description: '2' },
-        { generateTime: '2019.10.18', id: '6', name: '疾病标注', labelType: '关系抽取', description: '9' },
-        { generateTime: '2019.10.27', id: '7', name: '疾病标注', labelType: '文本分类', description: '10' },
-        { generateTime: '2019.10.16', id: '8', name: '疾病标注', labelType: '事件标注', description: '13' }
+        { create_date: '2019.10.21', id: '1', name: '疾病标注', template_type: '命名实体识别' },
+        { create_date: '2019.10.20', id: '2', name: '患者标注', template_type: '关系抽取' },
+        { create_date: '2019.10.19', id: '3', name: '医生标注', template_type: '文本分类' },
+        { create_date: '2019.10.22', id: '4', name: '药物标注', template_type: '事件标注' }
       ],
       total: 100,
       listLoading: true,
       page: 1,
-      limit: 10,
+      limit: 100,
       search: ''
     }
   },
@@ -108,36 +120,19 @@ export default {
   },
   methods: {
     getList() {
-      return this.request({
-        url: this.serverUrl + '/SpecificationFormal/getAll',
-        method: 'post',
-        params: { }
-      }).then(res => {
-        console.log(res)
-        if (res.code !== 0) {
-          this.$message({
-            type: 'warning',
-            message: '更新列表失败'
-          })
-        } else {
-          this.list = res.data
-          this.total = res.data.length
-          this.$message({
-            type: 'success',
-            message: '更新列表成功'
-          })
-        }
-      })
-    //   var _this = this
-    // this.$http.post('http://localhost:7788/api/personFormal/getAll', this.$qs.stringify({stage: 's'}) )
-    // .then(res => {
-    //   console.log(res.data)
-    //   _this.list = res.data.data
-    //   _this.total = res.data.data.length
-    // })
+      this.$store.dispatch('project/getallTemplate')
+        .then((response) => {
+          console.log(response)
+          this.list = response
+        })
+        .catch(() => {
+          console.log('error')
+        })
     },
     goToDetail(index, row) {
       // const p = '/specification/specificationDetail/' + this.list[index].id
+      console.log(index, row)
+      this.$store.commit('project/SET_DETAIL', row)
       const p = '/specification/specificationDetail/'
       this.$router.push({ path: p })
     },
