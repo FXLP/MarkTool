@@ -587,6 +587,7 @@ const carouselPrefix = '?imageView2/2/h/440'
                 if (i === list.length-1){
                   this.options = list
                   console.log('last', list);
+                  this.updatedoc()
                 }
               })
               .catch(() => {
@@ -690,8 +691,8 @@ const carouselPrefix = '?imageView2/2/h/440'
             id:this.tableData[this.docid].id,
             list:{
               doc:this.tableData[this.docid].id,
-              user:3,
-              role:2,
+              user:2,
+              role:3,
               classification_template:this.labeledevent.id
             }
           }
@@ -716,8 +717,8 @@ const carouselPrefix = '?imageView2/2/h/440'
           id:this.tableData[this.docid].id,
           list:{
             doc:this.tableData[this.docid].id,
-            user:3,
-            role:2,
+            user:2,
+            role:3,
             event_group_template:this.labeledevent.id
           }
         }
@@ -751,16 +752,17 @@ const carouselPrefix = '?imageView2/2/h/440'
         {  
           this.docid++ 
           this.updatedoc()
+          this.showdata = this.tableData[this.docid].content
         }
-        this.showdata = this.tableData[this.docid].content
+
       },
       last_doc(){
         if(this.docid-1>=0)
         {
           this.docid-- 
           this.updatedoc()
-        }
-        this.showdata = this.tableData[this.docid].content
+          this.showdata = this.tableData[this.docid].content
+        }     
       },
       aside_click(id){
         console.log(id)
@@ -773,7 +775,7 @@ const carouselPrefix = '?imageView2/2/h/440'
           this.entityinput =[]
           const data = {
             docid:this.tableData[this.docid].id,
-            userid:3
+            userid:2
           }
           this.$store.dispatch('user/getuserlabel', data)
             .then((response) => {
@@ -791,7 +793,7 @@ const carouselPrefix = '?imageView2/2/h/440'
                 var color =''
                 if(index==1){
                   for (let k = 0; k < this.options.length; k++) {
-                    for (let l = 0; l < this.options[i].children.length; l++) {
+                    for (let l = 0; l < this.options[k].children.length; l++) {
                       if(this.options[k].children[l].id===list[i].entity_template){
                         color = this.options[k].children[l].color
                       }
@@ -813,7 +815,7 @@ const carouselPrefix = '?imageView2/2/h/440'
         } else if(this.template_type == 'CLASSIFICATION'){
           const data = {
             docid:this.tableData[this.docid].id,
-            userid:3
+            userid:2
           }
           this.$store.dispatch('user/getuserlabel', data)
             .then((response) => {
@@ -838,7 +840,7 @@ const carouselPrefix = '?imageView2/2/h/440'
           this.eventoptions = []
           const data = {
             docid:this.tableData[this.docid].id,
-            userid:3
+            userid:2
           }
           this.$store.dispatch('user/getuserlabel', data)
             .then((response) => {
@@ -897,7 +899,7 @@ const carouselPrefix = '?imageView2/2/h/440'
           this.labeledre = []
           const data = {
             docid:this.tableData[this.docid].id,
-            userid:3
+            userid:2
           }
           this.$store.dispatch('user/getuserlabel', data)
             .then((response) => {
@@ -977,8 +979,8 @@ const carouselPrefix = '?imageView2/2/h/440'
             end_offset:end_offset,
             content:content,
             entity_template:this.selectvalue[1].id,
-            user:3,
-            role:2
+            user:2,
+            role:3
           }
         }
         this.$store.dispatch('user/labelentity', data)
@@ -1018,8 +1020,8 @@ const carouselPrefix = '?imageView2/2/h/440'
             content:content,
             entity_template:this.selectvalue[1].id,
             event_group_annotation:this.labeledevent.eventid,
-            user:3,
-            role:2
+            user:2,
+            role:3
           }
         }
         this.$store.dispatch('user/labelentity', data)
@@ -1062,8 +1064,8 @@ const carouselPrefix = '?imageView2/2/h/440'
           id:this.tableData[this.docid].id,
           list:{
             doc:this.tableData[this.docid].id,
-            user:3,
-            role:2,
+            user:2,
+            role:3,
             relation_entity_template:this.selectstartentity.relation,
             start_entity:this.selectstartentity.startid,
             end_entity:this.selectendentity.endid
@@ -1120,8 +1122,8 @@ const carouselPrefix = '?imageView2/2/h/440'
           const data = {
             id:this.tableData[this.docid].id,
             list:{
-              user:3,
-              role:2
+              user:2,
+              role:3
             }
           }
           this.$store.dispatch('user/labelconfirm', data)

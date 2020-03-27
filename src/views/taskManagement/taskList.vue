@@ -22,7 +22,7 @@
       </el-table-column> -->
       <el-table-column
         label="序号"
-        width="120"
+        min-width="120"
       >
         <template slot-scope="scope">
           <span>{{ scope.row.id }}</span>
@@ -30,7 +30,7 @@
       </el-table-column>
       <el-table-column
         label="任务名"
-        width="250"
+        min-width="250"
       >
         <template slot-scope="scope">
           <span>{{ scope.row.name }}</span>
@@ -38,13 +38,13 @@
       </el-table-column>
       <el-table-column
         label="任务类型"
-        width="280"
+        min-width="280"
       >
         <template slot-scope="scope">
           <span>{{ scope.row.project_type }}</span>
         </template>
       </el-table-column>
-      <el-table-column
+      <!-- <el-table-column
         label="标注者"
         width="150"
       >
@@ -56,15 +56,15 @@
             <span>{{ }}</span>
           </div>
         </template>
-      </el-table-column>
-      <el-table-column
+      </el-table-column> -->
+      <!-- <el-table-column
         label="审核者"
         width="150"
       >
         <template>
           <span>{{ }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <!-- <el-table-column
         label="标注状态"
         width="120"
@@ -75,20 +75,20 @@
       </el-table-column> -->
       <el-table-column
         align="right"
-        width="120"
+        min-width="120"
         label="操作"
       >
-        <template>
+        <template slot-scope="scope">
           <!-- <el-button
             size="mini"
             type="primary"
             @click="goToDetail(scope.$index, scope.row)"
-          >详情</el-button>
+          >详情</el-button> -->
           <el-button
             size="mini"
             type="success"
             @click="downloadResult(scope.$index, scope.row)"
-          >下载</el-button> -->
+          >下载</el-button>
           <!-- <el-button
             size="mini"
             type="danger"
@@ -107,7 +107,7 @@
 
 <script>
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
-
+import FileSaver from 'file-saver'
 export default {
   name: 'TaskList',
   components: { Pagination },
@@ -122,8 +122,9 @@ export default {
       total: 100,
       listLoading: true,
       page: 1,
-      limit: 10,
-      search: ''
+      limit: 100,
+      search: '',
+      outputdata: []
     }
   },
   created() {
@@ -143,10 +144,39 @@ export default {
     goToDetail(index, row) {
       // const p = '/task/taskDetail/' + this.list[index].taskId
       const p = '/taskManagement/taskDetails/'
-      this.$router.push({ path: p })
+      this.$router.push({
+        path: p,
+        query: {
+          projectid: row.id
+        }
+      })
     },
     downloadResult(index, row) { // 下载标注结果
-
+      console.log(row)
+      this.$store.dispatch('user/getEpoch', 2)
+        .then((response) => {
+          for (let i = 0; i < response.length; i++) {
+            if (row.id === response[i].project) {
+              const epochid = response[i].id
+              const data = {
+                id: epochid,
+                list: {
+                  project: row.id,
+                  user: 2,
+                  role: 2
+                }
+              }
+              this.$store.dispatch('project/getannres', data)
+                .then((response1) => {
+                  console.log(response1)
+                  this.outputdata = response1.result_file
+                  const data1 = JSON.stringify(this.outputdata)
+                  const blob = new Blob([data1], { type: '' })
+                  FileSaver.saveAs(blob, row.name + '.json')
+                })
+            }
+          }
+        })
     },
     handleDelete(index) {
       this.list.splice(index, 1)

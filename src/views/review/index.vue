@@ -109,7 +109,7 @@ export default {
       total: 100,
       listLoading: true,
       page: 1,
-      limit: 10,
+      limit: 100,
       search: ''
     }
   },
@@ -118,7 +118,7 @@ export default {
   },
   methods: {
     getList() {
-      this.$store.dispatch('reviewer/getreepoch').then((response) => {
+      this.$store.dispatch('reviewer/getreepoch', 2).then((response) => {
         // console.log(response)
         const list = response
         for (let i = 0; i < list.length; i++) {

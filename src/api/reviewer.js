@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function getreepoch(reviewerid) {
   return request({
-    url: '/api/reviewers/2/epoches/',
+    url: '/api/reviewers/' + reviewerid + '/epoches/',
     method: 'get'
   })
 }

@@ -225,29 +225,29 @@ export const asyncRoutes = [
     ]
   },
 
-  {
-    path: '/personnel',
-    component: Layout,
-    // redirect: '/permission/page',
-    alwaysShow: true, // will always show the root menu
-    name: '人员管理',
-    meta: {
-      title: '人员管理',
-      icon: 'peoples',
-      roles: ['admin'] // you can set roles in root nav
-    },
-    children: [
-      {
-        path: 'personnelList',
-        component: () => import('@/views/personnel/personnelList'),
-        name: '人员列表',
-        meta: {
-          title: '人员列表',
-          roles: ['admin'] // or you can only set roles in sub nav
-        }
-      }
-    ]
-  },
+  // {
+  //   path: '/personnel',
+  //   component: Layout,
+  //   // redirect: '/permission/page',
+  //   alwaysShow: true, // will always show the root menu
+  //   name: '人员管理',
+  //   meta: {
+  //     title: '人员管理',
+  //     icon: 'peoples',
+  //     roles: ['admin'] // you can set roles in root nav
+  //   },
+  //   children: [
+  //     {
+  //       path: 'personnelList',
+  //       component: () => import('@/views/personnel/personnelList'),
+  //       name: '人员列表',
+  //       meta: {
+  //         title: '人员列表',
+  //         roles: ['admin'] // or you can only set roles in sub nav
+  //       }
+  //     }
+  //   ]
+  // },
 
   {
     path: '/label',
@@ -269,25 +269,25 @@ export const asyncRoutes = [
     ]
   },
 
-  {
-    path: '/review',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/review/index'),
-        name: '审核任务列表',
-        meta: { title: '审核任务列表', icon: 'skill', roles: ['admin', 'editor'] }
-      },
-      {
-        path: 'reviewing',
-        component: () => import('@/views/review/reviewing'),
-        name: '审核任务',
-        hidden: true,
-        meta: { title: '审核任务', roles: ['admin', 'editor'] }
-      }
-    ]
-  },
+  // {
+  //   path: '/review',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       component: () => import('@/views/review/index'),
+  //       name: '审核任务列表',
+  //       meta: { title: '审核任务列表', icon: 'skill', roles: ['admin', 'editor'] }
+  //     },
+  //     {
+  //       path: 'reviewing',
+  //       component: () => import('@/views/review/reviewing'),
+  //       name: '审核任务',
+  //       hidden: true,
+  //       meta: { title: '审核任务', roles: ['admin', 'editor'] }
+  //     }
+  //   ]
+  // },
 
   {
     path: '/permission',

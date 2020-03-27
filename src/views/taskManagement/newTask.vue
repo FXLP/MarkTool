@@ -240,7 +240,7 @@
           >
             <i class="el-icon-plus" />
           </el-button>
-          <el-form-item
+          <!-- <el-form-item
             v-for="(reviewer,index) in revformtem"
             :key="index"
             label="审核者"
@@ -263,7 +263,7 @@
                 @click.prevent="removereviewer(index)"
               />
             </div>
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item label="答案文件（可选）">
             <el-upload
               class="upload-demo"
@@ -337,30 +337,14 @@ export default {
       },
       annotatorlabel: [
         {
-          name: '标注者1',
-          id: 1
-        },
-        {
-          name: '标注者2',
+          name: 'admin',
           id: 2
-        },
-        {
-          name: '标注者3',
-          id: 3
         }
       ],
       reviewerlabel: [
         {
-          name: '审核者1',
-          id: 1
-        },
-        {
-          name: '审核者2',
+          name: 'admin',
           id: 2
-        },
-        {
-          name: '审核者3',
-          id: 3
         }
       ],
       annformtem: [
@@ -473,9 +457,6 @@ export default {
           })
           this.active++
         })
-        .catch(() => {
-          console.log('error')
-        })
     },
     onSubmitForm3() {
       if (this.form3.file.length > 0) {
@@ -507,11 +488,11 @@ export default {
     },
     onSubmitForm4() {
       const formData = new window.FormData()
-      if (this.form3.file.length > 0) {
+      if (this.form4.file.length > 0) {
         for (let i = 0; i < this.form4.file.length; i++) {
           formData.append('file', this.form4.file[i].raw)
         }
-        // // console.log(111, formData.get('file'))
+        console.log(111, formData.get('file'))
       }
       var annatator = ''
       for (let i = 0; i < this.annformtem.length; i++) {

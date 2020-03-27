@@ -503,7 +503,7 @@ const carouselPrefix = '?imageView2/2/h/440'
            that.selecttext = window.getSelection().toString();
           setTimeout(() => {
             if(that.template_type === 'RE'||that.template_type === 'NER'||(that.template_type==='EVENT' && that.labeledevent!='')){
-              $("div.el-input").trigger("click")
+              $("div.block .el-input").trigger("click")
             }
           }, 200);
            
@@ -559,9 +559,6 @@ const carouselPrefix = '?imageView2/2/h/440'
           this.$store.commit('project/SET_PROJECTID', this.projectid)
           this.tableData = list
           this.showdata = this.tableData[0].content
-          if (this.template_type === 'NER'){
-            this.updatedoc()
-          }
         })
       },
       getEntitys(){
@@ -586,6 +583,10 @@ const carouselPrefix = '?imageView2/2/h/440'
                 }
                 if (i === list.length-1){
                   this.options = list
+                  // this.updatedoc()
+                  if (this.template_type === 'NER'){
+                    this.updatedoc()
+                  }
                   console.log('last', list);
                 }
               })
@@ -690,7 +691,7 @@ const carouselPrefix = '?imageView2/2/h/440'
             id:this.tableData[this.docid].id,
             list:{
               doc:this.tableData[this.docid].id,
-              user:3,
+              user:2,
               role:2,
               classification_template:this.labeledevent.id
             }
@@ -716,7 +717,7 @@ const carouselPrefix = '?imageView2/2/h/440'
           id:this.tableData[this.docid].id,
           list:{
             doc:this.tableData[this.docid].id,
-            user:3,
+            user:2,
             role:2,
             event_group_template:this.labeledevent.id
           }
@@ -744,6 +745,18 @@ const carouselPrefix = '?imageView2/2/h/440'
                 })
             }
           }
+          // for (let i = 0; i < this.entityinput1.length; i++) { //删去input内相应的项
+          //   if (content === this.entityinput1[i].content) {
+          //     const data = {
+          //       docid:this.tableData[this.docid].id,
+          //       entityid:this.entityinput1[i].id
+          //     }
+          //     this.$store.dispatch('user/deleteentity', data)
+          //       .then((response) => {
+          //         this.entityinput1.splice(i,1)
+          //       })
+          //   }
+          // }
       },
       next_doc(){
         let length = this.tableData.length - 1
@@ -751,16 +764,18 @@ const carouselPrefix = '?imageView2/2/h/440'
         {  
           this.docid++ 
           this.updatedoc()
+          this.showdata = this.tableData[this.docid].content
         }
-        this.showdata = this.tableData[this.docid].content
+        // this.showdata = this.tableData[this.docid].content
       },
       last_doc(){
         if(this.docid-1>=0)
         {
           this.docid-- 
           this.updatedoc()
+          this.showdata = this.tableData[this.docid].content
         }
-        this.showdata = this.tableData[this.docid].content
+        // this.showdata = this.tableData[this.docid].content
       },
       aside_click(id){
         console.log(id)
@@ -771,9 +786,19 @@ const carouselPrefix = '?imageView2/2/h/440'
       updatedoc(){
         if (this.template_type == 'NER') {
           this.entityinput =[]
+          // this.entityinput1 =[]
+          //  const data1 = {
+          //   docid:this.tableData[this.docid].id,
+          //   userid:3
+          // }
+          // this.$store.dispatch('user/getuserlabel', data1)
+          //   .then((response) => {
+          //     const list = response
+          //     this.entityinput1 = list
+          //   })
           const data = {
             docid:this.tableData[this.docid].id,
-            userid:3
+            userid:2
           }
           this.$store.dispatch('user/getuserlabel', data)
             .then((response) => {
@@ -789,9 +814,10 @@ const carouselPrefix = '?imageView2/2/h/440'
                   index=0
                 }
                 var color =''
+                //console.log(this.options);
                 if(index==1){
                   for (let k = 0; k < this.options.length; k++) {
-                    for (let l = 0; l < this.options[i].children.length; l++) {
+                    for (let l = 0; l < this.options[k].children.length; l++) {
                       if(this.options[k].children[l].id===list[i].entity_template){
                         color = this.options[k].children[l].color
                       }
@@ -807,13 +833,10 @@ const carouselPrefix = '?imageView2/2/h/440'
                 }         
               }
             })
-            .catch(() => {
-              console.log('error')
-            })
         } else if(this.template_type == 'CLASSIFICATION'){
           const data = {
             docid:this.tableData[this.docid].id,
-            userid:3
+            userid:2
           }
           this.$store.dispatch('user/getuserlabel', data)
             .then((response) => {
@@ -838,7 +861,7 @@ const carouselPrefix = '?imageView2/2/h/440'
           this.eventoptions = []
           const data = {
             docid:this.tableData[this.docid].id,
-            userid:3
+            userid:2
           }
           this.$store.dispatch('user/getuserlabel', data)
             .then((response) => {
@@ -897,7 +920,7 @@ const carouselPrefix = '?imageView2/2/h/440'
           this.labeledre = []
           const data = {
             docid:this.tableData[this.docid].id,
-            userid:3
+            userid:2
           }
           this.$store.dispatch('user/getuserlabel', data)
             .then((response) => {
@@ -977,7 +1000,7 @@ const carouselPrefix = '?imageView2/2/h/440'
             end_offset:end_offset,
             content:content,
             entity_template:this.selectvalue[1].id,
-            user:3,
+            user:2,
             role:2
           }
         }
@@ -988,6 +1011,26 @@ const carouselPrefix = '?imageView2/2/h/440'
             this.entityinput.push(data.list)
           })
         console.log('input',this.entityinput);
+
+        //  const data1 = {
+        //   id:this.tableData[this.docid].id,
+        //   list:{
+        //     doc:this.tableData[this.docid].id,
+        //     start_offset:start_offset,
+        //     end_offset:end_offset,
+        //     content:content,
+        //     entity_template:this.selectvalue[1].id,
+        //     user:3,
+        //     role:2
+        //   }
+        // }
+        // this.$store.dispatch('user/labelentity', data1)
+        //   .then((response) => {
+        //     console.log(response);
+        //     data1.list.id = response.id
+        //     this.entityinput1.push(data1.list)
+        //   })
+        // console.log('input',this.entityinput);
       },
       eventselectchange(){
         console.log('select', this.selectvalue)
@@ -1018,7 +1061,7 @@ const carouselPrefix = '?imageView2/2/h/440'
             content:content,
             entity_template:this.selectvalue[1].id,
             event_group_annotation:this.labeledevent.eventid,
-            user:3,
+            user:2,
             role:2
           }
         }
@@ -1062,7 +1105,7 @@ const carouselPrefix = '?imageView2/2/h/440'
           id:this.tableData[this.docid].id,
           list:{
             doc:this.tableData[this.docid].id,
-            user:3,
+            user:2,
             role:2,
             relation_entity_template:this.selectstartentity.relation,
             start_entity:this.selectstartentity.startid,
@@ -1120,7 +1163,7 @@ const carouselPrefix = '?imageView2/2/h/440'
           const data = {
             id:this.tableData[this.docid].id,
             list:{
-              user:3,
+              user:2,
               role:2
             }
           }
@@ -1128,6 +1171,17 @@ const carouselPrefix = '?imageView2/2/h/440'
             .then((response) => {
               this.$message({ message: '已提交！', type: 'success' });
             })
+          //   const data1 = {
+          //   id:this.tableData[this.docid].id,
+          //   list:{
+          //     user:3,
+          //     role:2
+          //   }
+          // }
+          // this.$store.dispatch('user/labelconfirm', data1)
+          //   .then((response) => {
+          //     // this.$message({ message: '已提交！', type: 'success' });
+          //   })
       }
     },
     data() {
@@ -1169,6 +1223,7 @@ const carouselPrefix = '?imageView2/2/h/440'
         labeledre:[],
         eventoptions:[],
         entityinput:[], 
+        entityinput1:[],
         tableData: [
             {
                 content: '金陵尚府小区门口,报警人家人（杨某某，32岁，智商有点问题，六合人）昨天晚上在上述地址被民警带走，需要联系。（接警台电话：28020）', id: 3, key:0

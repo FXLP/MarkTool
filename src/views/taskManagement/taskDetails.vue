@@ -59,7 +59,7 @@
         <div style="margin-bottom:50px;height:400px">
           <el-col :span="8" class="text-center">
             <span>标注者1</span>
-            <el-table :data="list.slice((page-1)*limit,page*limit)" style="width:100%;height:500px">
+            <el-table :data="list" style="width:100%;height:500px">
               <el-table-column
                 label="轮次"
                 width="120"
@@ -80,7 +80,7 @@
               </el-table-column>
             </el-table>
           </el-col>
-          <el-col :span="8" class="text-center">
+          <!-- <el-col :span="8" class="text-center">
             <span>标注者2</span>
             <el-table :data="list.slice((page-1)*limit,page*limit)" style="width:100%;height:500px">
               <el-table-column
@@ -125,7 +125,7 @@
                 </template>
               </el-table-column>
             </el-table>
-          </el-col>
+          </el-col> -->
         </div>
       </el-card>
     </el-row>
@@ -147,21 +147,25 @@ export default {
         labelSpecification: '诈骗'
       },
       list: [
-        { epoch: '1', progressRate: '100' },
-        { epoch: '2', progressRate: '80' },
-        { epoch: '3', progressRate: '70' },
-        { epoch: '4', progressRate: '50' },
-        { epoch: '5', progressRate: '70' },
-        { epoch: '6', progressRate: '80' },
-        { epoch: '7', progressRate: '40' },
-        { epoch: '8', progressRate: '50' },
-        { epoch: '9', progressRate: '66' },
-        { epoch: '10', progressRate: '15' }
+        { epoch: '1', progressRate: '100' }
       ],
       total: 100,
       listLoading: true,
       page: 1,
-      limit: 10
+      limit: 10,
+      projectid: ''
+    }
+  },
+  mounted() {
+    this.projectid = this.$route.query.projectid
+    this.getproject(this.projectid)
+  },
+  methods: {
+    getproject() {
+      this.$store.dispatch('project/getProject', this.projectid)
+        .then((response) => {
+          console.log(response)
+        })
     }
   }
 }

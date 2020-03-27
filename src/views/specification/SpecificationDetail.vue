@@ -26,11 +26,11 @@
             </div>
             <div
               class="component-item"
-              style="height:600px;"
+              style="min-height:300px;"
             >
               <el-table
                 :data="specification.entityGroups"
-                height="570"
+                min-height="300"
                 style="width: 100%; text-align:center"
               >
                 <el-table-column
@@ -77,11 +77,11 @@
             </div>
             <div
               class="component-item"
-              style="height:600px;"
+              style="min-height:300px"
             >
               <el-table
                 :data="specification.relationships"
-                height="570"
+                min-height="300"
                 style="width: 100%; text-align:center"
               >
                 <el-table-column
@@ -121,7 +121,7 @@
             >
               <el-table
                 :data="specification.classes"
-                height="570"
+                min-height="300"
                 style="width: 100%; text-align:center"
               >
                 <el-table-column
@@ -150,7 +150,6 @@
         title="实体集"
         :visible.sync="editEntityGroupDialog"
         width="800px"
-        :before-close="handleClose"
       >
         <!-- 每次点击打开实体集对话框需要更新参数editIndex -->
         <el-table
@@ -176,7 +175,7 @@
             min-width="200px"
           >
             <template slot-scope="scope">
-              <el-color-picker v-model="scope.row.entityColor" />
+              <el-color-picker v-model="scope.row.entityColor" disabled />
             </template>
           </el-table-column>
           <!-- <el-table-column

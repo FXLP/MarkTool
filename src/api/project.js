@@ -242,3 +242,24 @@ export function fenpeiepoch(projectid, formData) {
     data: formData
   })
 }
+
+export function getallepoches(id) {
+  return request({
+    url: '/api/projects/' + id + '/epoches/',
+    method: 'get',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+}
+
+export function getannres(epochid, data) {
+  return request({
+    url: '/api/projects/epoches/' + epochid + '/docs/annotationResults/',
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    data: data
+  })
+}

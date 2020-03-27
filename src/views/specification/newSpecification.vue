@@ -250,6 +250,7 @@
           上一步
         </el-button>
         <el-button
+          v-if="reform3change==0&&specification.labelType == '关系抽取'"
           type="primary"
           plain
           @click="reformchange()"

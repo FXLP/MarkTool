@@ -23,9 +23,10 @@ const mutations = {
 }
 
 const actions = {
-  getreepoch({ commit, state }) {
+  getreepoch({ commit, state }, id) {
+    const reviewerid = id
     return new Promise((resolve, reject) => {
-      getreepoch(state.reviewerid).then(response => {
+      getreepoch(reviewerid).then(response => {
         // console.log(response)
         const data = response
         resolve(data)

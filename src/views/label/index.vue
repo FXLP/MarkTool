@@ -122,7 +122,7 @@ export default {
       total: 100,
       listLoading: true,
       page: 1,
-      limit: 20,
+      limit: 100,
       search: ''
     }
   },

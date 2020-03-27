@@ -1,4 +1,4 @@
-import { getProject, getTemplate, getallTemplate, getTemplatedet, getentitys, getallProject, newTemplate, newEntitygroup, newEntitys, newEventgroup, getEventgroup, newClass, getClass, newRe, getRe, getEventEntitys, newEventEntitys, getReEntitys, newReEntitys, template_use, project_use, newProject, uploadlabelfile, uploaddicfile, fenpeiepoch } from '@/api/project'
+import { getProject, getTemplate, getallTemplate, getTemplatedet, getentitys, getallProject, newTemplate, newEntitygroup, newEntitys, newEventgroup, getEventgroup, newClass, getClass, newRe, getRe, getEventEntitys, newEventEntitys, getReEntitys, newReEntitys, template_use, project_use, newProject, uploadlabelfile, uploaddicfile, fenpeiepoch, getallepoches, getannres } from '@/api/project'
 import qs from 'qs'
 import { template } from '@babel/core'
 
@@ -36,6 +36,18 @@ const actions = {
     return new Promise((resolve, reject) => {
       const projectid = id
       getProject(projectid).then(response => {
+        // console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  getallepoches({ commit, state }, id) {
+    return new Promise((resolve, reject) => {
+      const projectid = id
+      getallepoches(projectid).then(response => {
         // console.log(response)
         const data = response
         resolve(data)
@@ -330,6 +342,19 @@ const actions = {
     return new Promise((resolve, reject) => {
       fenpeiepoch(project_id, formData).then(response => {
         console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  getannres({ commit, state }, data) {
+    const list = data.list
+    const epochid = data.id
+    return new Promise((resolve, reject) => {
+      getannres(epochid, list).then(response => {
+        // console.log(response)
         const data = response
         resolve(data)
       }).catch(error => {
