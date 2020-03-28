@@ -261,7 +261,7 @@ const actions = {
   deletere({ commit }, data) {
     // console.log(212)
     const docid = data.docid
-    const reid = data.retid
+    const reid = data.reid
     return new Promise((resolve, reject) => {
       deletere(docid, reid).then(response => {
         console.log(response)

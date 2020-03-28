@@ -141,7 +141,7 @@ export default {
               this.list[i].template_type = response2.template_type
             })
           })
-          console.log(this.list)
+          // console.log(this.list)
         }
       })
     },

@@ -502,14 +502,14 @@ export default {
           annatator += ','
         }
       }
-      var reviewer = ''
-      for (let i = 0; i < this.revformtem.length; i++) {
-        var h = this.revformtem[i].id
-        reviewer += this.reviewerlabel[h].id
-        if (i < this.revformtem.length - 1) {
-          reviewer += ','
-        }
-      }
+      // var reviewer = ''
+      // for (let i = 0; i < this.revformtem.length; i++) {
+      //   var h = this.revformtem[i].id
+      //   reviewer += this.reviewerlabel[h].id
+      //   if (i < this.revformtem.length - 1) {
+      //     reviewer += ','
+      //   }
+      // }
       // formData.append('annotators', annatator)
       // formData.append('reviewers', reviewer)
       formData.append('annotators', '2,3')

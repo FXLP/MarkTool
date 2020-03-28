@@ -292,7 +292,7 @@
                       v-for="(re,index2) in item.children"
                       :key="index2"
                     >
-                      <div v-if="relist.relation_entity_template==re.relation">
+                      <div v-if="relist.relation_entity_template==re.id">
                         {{ item.name }}:{{ relist.start_name }} - {{ relist.end_name }}
                         <el-button
                           type="danger"
@@ -501,6 +501,10 @@ const carouselPrefix = '?imageView2/2/h/440'
                     
          if(window.getSelection().toString()!=""){
            that.selecttext = window.getSelection().toString();
+           console.log(window.getSelection().anchorOffset,window.getSelection().focusOffset,window.getSelection());
+           that.selectstart = window.getSelection().anchorOffset
+           that.selectend = window.getSelection().focusOffset
+           that.selectpara = window.getSelection().anchorNode.wholeText
           setTimeout(() => {
             if(that.template_type === 'RE'||that.template_type === 'NER'||(that.template_type==='EVENT' && that.labeledevent!='')){
               $("div.block .el-input").trigger("click")
@@ -805,6 +809,8 @@ const carouselPrefix = '?imageView2/2/h/440'
               console.log('updatedoc',response)
               const list = response
               this.entityinput = list
+              var addcontent = []
+              var addlist = []
               for (let i = 0; i < list.length; i++) {
                 var content = list[i].content 
                 //console.log(that.showdata);
@@ -816,6 +822,7 @@ const carouselPrefix = '?imageView2/2/h/440'
                 var color =''
                 //console.log(this.options);
                 if(index==1){
+                  addlist.push(list[i])
                   for (let k = 0; k < this.options.length; k++) {
                     for (let l = 0; l < this.options[k].children.length; l++) {
                       if(this.options[k].children[l].id===list[i].entity_template){
@@ -823,14 +830,28 @@ const carouselPrefix = '?imageView2/2/h/440'
                       }
                     }
                   }
-                  var str = this.showdata.split(content);
-                  var str_new = "";
-                  for (let index = 0; index < str.length-1; index++) {
-                    str_new += str[index]+'<div class="labelstyle" style="background:' +color+'">'+content+'<div class="deletelabel">x</div></div>';
-                  }
-                  str_new += str[str.length-1]
-                  this.showdata = str_new;   
+                  // var str = this.showdata.split(content);
+                  // var str_new = "";
+                  // for (let index = 0; index < str.length-1; index++) {
+                  //   str_new += str[index]+'<div class="labelstyle" style="background:' +color+'">'+content+'<div class="deletelabel">x</div></div>';
+                  // }
+                  addcontent.push('<div class="labelstyle" style="background:' +color+'">'+content+'<div class="deletelabel">x</div></div>') 
+                  // str_new += str[str.length-1]
+                  // this.showdata = str_new;   
                 }         
+              }
+              var str_new = "";
+              for (let i = 0; i < addcontent.length; i++) {
+                var start = 0
+                if (i>0) {
+                  start = list[i].start_offset
+                }
+                if (i<addcontent.length-1){
+                  str_new += this.tableData[this.docid].content.slice(start,addlist[i].start_offset) + addcontent[i] + this.tableData[this.docid].content.slice(addlist[i].end_offset+1,addlist[i+1].start_offset-1)
+                } else {
+                  str_new += this.tableData[this.docid].content.slice(start,addlist[i].start_offset) + addcontent[i] + this.tableData[this.docid].content.slice(addlist[i].end_offset+1)
+                  this.showdata = str_new
+                }
               }
             })
         } else if(this.template_type == 'CLASSIFICATION'){
@@ -887,6 +908,8 @@ const carouselPrefix = '?imageView2/2/h/440'
                   }
                 }
                 this.entityinput = response[0].entities
+                var addcontent = []
+                var addlist = []
                 for (let i = 0; i < response[0].entities.length; i++) {
                   var content = response[0].entities[i].content 
                   //console.log(that.showdata);
@@ -897,21 +920,37 @@ const carouselPrefix = '?imageView2/2/h/440'
                   }
                   var color =''
                   if(index==1){
+                    addlist.push(response[0].entities[i])
                     for (let k = 0; k < this.options.length; k++) {
-                      for (let l = 0; l < this.options[i].children.length; l++) {
+                      for (let l = 0; l < this.options[k].children.length; l++) {
                         if(this.options[k].children[l].id===response[0].entities[i].entity_template){
                           color = this.options[k].children[l].color
                         }
                       }
                     }
-                    var str = this.showdata.split(content);
-                    var str_new = "";
-                    for (let index = 0; index < str.length-1; index++) {
-                      str_new += str[index]+'<div class="labelstyle" style="background:' +color+'">'+content+'<div class="deletelabel">x</div></div>';
-                    }
-                    str_new += str[str.length-1]
-                    this.showdata = str_new;   
+                    // var str = this.showdata.split(content);
+                    // var str_new = "";
+                    // for (let index = 0; index < str.length-1; index++) {
+                    //   str_new += str[index]+'<div class="labelstyle" style="background:' +color+'">'+content+'<div class="deletelabel">x</div></div>';
+                    // }
+                    addcontent.push('<div class="labelstyle" style="background:' +color+'">'+content+'<div class="deletelabel">x</div></div>') 
+
+                    // str_new += str[str.length-1]
+                    // this.showdata = str_new;   
                   }         
+                }
+                var str_new = "";
+                for (let i = 0; i < addcontent.length; i++) {
+                  var start = 0
+                  if (i>0) {
+                    start = list[i].start_offset
+                  }   
+                  if (i<addcontent.length-1){
+                    str_new += this.tableData[this.docid].content.slice(start,addlist[i].start_offset) + addcontent[i] + this.tableData[this.docid].content.slice(addlist[i].end_offset+1,addlist[i+1].start_offset-1)
+                  } else {
+                    str_new += this.tableData[this.docid].content.slice(start,addlist[i].start_offset) + addcontent[i] + this.tableData[this.docid].content.slice(addlist[i].end_offset+1)
+                    this.showdata = str_new
+                  }
                 }                
               }
             })
@@ -927,9 +966,11 @@ const carouselPrefix = '?imageView2/2/h/440'
               console.log('updatedoc',response)
               const list = response.entities
               this.entityinput = list
+              var addcontent = []
+              var addlist = []
               for (let i = 0; i < list.length; i++) {
                 var content = list[i].content 
-                //console.log(that.showdata);
+                console.log('enterlist',list[i]);
                 let index = 1
                 for (let j = 0; j < i; j++) {
                 if(content==list[j].content)
@@ -937,36 +978,51 @@ const carouselPrefix = '?imageView2/2/h/440'
                 }
                 var color =''
                 if(index==1){
+                  addlist.push(list[i])
                   for (let k = 0; k < this.options.length; k++) {
-                    for (let l = 0; l < this.options[i].children.length; l++) {
+                    for (let l = 0; l < this.options[k].children.length; l++) {
                       if(this.options[k].children[l].id===list[i].entity_template){
                         color = this.options[k].children[l].color
                       }
                     }
                   }
-                  var str = this.showdata.split(content);
-                  var str_new = "";
-                  for (let index = 0; index < str.length-1; index++) {
-                    str_new += str[index]+'<div class="labelstyle" style="background:' +color+'">'+content+'<div class="deletelabel">x</div></div>';
-                  }
-                  str_new += str[str.length-1]
-                  this.showdata = str_new;   
+                  // var str = this.showdata.split(content);
+                  // var str_new = "";
+                  // for (let index = 0; index < str.length-1; index++) {
+                  //   str_new += str[index]+'<div class="labelstyle" style="background:' +color+'">'+content+'<div class="deletelabel">x</div></div>';
+                  // }
+                  addcontent.push('<div class="labelstyle" style="background:' +color+'">'+content+'<div class="deletelabel">x</div></div>') 
+                  // str_new += str[str.length-1]
+                  // this.showdata = str_new;   
                 }         
               }
+              var str_new = "";
+              for (let i = 0; i < addcontent.length; i++) {
+                var start = 0
+                if (i>0) {
+                  start = list[i].start_offset
+                }
+                if (i<addcontent.length-1){
+                  str_new += this.tableData[this.docid].content.slice(start,addlist[i].start_offset) + addcontent[i] + this.tableData[this.docid].content.slice(addlist[i].end_offset+1,addlist[i+1].start_offset-1)
+                } else {
+                  str_new += this.tableData[this.docid].content.slice(start,addlist[i].start_offset) + addcontent[i] + this.tableData[this.docid].content.slice(addlist[i].end_offset+1)
+                  this.showdata = str_new
+                }
+              }
+              
               const relist = response.relations
               for (let k = 0; k < relist.length; k++) {
-                for (let i = 0; i < this.options.length; i++) {
-                  for (let j = 0; j < this.options[i].children.length; j++) {
-                    if (relist[k].start_entity === this.options[i].children[j].id) {
-                      relist[k].start_name = this.options[i].children.name
-                    }
-                    if (relist[k].end_entity === this.options[i].children[j].id) {
-                      relist[k].end_name = this.options[i].children.name
-                    }
+                for (let i = 0; i < this.entityinput.length; i++) {
+                  if (relist[k].start_entity === this.entityinput[i].id) {
+                    relist[k].start_name = this.entityinput[i].content
+                  }
+                  if (relist[k].end_entity === this.entityinput[i].id) {
+                    relist[k].end_name = this.entityinput[i].content
                   }
                 }
               }
               this.labeledre = relist
+              console.log('labeledre',this.labeledre,this.entityinput);
             })
         }
       },
@@ -977,19 +1033,28 @@ const carouselPrefix = '?imageView2/2/h/440'
         var content = this.selecttext
         console.log('content', content);
         //console.log(that.showdata);
-        var str = this.showdata.split(content);
+        // for (let i = this.selectstart; i < this.selectend; i++) {
+        console.log('showdata',this.showdata.split(this.selectpara));
+        var para = this.tableData[this.docid].content.split(this.selectpara)
+        var addpara = this.selectpara.slice(0,this.selectstart)+'<div class="labelstyle" style="background:' +this.selectvalue[1].color+'">'+content+'<div class="deletelabel">x</div></div>'+this.selectpara.slice(this.selectend)
+        console.log('add',addpara);
+
+        // }
+        var str = this.showdata.split(this.selectpara);
         var str_new = "";
-        for (let index = 0; index < str.length-1; index++) {
-          str_new += str[index]+'<div class="labelstyle" style="background:' +this.selectvalue[1].color+'">'+content+'<div class="deletelabel">x</div></div>';
-        }
-        str_new += str[str.length-1]
+        // for (let index = 0; index < str.length-1; index++) {
+        //   str_new += str[index]+'<div class="labelstyle" style="background:' +this.selectvalue[1].color+'">'+content+'<div class="deletelabel">x</div></div>';
+        // }
+        str_new = str[0] + addpara + str[1]
         this.showdata = str_new;
         console.log('show',this.showdata);
         console.log('doc',this.tableData[this.docid]);
         var docdata = this.tableData[this.docid].content
         // console.log('position',docdata.indexOf(content));
         // console.log('position1',content.length);
-        const start_offset = docdata.indexOf(content)
+        console.log('sl',para[0].length+this.selectstart);
+        
+        const start_offset = para[0].length+this.selectstart
         const end_offset = start_offset + content.length - 1
         
         const data = {
@@ -1074,6 +1139,8 @@ const carouselPrefix = '?imageView2/2/h/440'
         console.log('input',this.entityinput);
       },
       reselectchange(){
+        var startentitys = []
+        var endentitys = []
         for (let i = 0; i < this.entityinput.length; i++) {
           console.log('mmm',this.revalue1,this.entityinput);
           if (this.revalue1.startid === this.entityinput[i].entity_template){
@@ -1084,7 +1151,7 @@ const carouselPrefix = '?imageView2/2/h/440'
                 relation:this.revalue1.reid,
               }
             }
-            this.startentitys.push(data)
+            startentitys.push(data)
           }
           if (this.revalue1.endid === this.entityinput[i].entity_template){
             var data = {
@@ -1094,9 +1161,11 @@ const carouselPrefix = '?imageView2/2/h/440'
                 relation:this.revalue1.reid,
               }
             }
-            this.endentitys.push(data)
+            endentitys.push(data)
           }
         }
+        this.startentitys = startentitys
+        this.endentitys = endentitys
         console.log('reselectchange',this.endentitys,this.startentitys);
       },
       addre(){
@@ -1114,22 +1183,34 @@ const carouselPrefix = '?imageView2/2/h/440'
         }
         this.$store.dispatch('user/labelrelation', data)
             .then((response) => {
-              var list = data
+              console.log('113',response);
+              var list = response
               list.id = response.id
-              for (let i = 0; i < this.options.length; i++) {
-                for (let j = 0; j < this.options[i].children.length; j++) {
-                  if (list.start_entity === this.options[i].children[j].id) {
-                    list.start_name = this.options[i].children.name
-                  }
-                  if (list.end_entity === this.options[i].children[j].id) {
-                    list.end_name = this.options[i].children.name
-                  }
+              // for (let i = 0; i < this.options.length; i++) {
+              //   for (let j = 0; j < this.options[i].children.length; j++) {
+              //     if (list.start_entity === this.options[i].children[j].id) {
+              //       list.start_name = this.options[i].children.name
+              //     }
+              //     if (list.end_entity === this.options[i].children[j].id) {
+              //       list.end_name = this.options[i].children.name
+              //     }
+              //   }
+              // }
+              for (let i = 0; i < this.entityinput.length; i++) {
+                if (list.start_entity === this.entityinput[i].id) {
+                  list.start_name = this.entityinput[i].content
+                }
+                if (list.end_entity === this.entityinput[i].id) {
+                 list.end_name = this.entityinput[i].content
                 }
               }
               this.labeledre.push(list)
+              console.log('112',this.labeledre);
         })
       },
       deletere(id){
+        // console.log(id,this.labeledre);
+        
         const data = {
           docid:this.tableData[this.docid].id,
           reid:id
@@ -1137,9 +1218,10 @@ const carouselPrefix = '?imageView2/2/h/440'
         this.$store.dispatch('user/deletere', data)
           .then((response) => {
             for (let i = 0; i < this.labeledre.length; i++) {
-              if(this.labeledre.id===id){
+              if(this.labeledre[i].id===id){
                 this.labeledre.splice(i,1)
               }
+              console.log('111',this.labeledre);
             }
           })
       },
@@ -1194,6 +1276,9 @@ const carouselPrefix = '?imageView2/2/h/440'
         template_type:'',
         projectid:0,
         selecttext:"",
+        selectstart:'',
+        selectend:'',
+        selectpara:'',
         labelshow:1,
         selectvalue:"",
         labeledclass:'',

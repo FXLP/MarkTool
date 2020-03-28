@@ -80,7 +80,7 @@ export function labelrelation(docid, data) {
 
 export function deletere(docid, reid) {
   return request({
-    url: '/api/projects/docs/' + docid + '/annotations/relations/' + reid + '/',
+    url: '/api/projects/docs/' + docid + '/annotations/relations/' + reid,
     method: 'delete'
   })
 }
