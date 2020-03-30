@@ -65,7 +65,7 @@ export function labelevent(docid, data) {
 
 export function deleteevent(docid, eventid) {
   return request({
-    url: '/api/projects/docs/' + docid + '/annotations/events/' + eventid + '/',
+    url: '/api/projects/docs/' + docid + '/annotations/events/' + eventid,
     method: 'delete'
   })
 }
@@ -95,7 +95,7 @@ export function labelclass(docid, data) {
 
 export function deleteclass(docid, classid) {
   return request({
-    url: '/api/projects/docs/' + docid + '/annotations/classifications/' + classid + '/',
+    url: '/api/projects/docs/' + docid + '/annotations/classifications/' + classid,
     method: 'delete'
   })
 }

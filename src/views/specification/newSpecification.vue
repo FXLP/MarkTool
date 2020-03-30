@@ -286,11 +286,11 @@
                     <el-table-column
                       prop="name"
                       label="实体集合名"
-                      width="390"
+                      min-width="390"
                     />
                     <el-table-column
                       label="操作"
-                      width="350"
+                      min-width="350"
                     >
                       <template slot-scope="scope">
                         <el-button
@@ -299,11 +299,11 @@
                           circle
                           @click="modifyEntityGroup(scope.$index)"
                         />
-                        <el-button
+                        <!-- <el-button
                           type="danger"
                           icon="el-icon-delete"
                           circle
-                        />
+                        /> -->
                       </template>
                     </el-table-column>
                   </el-table>
@@ -421,6 +421,7 @@
             <el-col
               v-if="specification.labelType == '文本分类'"
               :span="12"
+              style="width:100%"
             >
               <el-card>
                 <div
@@ -851,6 +852,17 @@ export default {
     newEntityGroup() {
       this.form2.entityGroups.push({
         'name': '',
+        entitys: [
+          {
+            id: 0,
+            name: 'entity1',
+            color: '#eeeeee'
+          }, {
+            id: 1,
+            name: 'entity2',
+            color: '#eeeeee'
+          }
+        ],
         key: Date.now()
       })
     },

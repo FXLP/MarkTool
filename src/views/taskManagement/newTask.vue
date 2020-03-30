@@ -457,6 +457,10 @@ export default {
           })
           this.active++
         })
+        // .catch(error => {
+        //   console.log("登录失败")
+        //   reject(error)
+        // })
     },
     onSubmitForm3() {
       if (this.form3.file.length > 0) {
