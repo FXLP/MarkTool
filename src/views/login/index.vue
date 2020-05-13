@@ -3,7 +3,7 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">Login Form</h3>
+        <h3 class="title">文本标注工具</h3>
       </div>
 
       <el-form-item prop="username">
@@ -58,44 +58,44 @@
         </div>
 
         <el-button class="thirdparty-button" type="primary" @click="showDialog=true">
-          Or connect with
+          注册
         </el-button>
       </div>
     </el-form>
 
-    <el-dialog title="Or connect with" :visible.sync="showDialog">
-      Can not be simulated on local, so please combine you own business simulation! ! !
-      <br>
-      <br>
-      <br>
-      <social-sign />
+    <el-dialog title="注册" style="text-align:center" :visible.sync="showDialog">
+      <div> 用户名：<el-input v-model="reguser" style="width:40%;margin:10px" placeholder="请输入用户名" /></div>
+      <div>密码：<el-input v-model="regpass" style="width:40%;margin:10px" placeholder="请输入密码" show-password /></div>
+      <el-button type="primary" @click="register">注册</el-button>
     </el-dialog>
   </div>
 </template>
 
 <script>
 import { validUsername } from '@/utils/validate'
-import SocialSign from './components/SocialSignin'
+// import SocialSign from './components/SocialSignin'
 
 export default {
   name: 'Login',
-  components: { SocialSign },
+  // components: { SocialSign },
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
+        callback()
       } else {
         callback()
       }
     }
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'))
+        callback()
       } else {
         callback()
       }
     }
     return {
+      reguser: '',
+      regpass: '',
       loginForm: {
         username: 'ecust',
         password: 'ecustlab301'
@@ -165,11 +165,15 @@ export default {
         if (valid) {
           this.loading = true
           this.$store.dispatch('user/login', this.loginForm)
-            .then(() => {
-              this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+            .then((response) => {
+              // console.log('success',response);
+              this.$store.commit('user/SET_NAME', this.loginForm.username)
+              this.$router.push({ path: this.redirect || '/' })
               this.loading = false
             })
             .catch(() => {
+              // console.log('fail',error);
+
               this.loading = false
             })
         } else {
@@ -177,6 +181,24 @@ export default {
           return false
         }
       })
+    },
+    register() {
+      if (this.regpass === '' || this.reguser === '') {
+        this.$message({ message: '信息未填完整', type: 'error' })
+      } else {
+        const data = {
+          user_name: this.reguser,
+          password: this.regpass,
+          role_list: '2'
+        }
+        this.$store.dispatch('user/register', data)
+          .then(() => {
+            this.$message({ message: '注册成功！', type: 'success' })
+            this.showDialog = false
+          })
+          .catch(() => {
+          })
+      }
     },
     getOtherQuery(query) {
       return Object.keys(query).reduce((acc, cur) => {
@@ -217,13 +239,13 @@ $light_gray:#fff;
 $cursor: #fff;
 
 @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
-  .login-container .el-input input {
+  .login-form .el-input input {
     color: $cursor;
   }
 }
 
 /* reset element-ui css */
-.login-container {
+.login-form {
   .el-input {
     display: inline-block;
     height: 47px;

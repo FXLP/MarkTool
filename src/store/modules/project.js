@@ -1,4 +1,4 @@
-import { getProject, getTemplate, getallTemplate, getTemplatedet, getentitys, getallProject, newTemplate, newEntitygroup, newEntitys, newEventgroup, getEventgroup, newClass, getClass, newRe, getRe, getEventEntitys, newEventEntitys, getReEntitys, newReEntitys, template_use, project_use, newProject, uploadlabelfile, uploaddicfile, fenpeiepoch, getallepoches, getannres } from '@/api/project'
+import { getProject, getTemplate, getallTemplate, getTemplatedet, getentitys, getallProject, newTemplate, newEntitygroup, newEntitys, newEventgroup, getEventgroup, newClass, getClass, newRe, getRe, getEventEntitys, newEventEntitys, getReEntitys, newReEntitys, template_use, project_use, newProject, uploadlabelfile, uploaddic, fenpeiepoch, getallepoches, getannres, fileaddstandard, manualaddstandard, getstandard, delProject, delTemplate, getdic, dicmatch, uploadregular, getregular, regularmatch } from '@/api/project'
 import qs from 'qs'
 import { template } from '@babel/core'
 
@@ -44,6 +44,18 @@ const actions = {
       })
     })
   },
+  delProject({ commit, state }, id) {
+    return new Promise((resolve, reject) => {
+      const projectid = id
+      delProject(projectid).then(response => {
+        // console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
   getallepoches({ commit, state }, id) {
     return new Promise((resolve, reject) => {
       const projectid = id
@@ -72,6 +84,18 @@ const actions = {
     return new Promise((resolve, reject) => {
       const id = templatid
       getTemplate(id).then(response => {
+        // console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  delTemplate({ commit, state }, templatid) {
+    return new Promise((resolve, reject) => {
+      const id = templatid
+      delTemplate(id).then(response => {
         // console.log(response)
         const data = response
         resolve(data)
@@ -323,11 +347,11 @@ const actions = {
       })
     })
   },
-  uploaddicfile({ commit, state }, data) {
+  uploaddic({ commit, state }, data) {
     const formData = data.formdata
     const project_id = data.id
     return new Promise((resolve, reject) => {
-      uploaddicfile(project_id, formData).then(response => {
+      uploaddic(project_id, formData).then(response => {
         console.log(response)
         const data = response
         resolve(data)
@@ -354,6 +378,108 @@ const actions = {
     const epochid = data.id
     return new Promise((resolve, reject) => {
       getannres(epochid, list).then(response => {
+        // console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  fileaddstandard({ commit, state }, data) {
+    const list = data.formdata
+    const projectid = data.id
+    return new Promise((resolve, reject) => {
+      fileaddstandard(projectid, list).then(response => {
+        // console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  manualaddstandard({ commit, state }, data) {
+    const list = data.list
+    const projectid = data.id
+    return new Promise((resolve, reject) => {
+      manualaddstandard(projectid, list).then(response => {
+        // console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  getstandard({ commit, state }, id) {
+    const entityid = id.entityid
+    const projectid = id.projectid
+    return new Promise((resolve, reject) => {
+      getstandard(projectid, entityid).then(response => {
+        // console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  getdic({ commit, state }, id) {
+    const projectid = id
+    return new Promise((resolve, reject) => {
+      getdic(projectid).then(response => {
+        // console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  dicmatch({ commit, state }, list) {
+    const projectid = list.id
+    const formdata = list.formdata
+    return new Promise((resolve, reject) => {
+      dicmatch(projectid, formdata).then(response => {
+        // console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  uploadregular({ commit, state }, list) {
+    const projectid = list.id
+    const formdata = list.formdata
+    return new Promise((resolve, reject) => {
+      uploadregular(projectid, formdata).then(response => {
+        // console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  getregular({ commit, state }, id) {
+    const projectid = id
+    return new Promise((resolve, reject) => {
+      getregular(projectid).then(response => {
+        // console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  regularmatch({ commit, state }, list) {
+    // const projectid = list.id
+    const formdata = list.formdata
+    return new Promise((resolve, reject) => {
+      regularmatch(formdata).then(response => {
         // console.log(response)
         const data = response
         resolve(data)

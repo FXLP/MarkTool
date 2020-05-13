@@ -89,40 +89,57 @@
             type="success"
             @click="downloadResult(scope.$index, scope.row)"
           >下载</el-button>
-          <!-- <el-button
+          <el-button
             size="mini"
             type="danger"
-            @click="handleDelete(scope.$index)"
-          >删除</el-button> -->
+            @click="handleDelete(scope.$index,scope.row)"
+          >删除</el-button>
         </template>
       </el-table-column>
     </el-table>
-    <pagination
-      v-show="total>0"
-      :total="total"
-      @pagination="getList"
+    <el-dialog
+      title="是否确定删除"
+      :visible.sync="dialogVisible"
+      width="30%"
+      :before-close="handleClose"
+    >
+      <span>是否确定删除</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="deleteproject">确 定</el-button>
+      </span>
+    </el-dialog>
+    <el-pagination
+      v-show="list.length>0"
+      :total="list.length"
+      :current-page="page"
+      :page-size="limit"
+      layout="total, prev, pager, next, jumper"
+      :prev-click="prepage"
+      :next-click="nextpage"
+      @current-change="handleCurrentChange"
     />
   </div>
 </template>
 
 <script>
-import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
+// import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 import FileSaver from 'file-saver'
 export default {
   name: 'TaskList',
-  components: { Pagination },
+  // components: { Pagination },
   data() {
     return {
+      dialogVisible: false,
+      deleterow: '',
+      deleteindex: '',
       list: [
-        { taskTime: '2019.10.21 13:39', project_type: '', name: '1月诈骗案件', id: '11', taskFlie: 'test file1', labelname: '林宇翩，梁明', checkerName: '马老师', taskStage: '待标注' },
-        { taskTime: '2019.10.20 14:39', project_type: '', name: '2月诈骗案件', id: '22', taskFlie: 'test file2', labelname: '林宇翩，蔡婷婷', checkerName: '马老师', taskStage: '待标注' },
-        { taskTime: '2019.10.19 13:39', project_type: '', name: '3月诈骗案件', id: '13', taskFlie: 'test file3', labelname: '林宇翩，梁明', checkerName: '马老师', taskStage: '标注中' },
-        { taskTime: '2019.10.22 19:39', project_type: '', name: '4月诈骗案件', id: '15', taskFlie: 'test file4', labelname: '林宇翩，蔡婷婷', checkerName: '马老师', taskStage: '标注中' }
+
       ],
       total: 100,
       listLoading: true,
       page: 1,
-      limit: 100,
+      limit: 10,
       search: '',
       outputdata: []
     }
@@ -131,6 +148,33 @@ export default {
     this.getList()
   },
   methods: {
+    handleCurrentChange(page) {
+      this.page = page
+    },
+    prepage() {
+      this.page--
+    },
+    nextpage() {
+      this.page++
+    },
+    deleteproject() {
+      this.$store.dispatch('project/delProject', this.deleterow.id)
+        .then((response) => {
+          this.$message({ message: '删除成功', type: 'success' })
+          this.list.splice(this.deleteindex, 1)
+          this.dialogVisible = false
+        })
+        .catch(() => {
+          console.log('error')
+        })
+    },
+    handleDelete(index, row) {
+      // this.list.splice(index, 1)
+      console.log(index, row)
+      this.dialogVisible = true
+      this.deleterow = row
+      this.deleteindex = index
+    },
     getList() {
       this.$store.dispatch('project/getallProject')
         .then((response) => {
@@ -153,34 +197,24 @@ export default {
     },
     downloadResult(index, row) { // 下载标注结果
       console.log(row)
-      this.$store.dispatch('user/getEpoch', 2)
-        .then((response) => {
-          for (let i = 0; i < response.length; i++) {
-            if (row.id === response[i].project) {
-              const epochid = response[i].id
-              const data = {
-                id: epochid,
-                list: {
-                  project: row.id,
-                  user: 2,
-                  role: 2
-                }
-              }
-              this.$store.dispatch('project/getannres', data)
-                .then((response1) => {
-                  console.log(response1)
-                  this.outputdata = response1.result_file
-                  const data1 = JSON.stringify(this.outputdata)
-                  const blob = new Blob([data1], { type: '' })
-                  FileSaver.saveAs(blob, row.name + '.json')
-                })
-            }
-          }
+      const data = {
+        id: 1,
+        list: {
+          project: row.id
+        }
+      }
+      this.$store.dispatch('project/getannres', data)
+        .then((response1) => {
+          console.log(response1)
+          this.outputdata = response1.result_file
+          const data1 = JSON.stringify(this.outputdata, null, 2)
+          const blob = new Blob([data1], { type: '' })
+          FileSaver.saveAs(blob, row.name + '.json')
         })
-    },
-    handleDelete(index) {
-      this.list.splice(index, 1)
     }
+    // handleDelete(index) {
+    //   this.list.splice(index, 1)
+    // }
   }
 }
 </script>

@@ -139,8 +139,8 @@ export const asyncRoutes = [
     name: '任务管理',
     meta: {
       title: '任务管理',
-      icon: 'list',
-      roles: ['admin'] // you can set roles in root nav
+      icon: 'list'
+      // roles: ['admin','annotator'] // you can set roles in root nav
     },
     children: [
       {
@@ -148,8 +148,8 @@ export const asyncRoutes = [
         component: () => import('@/views/taskManagement/taskList'),
         name: '任务列表',
         meta: {
-          title: '任务列表',
-          roles: ['admin'] // or you can only set roles in sub nav
+          title: '任务列表'
+          // roles: ['admin','annotator'] // or you can only set roles in sub nav
         }
       },
       {
@@ -158,6 +158,7 @@ export const asyncRoutes = [
         name: '新建任务',
         meta: {
           title: '新建任务'
+          // roles: ['admin','annotator']
           // if do not set roles, means: this page does not require permission
         }
       },
@@ -167,8 +168,8 @@ export const asyncRoutes = [
         name: '分配任务',
         hidden: true,
         meta: {
-          title: '分配任务',
-          roles: ['admin']
+          title: '分配任务'
+          // roles: ['admin']
         }
       },
       {
@@ -177,8 +178,8 @@ export const asyncRoutes = [
         name: '任务详情',
         hidden: true,
         meta: {
-          title: '任务详情',
-          roles: ['admin']
+          title: '任务详情'
+          // roles: ['admin','annotator']
         }
       }
     ]
@@ -191,8 +192,8 @@ export const asyncRoutes = [
     name: '标注规范',
     meta: {
       title: '标注规范',
-      icon: 'edit',
-      roles: ['admin'] // you can set roles in root nav
+      icon: 'edit'
+      // roles: ['admin','annotator'] // you can set roles in root nav
     },
     children: [
       {
@@ -200,8 +201,8 @@ export const asyncRoutes = [
         component: () => import('@/views/specification/specificationList'),
         name: '规范列表',
         meta: {
-          title: '规范列表',
-          roles: ['admin'] // or you can only set roles in sub nav
+          title: '规范列表'
+          // roles: ['admin','annotator'] // or you can only set roles in sub nav
         }
       },
       {
@@ -257,14 +258,18 @@ export const asyncRoutes = [
         path: 'index',
         component: () => import('@/views/label/index'),
         name: '标注任务',
-        meta: { title: '标注任务', icon: 'form', roles: ['admin', 'editor'] }
+        meta: { title: '标注任务', icon: 'form'
+        // roles: ['admin', 'annotator']
+        }
       },
       {
         path: 'labeling',
         component: () => import('@/views/label/labeling'),
         name: '进行标注',
         hidden: true,
-        meta: { title: '进行标注', roles: ['admin', 'editor'] }
+        meta: { title: '进行标注'
+        //  roles: ['admin', 'annotator']
+        }
       }
     ]
   },
@@ -298,8 +303,8 @@ export const asyncRoutes = [
     hidden: true,
     meta: {
       title: 'Permission',
-      icon: 'lock',
-      roles: ['admin', 'editor'] // you can set roles in root nav
+      icon: 'lock'
+      // roles: ['admin', 'editor'] // you can set roles in root nav
     },
     children: [
       {
@@ -307,8 +312,8 @@ export const asyncRoutes = [
         component: () => import('@/views/permission/page'),
         name: 'PagePermission',
         meta: {
-          title: 'Page Permission',
-          roles: ['admin'] // or you can only set roles in sub nav
+          title: 'Page Permission'
+          // roles: ['admin'] // or you can only set roles in sub nav
         }
       },
       {
@@ -325,8 +330,8 @@ export const asyncRoutes = [
         component: () => import('@/views/permission/role'),
         name: 'RolePermission',
         meta: {
-          title: 'Role Permission',
-          roles: ['admin']
+          title: 'Role Permission'
+          // roles: ['admin']
         }
       }
     ]

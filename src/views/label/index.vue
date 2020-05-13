@@ -89,56 +89,75 @@
           >
             标注
           </el-button>
-          <el-button
+          <!-- <el-button
             size="mini"
             type="success"
             @click="handleCommit(scope.$index)"
           >
             提交
-          </el-button>
+          </el-button> -->
         </template>
       </el-table-column>
     </el-table>
-    <pagination
-      v-show="total>0"
-      :total="total"
-      @pagination="getList"
+    <el-pagination
+      v-show="list.length>0"
+      :total="list.length"
+      :current-page="page"
+      :page-size="limit"
+      layout="total, prev, pager, next, jumper"
+      :prev-click="prepage"
+      :next-click="nextpage"
+      @current-change="handleCurrentChange"
     />
   </div>
 </template>
 
 <script>
-import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
+// import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {
   missionName: 'LabelMissionList',
-  components: { Pagination },
+  // components: { Pagination },
   data() {
     return {
+      isdetail: false,
+      userid: '',
       list: [
-        { id: 197, annotate_progress: { finish_num: '12', total_num: '230' }, missionName: '诈骗', state: 'ANNOTATING', project_type: 'NON_ACTIVE_LEARNING', project: 5, template: 9 },
-        { id: 197, annotate_progress: { finish_num: '12', total_num: '230' }, missionName: '诈骗', state: 'ANNOTATING', project_type: 'NON_ACTIVE_LEARNING', project: 5, template: 9 }
       ],
-      total: 100,
-      listLoading: true,
+      // total: 100,
       page: 1,
-      limit: 100,
-      search: ''
+      limit: 10
     }
   },
   created() {
+    this.userid = this.$store.getters.userid
+    console.log(this.userid)
+    this.isdetail = false
     this.getList()
   },
   methods: {
+    handleCurrentChange(page) {
+      this.page = page
+    },
+    prepage() {
+      this.page--
+    },
+    nextpage() {
+      this.page++
+    },
     getList() {
-      this.$store.dispatch('user/getEpoch', 2).then((response) => {
+      this.$store.dispatch('user/getEpoch', this.userid).then((response) => {
         this.list = response
         for (let i = 0; i < this.list.length; i++) {
+          // this.total = this.list.length
           this.$store.dispatch('project/getProject', this.list[i].project).then((response1) => {
             this.list[i].template = response1.template
             this.list[i].missionName = response1.name
             this.$store.dispatch('project/getTemplatedet', response1.template).then((response2) => {
               this.list[i].template_type = response2.template_type
+              if (i === this.list.length - 1) {
+                this.isdetail = true
+              }
             })
           })
           // console.log(this.list)
@@ -157,15 +176,19 @@ export default {
       // console.log(this.$store.getters.userid)
       // var list = this.$store.dispatch('user/getEpoch')
       // console.log(list)
-      this.$router.push({
-        path: '/label/labeling',
-        query: {
-          template: row.template,
-          state: row.state,
-          epochid: row.id,
-          template_type: row.template_type
-        }
-      })
+      if (this.isdetail) {
+        this.$router.push({
+          path: '/label/labeling',
+          query: {
+            template: row.template,
+            state: row.state,
+            epochid: row.id,
+            template_type: row.template_type
+          }
+        })
+      } else {
+        this.$message({ message: '请等待数据加载完毕' })
+      }
     },
     handleCommit(index) {
       this.list.splice(index, 1)

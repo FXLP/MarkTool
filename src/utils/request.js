@@ -5,8 +5,8 @@ import { getToken } from '@/utils/auth'
 // create an axios instance
 const service = axios.create({
   baseURL: 'http://172.20.46.190:10000', // url = base url + request url
-  withCredentials: true, // send cookies when cross-domain requests
-  timeout: 5000 // request timeout
+  withCredentials: true // send cookies when cross-domain requests
+  // timeout: 5000 // request timeout
 })
 
 // request interceptor
@@ -43,6 +43,7 @@ service.interceptors.response.use(
    */
   response => {
     const res = response.data
+    console.log('res', res)
 
     // if the custom code is not 20000, it is judged as an error.
     if (res.code === 20000) {
@@ -71,12 +72,22 @@ service.interceptors.response.use(
     }
   },
   error => {
-    console.log('err' + error) // for debug
-    Message({
-      message: error.message,
-      type: 'error',
-      duration: 5 * 1000
-    })
+    if (error.response) {
+      const data = error.response.data
+      Message({
+        message: error.response.data.detail,
+        type: 'error',
+        duration: 5 * 1000
+      })
+    } else {
+      Message({
+        message: error,
+        type: 'error',
+        duration: 5 * 1000
+      })
+    }
+    // console.log('errres',error.response);
+    // console.log('err1' + error) // for debug
     return Promise.reject(error)
   }
 )

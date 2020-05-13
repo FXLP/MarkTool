@@ -1,4 +1,4 @@
-import { login, logout, getRoles, getEpoch, getDoc, labelentity, deleteentity, labelevent, labelrelation, labelclass, deleteclass, deleteevent, labelconfirm, getuserlabel, deletere } from '@/api/user'
+import { login, logout, getRoles, getEpoch, getDoc, labelentity, deleteentity, labelevent, labelrelation, labelclass, deleteclass, deleteevent, labelconfirm, getuserlabel, deletere, labelstantard, getuserinfo, register } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
@@ -42,9 +42,10 @@ const actions = {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
       login({ username: username.trim(), password: password }).then(response => {
-        console.log(response)
+        console.log('denglu', response)
         const data = response
         commit('SET_USERID', data.user_id)
+        commit('SET_ROLES', data.roles)
         commit('SET_TOKEN', data.token)
         setToken(data.token)
         resolve()
@@ -65,6 +66,8 @@ const actions = {
         }
 
         const { roles } = data
+        console.log('adada', data)
+
         // roles must be a non-empty array
         if (!roles || roles.length <= 0) {
           reject('getInfo: roles must be a non-null array!')
@@ -94,9 +97,10 @@ const actions = {
     })
   },
 
-  getDoc({ commit, state }) {
+  getDoc({ commit, state }, id) {
+    const epochid = id
     return new Promise((resolve, reject) => {
-      getDoc(state.epochid).then(response => {
+      getDoc(epochid).then(response => {
         // console.log(response)
         const data = response
         resolve(data)
@@ -246,7 +250,7 @@ const actions = {
   },
   deleteevent({ commit }, data) {
     // console.log(212)
-    const docid = data.docid
+    const docid = data.id
     const eventid = data.eventid
     return new Promise((resolve, reject) => {
       deleteevent(docid, eventid).then(response => {
@@ -292,6 +296,46 @@ const actions = {
     const userid = data.userid
     return new Promise((resolve, reject) => {
       getuserlabel(docid, userid).then(response => {
+        console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  labelstantard({ commit }, data) {
+    // console.log(212)
+    const annotation_id = data.id
+    const list = data.list
+    return new Promise((resolve, reject) => {
+      labelstantard(annotation_id, list).then(response => {
+        console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  getuserinfo({ commit }, list) {
+    // console.log(212)
+    const data = list
+    return new Promise((resolve, reject) => {
+      getuserinfo(data).then(response => {
+        console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  register({ commit }, list) {
+    // console.log(212)
+    const data = list
+    return new Promise((resolve, reject) => {
+      register(data).then(response => {
         console.log(response)
         const data = response
         resolve(data)

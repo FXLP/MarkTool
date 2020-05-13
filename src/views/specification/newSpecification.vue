@@ -22,10 +22,6 @@
           label="规范名称"
           prop="specificationName"
           style="width:1200px; margin-top:100px"
-          :rules="[
-            { required: true, message: '请输入标注规范名称', trigger: 'blur' },
-            { min: 1, max: 10, message: '长度在 1 到 15 个字符', trigger: 'blur' }
-          ]"
         >
           <div style="width:60%;">
             <el-input v-model="specification.specificationName" />
@@ -96,7 +92,7 @@
       >
         <div v-if="specification.labelType != '文本分类'">
           <el-form-item
-            label="创建实体集合元组"
+            label="创建实体/事件集合元组"
             style="width:1200px"
           >
             <el-button
@@ -111,10 +107,10 @@
           <el-form-item
             v-for="(entityGroup, index) in form2.entityGroups"
             :key="entityGroup.key"
-            :label="'实体集'+(index+1)"
+            :label="'实体集/事件'+(index+1)"
             :prop="'entityGroups.'+index+'.name'"
             :rules="{
-              required: true, message: '实体集名不能为空', trigger: 'blur'
+              required: true, message: '实体/事件集名不能为空', trigger: 'blur'
             }"
           >
             <el-input
@@ -209,13 +205,13 @@
           <el-button @click="resetForm('form2')">
             重置
           </el-button>
-          <el-button
+          <!-- <el-button
             type="primary"
             plain
             @click="last()"
           >
-            上一步
-          </el-button>
+            上一步 -->
+          <!-- </el-button> -->
         </el-form-item>
       </el-form>
       <el-tooltip
@@ -242,13 +238,13 @@
         >
           立即创建
         </el-button>
-        <el-button
+        <!-- <el-button
           type="primary"
           plain
           @click="last()"
         >
           上一步
-        </el-button>
+        </el-button> -->
         <el-button
           v-if="reform3change==0&&specification.labelType == '关系抽取'"
           type="primary"
@@ -593,8 +589,8 @@ export default {
       editIndex: 0, // 编辑实体集合index
       editEntityIndex: 0, // 编辑实体index
       specification: {
-        specificationName: '诈骗案件',
-        labelType: '文本分类', // 命名实体识别 关系抽取 文本分类 事件标注
+        specificationName: '',
+        labelType: '', // 命名实体识别 关系抽取 文本分类 事件标注
         specificationFile: ''
       },
       form2: {
@@ -693,12 +689,15 @@ export default {
         // this.finish()
       } else if (this.specification.labelType === '关系抽取') {
         // this.finish()
-        console.log(this.form2.relationships)
+        console.log('关系抽取1', this.form2.relationships)
         let p = 1 // 判断是否创建过这个关系
         for (let i = 0; i < this.form2.relationships.length; i++) {
           for (let k = i - 1; k >= 0; k--) {
+            p = 1
             if (this.form2.relationships[i].Rname === this.form2.relationships[k].Rname) {
               p = 0
+              console.log('重复i', i)
+              break
             }
           }
           const data = {
@@ -708,6 +707,7 @@ export default {
             id: this.newtemoutput.id
           }
           if (p === 1) {
+            console.log('i进入了', i)
             this.$store.dispatch('project/newRe', data)
               .then((response) => {
                 for (let j = 0; j < this.form2.relationships.length; j++) {
@@ -988,8 +988,8 @@ export default {
           this.newtemoutput = response
           this.active++
         })
-        .catch(() => {
-          console.log('error')
+        .catch((error) => {
+          console.log('error', error)
         })
     },
     onSubmitForm2() {

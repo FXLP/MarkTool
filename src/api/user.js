@@ -114,3 +114,27 @@ export function getuserlabel(docid, userid) {
     method: 'get'
   })
 }
+
+export function labelstantard(annotation_id, data) {
+  return request({
+    url: '/api/projects/annotations/' + annotation_id + '/standards/',
+    method: 'patch',
+    data: data
+  })
+}
+
+export function getuserinfo(data) {
+  return request({
+    url: '/api/users/',
+    method: 'get',
+    params: data
+  })
+}
+
+export function register(data) {
+  return request({
+    url: '/api/users/',
+    method: 'post',
+    data: data
+  })
+}

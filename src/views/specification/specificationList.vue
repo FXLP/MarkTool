@@ -78,40 +78,57 @@
           >
             详情
           </el-button>
-          <!-- <el-button
+          <el-button
             size="mini"
             type="danger"
-            @click="handleDelete(scope.$index)"
-          >删除</el-button> -->
+            @click="handleDelete(scope.$index,scope.row)"
+          >删除</el-button>
         </template>
       </el-table-column>
     </el-table>
-    <pagination
-      v-show="total>0"
-      :total="total"
-      @pagination="getList"
+    <el-dialog
+      title="是否确定删除"
+      :visible.sync="dialogVisible"
+      width="30%"
+      :before-close="handleClose"
+    >
+      <span>是否确定删除</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="deletetemplate">确 定</el-button>
+      </span>
+    </el-dialog>
+
+    <el-pagination
+      v-show="list.length>0"
+      :total="list.length"
+      :current-page="page"
+      :page-size="limit"
+      layout="total, prev, pager, next, jumper"
+      :prev-click="prepage"
+      :next-click="nextpage"
+      @current-change="handleCurrentChange"
     />
   </div>
 </template>
 
 <script>
-import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
+// import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {
   name: 'SpecificationList',
-  components: { Pagination },
+  // components: { Pagination },
   data() {
     return {
+      dialogVisible: false,
+      deleterow: '',
+      deleteindex: '',
       list: [
-        { create_date: '2019.10.21', id: '1', name: '疾病标注', template_type: '命名实体识别' },
-        { create_date: '2019.10.20', id: '2', name: '患者标注', template_type: '关系抽取' },
-        { create_date: '2019.10.19', id: '3', name: '医生标注', template_type: '文本分类' },
-        { create_date: '2019.10.22', id: '4', name: '药物标注', template_type: '事件标注' }
       ],
       total: 100,
       listLoading: true,
       page: 1,
-      limit: 100,
+      limit: 10,
       search: ''
     }
   },
@@ -119,6 +136,26 @@ export default {
     this.getList()
   },
   methods: {
+    handleCurrentChange(page) {
+      this.page = page
+    },
+    prepage() {
+      this.page--
+    },
+    nextpage() {
+      this.page++
+    },
+    deletetemplate() {
+      this.$store.dispatch('project/delTemplate', this.deleterow.id)
+        .then((response) => {
+          this.$message({ message: '删除成功', type: 'success' })
+          this.list.splice(this.deleteindex, 1)
+          this.dialogVisible = false
+        })
+        .catch(() => {
+          console.log('error')
+        })
+    },
     getList() {
       this.$store.dispatch('project/getallTemplate')
         .then((response) => {
@@ -136,8 +173,12 @@ export default {
       const p = '/specification/specificationDetail/'
       this.$router.push({ path: p })
     },
-    handleDelete(index) {
-      this.list.splice(index, 1)
+    handleDelete(index, row) {
+      // this.list.splice(index, 1)
+      console.log(index, row)
+      this.dialogVisible = true
+      this.deleterow = row
+      this.deleteindex = index
     },
     newSpecification() {
       this.$router.push({ path: '/specification/newSpecification' })

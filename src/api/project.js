@@ -14,6 +14,13 @@ export function getProject(projectid) {
   })
 }
 
+export function delProject(projectid) {
+  return request({
+    url: '/api/projects/' + projectid + '/',
+    method: 'delete'
+  })
+}
+
 export function newProject(data) {
   return request({
     url: '/api/projects/',
@@ -36,6 +43,13 @@ export function getallTemplate(templateid) {
   return request({
     url: '/api/templates/',
     method: 'get'
+  })
+}
+
+export function delTemplate(templateid) {
+  return request({
+    url: '/api/templates/' + templateid + '/',
+    method: 'delete'
   })
 }
 
@@ -221,7 +235,7 @@ export function uploadlabelfile(projectid, formData) {
   })
 }
 
-export function uploaddicfile(projectid, formData) {
+export function uploaddic(projectid, formData) {
   return request({
     url: '/api/projects/' + projectid + '/dics/',
     method: 'post',
@@ -261,5 +275,90 @@ export function getannres(epochid, data) {
       'Content-Type': 'application/json'
     },
     data: data
+  })
+}
+
+export function fileaddstandard(projectid, data) {
+  return request({
+    url: '/api/projects/' + projectid + '/standards/',
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    data: data
+  })
+}
+
+export function manualaddstandard(projectid, data) {
+  return request({
+    url: '/api/projects/' + projectid + '/standards/',
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    data: data
+  })
+}
+
+export function getstandard(projectid, entityid) {
+  return request({
+    url: '/api/projects/' + projectid + '/entity_template/' + entityid + '/standards/',
+    method: 'get',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+}
+
+export function getdic(project_id) {
+  return request({
+    url: '/api/projects/' + project_id + '/dics/',
+    method: 'get',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+}
+
+export function dicmatch(projectid, formdata) {
+  return request({
+    url: '/api/projects/dics/matches/',
+    method: 'post',
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    },
+    data: formdata
+  })
+}
+
+export function uploadregular(projectid, formdata) {
+  return request({
+    url: '/api/projects/' + projectid + '/res/',
+    method: 'post',
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    },
+    data: formdata
+  })
+}
+
+export function getregular(project_id) {
+  return request({
+    url: '/api/projects/' + project_id + '/res/',
+    method: 'get',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+}
+
+export function regularmatch(formdata) {
+  return request({
+    url: '/api/projects/res/matches/',
+    method: 'post',
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    },
+    data: formdata
   })
 }

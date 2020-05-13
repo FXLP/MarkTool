@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-card style="width:97%; height:760px; margin:25px">
+    <el-card style="width:97%; height:auto; margin:25px">
       <el-steps
         :active="active"
         finish-status="success"
@@ -9,6 +9,8 @@
         <el-step title="步骤 2" />
         <el-step title="步骤 3" />
         <el-step title="步骤 4" />
+        <el-step title="步骤 5" />
+        <el-step title="步骤 6" />
       </el-steps>
       <div
         v-if="active == 0"
@@ -30,16 +32,16 @@
               <el-input v-model="form1.taskTitle" />
             </div>
           </el-form-item>
-          <el-form-item
+          <!-- <el-form-item
             label="任务类型"
             prop="taskType"
           >
             <el-radio-group v-model="form1.taskType">
               <el-radio label="NON_ACTIVE_LEARNING" />
-              <!-- <el-radio label="NON_ACTIVE_LEARNING" />
-              <el-radio label="NON_ACTIVE_LEARNING" /> -->
+              <el-radio label="NON_ACTIVE_LEARNING" />
+              <el-radio label="NON_ACTIVE_LEARNING" />
             </el-radio-group>
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item
             label="标注规范"
             prop="labelSpecification"
@@ -56,17 +58,14 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item
+          <!-- <el-form-item
             label="标注模型"
             prop="labelModel"
           >
             <el-radio-group v-model="form1.labelModel">
-              <!-- <el-radio label="Bi-LSTM_CRF" />
-              <el-radio label="Bert_CRF" />
-              <el-radio label="Bi-RNN_CRF" /> -->
               <el-radio label="无" />
             </el-radio-group>
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item>
             <el-button
               type="primary"
@@ -74,9 +73,9 @@
             >
               确定
             </el-button>
-            <el-button @click="resetForm('form1')">
+            <!-- <el-button @click="resetForm('form1')">
               重置
-            </el-button>
+            </el-button> -->
           </el-form-item>
         </el-form>
       </div>
@@ -92,22 +91,23 @@
           style="margin:100px"
           class="demo-ruleForm"
         >
-          <el-form-item
+          <!-- <el-form-item
             label="标注类型"
             prop="labelType"
           >
             {{ form1.specification.labelType }}
-          </el-form-item>
-          <el-form-item
+          </el-form-item> -->
+          <!-- <el-form-item
             label="每轮标注数量"
             prop="labelTotalNumber"
           >
             <div style="width:40%">
               <el-input v-model="form2.labelTotalNumber" />
-            </div>
-          </el-form-item>
+            </div> -->
+          <!-- </el-form-item> -->
           <el-form-item label="待标注文件">
             <el-upload
+              ref="upload2"
               class="upload-demo"
               drag
               action=""
@@ -128,24 +128,23 @@
             >
               确定
             </el-button>
-            <el-button @click="resetForm('form2')">
+            <!-- <el-button @click="resetForm('form2')">
               重置
-            </el-button>
-            <el-button
+            </el-button> -->
+            <!-- <el-button
               type="primary"
               plain
               @click="last()"
             >
               上一步
-            </el-button>
+            </el-button> -->
           </el-form-item>
         </el-form>
       </div>
       <div
-        v-if="active == 2"
+        v-if="active == 3"
         style="width"
       >
-        <!-- 步骤3 -->
         <el-form
           ref="form3"
           :model="form3"
@@ -155,6 +154,7 @@
         >
           <el-form-item label="上传字典文件">
             <el-upload
+              ref="upload3"
               class="upload-demo"
               drag
               action=""
@@ -175,21 +175,116 @@
             >
               确定
             </el-button>
-            <el-button @click="resetForm('form3')">
+            <!-- <el-button @click="resetForm('form3')">
               重置
-            </el-button>
-            <el-button
+            </el-button> -->
+            <!-- <el-button
               type="primary"
               plain
               @click="last()"
             >
               上一步
-            </el-button>
+            </el-button> -->
           </el-form-item>
         </el-form>
       </div>
       <div
-        v-if="active == 3"
+        v-if="active == 2"
+        style="width"
+      >
+        <!-- 步骤3 -->
+        <el-form
+          ref="form5"
+          :model="form5"
+          label-width="100px"
+          style="margin:100px"
+          class="demo-ruleForm"
+        >
+          <el-form-item label="上传标准文件">
+            <el-upload
+              ref="upload5"
+              class="upload-demo"
+              drag
+              action=""
+              :on-change="showfile5"
+              multiple
+              :auto-upload="false"
+            >
+              <i class="el-icon-upload" />
+              <div class="el-upload__text">
+                将文件拖到此处，或<em>点击上传</em>
+              </div>
+            </el-upload>
+          </el-form-item>
+          <el-form-item>
+            <el-button
+              type="primary"
+              @click="onSubmitForm5"
+            >
+              确定
+            </el-button>
+            <!-- <el-button @click="resetForm('form5')">
+              重置
+            </el-button> -->
+            <!-- <el-button
+              type="primary"
+              plain
+              @click="last()"
+            >
+              上一步
+            </el-button> -->
+          </el-form-item>
+        </el-form>
+      </div>
+      <div
+        v-if="active == 4"
+        style="width"
+      >
+        <el-form
+          ref="form6"
+          :model="form6"
+          label-width="100px"
+          style="margin:100px"
+          class="demo-ruleForm"
+        >
+          <el-form-item label="上传正则文件">
+            <el-upload
+              ref="upload6"
+              class="upload-demo"
+              drag
+              action=""
+              :on-change="showfile6"
+              multiple
+              :auto-upload="false"
+            >
+              <i class="el-icon-upload" />
+              <div class="el-upload__text">
+                将文件拖到此处，或<em>点击上传</em>
+              </div>
+            </el-upload>
+          </el-form-item>
+          <el-form-item>
+            <el-button
+              type="primary"
+              @click="onSubmitForm6"
+            >
+              确定
+            </el-button>
+            <!-- <el-button @click="resetForm('form3')">
+              重置
+            </el-button> -->
+            <!-- <el-button
+              type="primary"
+              plain
+              @click="last()"
+            >
+              上一步
+            </el-button> -->
+          </el-form-item>
+        </el-form>
+      </div>
+      <div
+        v-if="active == 5"
         style="width"
       >
         <!-- 步骤4 -->
@@ -218,9 +313,9 @@
               <el-select v-model="annatator.id">
                 <el-option
                   v-for="(item,index1) in annotatorlabel"
-                  :key="item.name"
-                  :label="item.name"
-                  :value="index1"
+                  :key="index1"
+                  :label="item.username"
+                  :value="item.id"
                 />
               </el-select>
               <el-button
@@ -232,7 +327,7 @@
               />
             </div>
           </el-form-item>
-          <el-button
+          <!-- <el-button
             circle
             size="mini"
             type="primary"
@@ -240,7 +335,7 @@
           >
             <i class="el-icon-plus" />
           </el-button>
-          <!-- <el-form-item
+          <el-form-item
             v-for="(reviewer,index) in revformtem"
             :key="index"
             label="审核者"
@@ -266,6 +361,7 @@
           </el-form-item> -->
           <el-form-item label="答案文件（可选）">
             <el-upload
+              ref="upload3"
               class="upload-demo"
               drag
               action=""
@@ -286,16 +382,16 @@
             >
               确定
             </el-button>
-            <el-button @click="resetForm('form4')">
+            <!-- <el-button @click="resetForm('form4')">
               重置
-            </el-button>
-            <el-button
+            </el-button> -->
+            <!-- <el-button
               type="primary"
               plain
               @click="last()"
             >
               上一步
-            </el-button>
+            </el-button> -->
           </el-form-item>
         </el-form>
       </div>
@@ -314,7 +410,7 @@ export default {
       projectid: '',
       form1: {
         taskTitle: '',
-        taskType: '地雷任务',
+        taskType: 'NON_ACTIVE_LEARNING',
         specification: {
           specificationName: '',
           labelType: '关系抽取'
@@ -328,6 +424,12 @@ export default {
       form3: {
         file: ''
       },
+      form5: {
+        file: ''
+      },
+      form6: {
+        file: ''
+      },
       form4: {
         annotator1: '林宇翩',
         annotator2: '蔡婷婷',
@@ -337,14 +439,18 @@ export default {
       },
       annotatorlabel: [
         {
-          name: 'admin',
+          username: '标注者1',
           id: 2
+        },
+        {
+          username: '标注者2',
+          id: 3
         }
       ],
       reviewerlabel: [
         {
           name: 'admin',
-          id: 2
+          id: 1
         }
       ],
       annformtem: [
@@ -363,6 +469,7 @@ export default {
   },
   created() {
     this.getTemplate()
+    this.getuser()
   },
   methods: {
     getTemplate() {
@@ -375,8 +482,21 @@ export default {
           console.log('error')
         })
     },
+    getuser() {
+      const data = {
+        role_id: 2
+      }
+      this.$store.dispatch('user/getuserinfo', data)
+        .then((response) => {
+          console.log(response)
+          this.annotatorlabel = response
+        })
+        .catch(() => {
+          console.log('error')
+        })
+    },
     showfile(file, fileList) {
-      console.log(file, fileList)
+      console.log('1', this.form2, this.form5, this.form4, fileList)
       this.form2.file = fileList
     },
     showfile2(file, fileList) {
@@ -385,9 +505,16 @@ export default {
     showfile3(file, fileList) {
       this.form4.file = fileList
     },
+    showfile5(file, fileList) {
+      this.form5.file = fileList
+      // console.log('2',fileList);
+    },
+    showfile6(file, fileList) {
+      this.form6.file = fileList
+    },
     newannatator() {
       this.annformtem.push({
-        'name': '',
+        'username': '',
         id: '',
         key: Date.now()
       })
@@ -441,8 +568,8 @@ export default {
       for (let i = 0; i < this.form2.file.length; i++) {
         formData.append('file', this.form2.file[i].raw)
       }
-      formData.append('ann_num_per_epoch', this.form2.labelTotalNumber)
-      console.log(111, formData.get('file'))
+      // formData.append('ann_num_per_epoch', this.form2.labelTotalNumber)
+      // console.log(111, formData.get('file'))
       const data = {
         formdata: formData,
         id: this.projectid
@@ -455,6 +582,9 @@ export default {
             type: 'success',
             message: '上传成功'
           })
+          console.log(this.$refs)
+
+          this.$refs.upload2.clearFiles()
           this.active++
         })
         // .catch(error => {
@@ -468,19 +598,81 @@ export default {
         for (let i = 0; i < this.form3.file.length; i++) {
           formData.append('file', this.form3.file[i].raw)
         }
+        formData.append('type', 'file')
         // console.log(111, formData.get('file'))
         const data = {
           formdata: formData,
           id: this.projectid
         }
         console.log(data)
-        this.$store.dispatch('project/uploaddicfile', data)
+        this.$store.dispatch('project/uploaddic', data)
           .then((response) => {
             console.log(response)
             this.$message({
               type: 'success',
               message: '上传成功'
             })
+            this.$refs.upload3.clearFiles()
+            this.active++
+          })
+          .catch(() => {
+            console.log('error')
+          })
+      } else {
+        this.active++
+      }
+    },
+    onSubmitForm5() {
+      if (this.form5.file.length > 0) {
+        const formData = new window.FormData()
+        for (let i = 0; i < this.form5.file.length; i++) {
+          formData.append('file', this.form5.file[i].raw)
+        }
+        formData.append('type', 'file')
+        // console.log(111, formData.get('file'))
+        const data = {
+          formdata: formData,
+          id: this.projectid
+        }
+        console.log(data)
+        this.$store.dispatch('project/fileaddstandard', data)
+          .then((response) => {
+            console.log(response)
+            this.$message({
+              type: 'success',
+              message: '上传成功'
+            })
+            this.$refs.upload5.clearFiles()
+            this.active++
+          })
+          .catch((error) => {
+            console.log('error', error)
+          })
+      } else {
+        this.active++
+      }
+    },
+    onSubmitForm6() {
+      if (this.form6.file.length > 0) {
+        const formData = new window.FormData()
+        for (let i = 0; i < this.form6.file.length; i++) {
+          formData.append('file', this.form6.file[i].raw)
+        }
+        formData.append('type', 'file')
+        // console.log(111, formData.get('file'))
+        const data = {
+          formdata: formData,
+          id: this.projectid
+        }
+        console.log(data)
+        this.$store.dispatch('project/uploadregular', data)
+          .then((response) => {
+            console.log(response)
+            this.$message({
+              type: 'success',
+              message: '上传成功'
+            })
+            this.$refs.upload6.clearFiles()
             this.active++
           })
           .catch(() => {
@@ -500,12 +692,14 @@ export default {
       }
       var annatator = ''
       for (let i = 0; i < this.annformtem.length; i++) {
-        var j = this.annformtem[i].id
-        annatator += this.annotatorlabel[j].id
+        annatator += this.annformtem[i].id
         if (i < this.annformtem.length - 1) {
           annatator += ','
         }
       }
+      console.log('annformtem', this.annformtem)
+
+      console.log(annatator)
       // var reviewer = ''
       // for (let i = 0; i < this.revformtem.length; i++) {
       //   var h = this.revformtem[i].id
@@ -516,8 +710,9 @@ export default {
       // }
       // formData.append('annotators', annatator)
       // formData.append('reviewers', reviewer)
-      formData.append('annotators', '2,3')
-      formData.append('reviewers', '2')
+
+      formData.append('annotators', annatator)
+      formData.append('reviewers', '1')
       const data = {
         formdata: formData,
         id: this.projectid
