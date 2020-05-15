@@ -476,15 +476,16 @@
             <!-- 每次点击打开实体集对话框需要更新参数editIndex -->
             <el-table
               :data="form=form2.entityGroups[editIndex].entitys"
-              height="600px"
+              min-height="300px"
             >
               <el-table-column
                 label="实体名称"
                 width="200px"
               >
                 <template slot-scope="scope">
-                  {{ scope.row.name }}
+                  <el-input v-model="scope.row.name" />
                 </template>
+
               </el-table-column>
               <!-- <el-table-column
                 label="实体英文名"
@@ -505,13 +506,13 @@
                 min-width="150px"
               >
                 <template slot-scope="scope">
-                  <el-button
+                  <!-- <el-button
                     type="success"
                     plain
                     icon="el-icon-edit"
                     circle
                     @click="modifyEntity(scope.$index)"
-                  />
+                  /> -->
                   <el-button
                     type="danger"
                     plain
@@ -522,7 +523,7 @@
                 </template>
               </el-table-column>
             </el-table>
-            <el-dialog
+            <!-- <el-dialog
               title="编辑实体"
               :visible.sync="editEntityDialog"
               width="40%"
@@ -534,13 +535,9 @@
                 :model="form=form2.entityGroups[editIndex].entitys[editEntityIndex]"
                 label-width="150px"
               >
-                <!-- 每次点击打开编辑实体对话框需要更新参数editEntityIndex -->
                 <el-form-item label="实体名称">
                   <el-input v-model="form.name" />
                 </el-form-item>
-                <!-- <el-form-item label="实体英文名">
-                  <el-input v-model="form.entityMatchName" />
-                </el-form-item> -->
                 <el-form-item label="实体颜色">
                   <el-color-picker v-model="form.color" />
                 </el-form-item>
@@ -555,7 +552,7 @@
                   @click="saveEditEntity()"
                 >保存</el-button>
               </span>
-            </el-dialog>
+            </el-dialog> -->
             <span
               slot="footer"
               class="dialog-footer"
@@ -968,33 +965,41 @@ export default {
     //     })
     // },
     onSubmitForm1() { // 新建模板
-      const newtemplatedata = {
-        name: this.specification.specificationName,
-        template_type: ''
-      }
-      if (this.specification.labelType === '命名实体识别') {
-        newtemplatedata.template_type = 'NER'
-      } else if (this.specification.labelType === '关系抽取') {
-        newtemplatedata.template_type = 'RE'
-      } else if (this.specification.labelType === '文本分类') {
-        newtemplatedata.template_type = 'CLASSIFICATION'
+      if (this.specification.specificationName === '' || this.specification.labelType === '') {
+        this.$message({
+          type: 'error',
+          message: '信息未填写完整'
+        })
       } else {
-        newtemplatedata.template_type = 'EVENT'
+        const newtemplatedata = {
+          name: this.specification.specificationName,
+          template_type: ''
+        }
+        if (this.specification.labelType === '命名实体识别') {
+          newtemplatedata.template_type = 'NER'
+        } else if (this.specification.labelType === '关系抽取') {
+          newtemplatedata.template_type = 'RE'
+        } else if (this.specification.labelType === '文本分类') {
+          newtemplatedata.template_type = 'CLASSIFICATION'
+        } else {
+          newtemplatedata.template_type = 'EVENT'
+        }
+        console.log(newtemplatedata)
+        this.$store.dispatch('project/newTemplate', newtemplatedata)
+          .then((response) => {
+            console.log(2, response)
+            this.newtemoutput = response
+            this.active++
+          })
+          .catch((error) => {
+            console.log('error', error)
+          })
       }
-      console.log(newtemplatedata)
-      this.$store.dispatch('project/newTemplate', newtemplatedata)
-        .then((response) => {
-          console.log(2, response)
-          this.newtemoutput = response
-          this.active++
-        })
-        .catch((error) => {
-          console.log('error', error)
-        })
     },
     onSubmitForm2() {
       if (this.specification.labelType === '命名实体识别') {
         const list = []
+
         for (let i = 0; i < this.form2.entityGroups.length; i++) {
           const group = {}
           group.name = this.form2.entityGroups[i].name
@@ -1016,25 +1021,45 @@ export default {
           })
       } else if (this.specification.labelType === '关系抽取') {
         const list = []
-        for (let i = 0; i < this.form2.entityGroups.length; i++) {
-          const group = {}
-          group.name = this.form2.entityGroups[i].name
-          list[i] = group
+        var isempty = 1
+        for (let k = 0; k < this.form2.entityGroups.length; k++) {
+          if (this.form2.entityGroups[k].name === '') {
+            isempty = 0
+            break
+          }k
         }
-        const data = {
-          list: list,
-          id: this.newtemoutput.id
+        for (let k = 0; k < this.form2.relationships.length; k++) {
+          if (this.form2.relationships[k].Rname === '') {
+            isempty = 0
+            break
+          }
         }
-        this.$store.dispatch('project/newEntitygroup', data)
-          .then((response) => {
-            console.log(this.newtemoutput.id)
-            console.log(response)
-            this.newgroupoutput = response
-            this.active++
+        if (!isempty) {
+          this.$message({
+            type: 'error',
+            message: '请将信息填写完整'
           })
-          .catch(() => {
-            console.log('error')
-          })
+        } else {
+          for (let i = 0; i < this.form2.entityGroups.length; i++) {
+            const group = {}
+            group.name = this.form2.entityGroups[i].name
+            list[i] = group
+          }
+          const data = {
+            list: list,
+            id: this.newtemoutput.id
+          }
+          this.$store.dispatch('project/newEntitygroup', data)
+            .then((response) => {
+              console.log(this.newtemoutput.id)
+              console.log(response)
+              this.newgroupoutput = response
+              this.active++
+            })
+            .catch(() => {
+              console.log('error')
+            })
+        }
       } else if (this.specification.labelType === '文本分类') {
         this.active++
       } else {

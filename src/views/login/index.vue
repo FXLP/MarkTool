@@ -168,7 +168,7 @@ export default {
             .then((response) => {
               // console.log('success',response);
               this.$store.commit('user/SET_NAME', this.loginForm.username)
-              this.$router.push({ path: this.redirect || '/' })
+              this.$router.push({ path: '/' })
               this.loading = false
             })
             .catch(() => {

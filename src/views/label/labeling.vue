@@ -242,6 +242,7 @@
                 :key="item.name"
                 v-model="activeName1"
                 accordion
+                @change="recolchange"
               >
                 <el-collapse-item
                   :title="item.name"
@@ -605,7 +606,7 @@
           <span slot="footer" class="dialog-footer">
             <el-button @click="showaddregular = false">取 消</el-button>
             <el-button type="primary" @click="regularmatch">直接匹配</el-button>
-            <el-button type="primary" @click="regularadd">保存并匹配</el-button>
+            <el-button type="primary" @click="regularadd">保存</el-button>
           </span>
         </el-dialog>
         <el-card
@@ -704,6 +705,7 @@
               v-model="selectvalue"
               expand-trigger="hover"
               :options="options"
+              size="medium"
               @change="selectchange"
             />
           </div>
@@ -891,6 +893,7 @@ const carouselPrefix = '?imageView2/2/h/440'
       this.state = this.$route.query.state
       this.epochid = this.$route.query.epochid
       this.template_type = this.$route.query.template_type
+      this.projectid = this.$route.query.projectid
       this.userid = this.$store.getters.userid
       console.log('template', this.template_type);
       
@@ -928,22 +931,33 @@ const carouselPrefix = '?imageView2/2/h/440'
           })
                     
          if(that.tabactiveName!='字典匹配'&&that.tabactiveName!='正则匹配'&&window.getSelection().toString()!=""){
-           that.selecttext = window.getSelection().toString();
-           console.log(window.getSelection().anchorOffset,window.getSelection().focusOffset,window.getSelection());
-           that.selectstart = window.getSelection().anchorOffset
-           that.selectend = window.getSelection().focusOffset
-           if(that.selectstart>that.selectend){
-             var temp = that.selectend
-             that.selectend = that.selectstart
-             that.selectstart = temp
-           }
-           that.selectpara = window.getSelection().anchorNode.wholeText
-          setTimeout(() => {
-            if(that.template_type === 'RE'||that.template_type === 'NER'||(that.template_type==='EVENT' && that.labeledevent!='')){
-              $("div.block .el-input").trigger("click")
+          // var para = that.tableData[that.docid].content.split(window.getSelection().anchorNode.wholeText)
+          // const start_offset = para[0].length+window.getSelection().anchorOffset
+          // const end_offset = start_offset + window.getSelection().toString().length
+          // console.log(111,para,window.getSelection().toString(),start_offset,end_offset);
+          
+            if(window.getSelection().anchorNode.data===window.getSelection().focusNode.data){
+              that.selecttext = window.getSelection().toString();
+              console.log(window.getSelection().anchorOffset,window.getSelection().focusOffset,window.getSelection());
+              that.selectstart = window.getSelection().anchorOffset
+              that.selectend = window.getSelection().focusOffset
+              if(that.selectstart>that.selectend){
+                var temp = that.selectend
+                that.selectend = that.selectstart
+                that.selectstart = temp
+              }
+              that.selectpara = window.getSelection().anchorNode.wholeText
+              var para = that.tableData[that.docid].content.split(window.getSelection().anchorNode.wholeText)
+              const start_offset = para[0].length+that.selectstart
+              const end_offset = start_offset + window.getSelection().toString().length
+              if(that.ischongfulabel(start_offset,end_offset)){
+                setTimeout(() => {
+                  if(that.template_type === 'RE'||that.template_type === 'NER'||(that.template_type==='EVENT' && that.labeledevent!='')){
+                    $("div.block .el-input").trigger("click")
+                  }
+                }, 200);
+              }
             }
-          }, 200);
-           
          }
         //   var content = window.getSelection().toString();
         //   console.log(content);
@@ -984,7 +998,21 @@ const carouselPrefix = '?imageView2/2/h/440'
       })
     },
     methods: {
-       badgefilter(id){
+      ischongfulabel(start,end){
+        for (let i = 0; i < this.entityinput.length; i++) {
+          if(!(end<=this.entityinput[i].start_offset||start>=this.entityinput[i].end_offset))
+          {
+            return false
+          }
+        }
+        return true
+      },
+      recolchange(){
+        this.selectendentity=''
+        this.selectstartentity=''
+        this.revalue1 = ''
+      },
+      badgefilter(id){
         var num = 0
         for (let i = 0; i < this.entityinput.length; i++) {
           if(this.entityinput[i].entity_template===id){
@@ -1008,13 +1036,18 @@ const carouselPrefix = '?imageView2/2/h/440'
           for (let i = 0; i < list.length; i++) {
             list[i].key = i
           }
-          this.projectid = list[0].project
+          // this.projectid = list[0].project
           this.getdic()
           this.getregular()
-          console.log(this.projectid)
-          this.$store.commit('project/SET_PROJECTID', this.projectid)
+          // console.log(this.projectid)
+          // this.$store.commit('project/SET_PROJECTID', this.projectid)
           this.tableData = list
+          for (let i = 0; i < this.tableData.length; i++) {
+            this.tableData[i].content = this.tableData[i].content.replace(/\n/g,"<br>");
+          }
           this.showdata = this.tableData[0].content
+          console.log('n',this.tableData);
+          
         })
       },
       getEntitys(){
@@ -1365,6 +1398,7 @@ const carouselPrefix = '?imageView2/2/h/440'
                     new_str +=str[str.length-1];
                   //  console.log(deletestr,str,new_str)
                     this.showdata = new_str;
+                    this.showlabeledstandard(this.itemlabel)
                   // this.updatedoc()
                 })
             }
@@ -1387,6 +1421,11 @@ const carouselPrefix = '?imageView2/2/h/440'
         let length = this.tableData.length - 1
         if(this.docid+1<=length)
         {  
+          this.selectedregularid = ''
+          this.selecteddicid=''
+          this.selectendentity=''
+          this.selectstartentity=''
+          this.revalue1 = ''
           this.activeName=''
           this.docid++ 
           this.updatedoc()
@@ -1398,6 +1437,11 @@ const carouselPrefix = '?imageView2/2/h/440'
 
         if(this.docid-1>=0)
         {
+          this.selectedregularid = ''
+          this.selecteddicid=''
+          this.selectendentity=''
+          this.selectstartentity=''
+          this.revalue1 = ''
           this.activeName=''
           this.docid-- 
           this.updatedoc()
@@ -1407,6 +1451,11 @@ const carouselPrefix = '?imageView2/2/h/440'
       },
       aside_click(id){
         console.log(id)
+        this.selectedregularid=''
+        this.selecteddicid=''
+        this.selectendentity=''
+        this.selectstartentity=''
+        this.revalue1 = ''
         this.docid = id
         this.showdata = this.tableData[id].content
         this.activeName = ''
@@ -1795,6 +1844,7 @@ const carouselPrefix = '?imageView2/2/h/440'
                   console.log('updatedoc1',response)
                   const list = response.entities
                   this.entityinput = list
+                  this.reselectchange()
                 })
               }else{
                 const data = {
@@ -1923,6 +1973,8 @@ const carouselPrefix = '?imageView2/2/h/440'
         }
         this.startentitys = startentitys
         this.endentitys = endentitys
+        this.selectstartentity = this.startentitys[0]
+        this.selectendentity = this.endentitys[0]
         console.log('reselectchange',this.endentitys,this.startentitys);
       },
       addre(){
@@ -2126,8 +2178,10 @@ const carouselPrefix = '?imageView2/2/h/440'
               this.$message({ message: '添加成功！', type: 'success' });
               if(this.template_type == 'EVENT') {
                   this.geteventEntitys()
+                  this.showlabeledstandard(this.itemlabel)
                 }else{
                   this.getEntitys()
+                  this.showlabeledstandard(this.itemlabel)
                 }
               
               this.dialogVisible = false
@@ -2151,14 +2205,14 @@ const carouselPrefix = '?imageView2/2/h/440'
                 const list = response.entities
                 this.entityinput = list
               })
-          }else{
+          }else if(this.template_type==='NER'){
              const data = {
               docid:this.tableData[this.docid].id,
               userid:this.userid
             }
             this.$store.dispatch('user/getuserlabel', data)
               .then((response) => {
-                console.log('updatedoc1',response)
+                console.log('updatedoc3',response)
                 const list = response
                 this.entityinput = list
               })
@@ -2191,7 +2245,7 @@ const carouselPrefix = '?imageView2/2/h/440'
           }
         }
         console.log('labeledstandard',this.labeledstandard);
-        }, 300);
+        }, 1000);
         
       },
       getdic(){
@@ -2826,9 +2880,12 @@ html{
   padding:3px;
 }
 .deletelabel{
-  margin-left: 2px;
+  margin-left: 5px;
   margin-right:2px;
   cursor: pointer;
+  position: relative;
+  bottom: 10px;
+  color: aliceblue;
 }
 .deleteclass{
   margin-left: 2px;
@@ -2838,6 +2895,9 @@ html{
 div.block .el-input{
   visibility: hidden;
   display: none;
+}
+.el-cascader-menu{
+  height:auto
 }
 .aside-container{
   min-height: 90%;

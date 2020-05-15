@@ -49,6 +49,9 @@ export default {
     isCollapse() {
       return !this.sidebar.opened
     }
+  },
+  created() {
+    console.log('routes', this.permission_routes, this.$store.getters.permission_routes)
   }
 }
 </script>

@@ -54,7 +54,17 @@ export default {
     // To fix https://github.com/PanJiaChen/vue-admin-template/issues/237
     // TODO: refactor with render function
     this.onlyOneChild = null
-    return {}
+    return {
+      // reload:0
+    }
+  },
+  created() {
+    // if(!this.reload){
+    //   this.$router.go(0)
+    //   this.reload++
+    //   console.log('1112',this.reload);
+
+    // }
   },
   methods: {
     hasOneShowingChild(children = [], parent) {

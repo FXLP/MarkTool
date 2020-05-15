@@ -101,7 +101,6 @@
       title="是否确定删除"
       :visible.sync="dialogVisible"
       width="30%"
-      :before-close="handleClose"
     >
       <span>是否确定删除</span>
       <span slot="footer" class="dialog-footer">

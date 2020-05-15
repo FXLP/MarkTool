@@ -152,7 +152,7 @@
           style="margin:100px"
           class="demo-ruleForm"
         >
-          <el-form-item label="上传字典文件">
+          <el-form-item label="上传字典文件(可选)">
             <el-upload
               ref="upload3"
               class="upload-demo"
@@ -200,7 +200,7 @@
           style="margin:100px"
           class="demo-ruleForm"
         >
-          <el-form-item label="上传标准文件">
+          <el-form-item label="上传标准文件(可选)">
             <el-upload
               ref="upload5"
               class="upload-demo"
@@ -247,7 +247,7 @@
           style="margin:100px"
           class="demo-ruleForm"
         >
-          <el-form-item label="上传正则文件">
+          <el-form-item label="上传正则文件(可选)">
             <el-upload
               ref="upload6"
               class="upload-demo"
@@ -543,25 +543,32 @@ export default {
       this.$refs[formName].resetFields()
     },
     onSubmitForm1() {
-      const data = {
-        name: this.form1.taskTitle,
-        project_type: this.form1.taskType,
-        template: 'http://172.20.46.190:10000/api/templates/' + this.templateid + '/'
-      }
-      this.$store.dispatch('project/newProject', data)
-        .then((response) => {
-          console.log(response)
-          this.$message({
-            type: 'success',
-            message: '新建成功'
+      if (this.form1.taskTitle === '' || this.form1.taskType === '') {
+        this.$message({
+          type: 'error',
+          message: '信息未填完整'
+        })
+      } else {
+        const data = {
+          name: this.form1.taskTitle,
+          project_type: this.form1.taskType,
+          template: 'http://172.20.46.190:10000/api/templates/' + this.templateid + '/'
+        }
+        this.$store.dispatch('project/newProject', data)
+          .then((response) => {
+            console.log(response)
+            this.$message({
+              type: 'success',
+              message: '新建成功'
+            })
+            this.projectid = response.id
+            // this.form1.specification.labelType = this.templatelist[this.templateid - 1].template_type
+            this.active++
           })
-          this.projectid = response.id
-          // this.form1.specification.labelType = this.templatelist[this.templateid - 1].template_type
-          this.active++
-        })
-        .catch(() => {
-          console.log('error')
-        })
+          .catch(() => {
+            console.log('error')
+          })
+      }
     },
     onSubmitForm2() {
       const formData = new window.FormData()
@@ -683,72 +690,88 @@ export default {
       }
     },
     onSubmitForm4() {
-      const formData = new window.FormData()
-      if (this.form4.file.length > 0) {
-        for (let i = 0; i < this.form4.file.length; i++) {
-          formData.append('file', this.form4.file[i].raw)
-        }
-        console.log(111, formData.get('file'))
-      }
-      var annatator = ''
-      for (let i = 0; i < this.annformtem.length; i++) {
-        annatator += this.annformtem[i].id
-        if (i < this.annformtem.length - 1) {
-          annatator += ','
+      var isann = true
+      for (let k = 0; k < this.annformtem.length; k++) {
+        if (this.annformtem[k].id === '') {
+          isann = false
+          break
         }
       }
-      console.log('annformtem', this.annformtem)
-
-      console.log(annatator)
-      // var reviewer = ''
-      // for (let i = 0; i < this.revformtem.length; i++) {
-      //   var h = this.revformtem[i].id
-      //   reviewer += this.reviewerlabel[h].id
-      //   if (i < this.revformtem.length - 1) {
-      //     reviewer += ','
-      //   }
-      // }
-      // formData.append('annotators', annatator)
-      // formData.append('reviewers', reviewer)
-
-      formData.append('annotators', annatator)
-      formData.append('reviewers', '1')
-      const data = {
-        formdata: formData,
-        id: this.projectid
-      }
-      console.log(data)
-      this.$store.dispatch('project/fenpeiepoch', data)
-        .then((response) => {
-          console.log(response)
-          const data1 = {
-            id: this.projectid,
-            input: {
-              in_use: 1
-            }
+      if (isann) {
+        const formData = new window.FormData()
+        if (this.form4.file.length > 0) {
+          for (let i = 0; i < this.form4.file.length; i++) {
+            formData.append('file', this.form4.file[i].raw)
           }
-          this.$store.dispatch('project/project_use', data1)
-            .then((response1) => {
-              this.$message({
-                type: 'success',
-                message: '创建任务成功'
+          console.log(111, formData.get('file'))
+        }
+        var annatator = ''
+        for (let i = 0; i < this.annformtem.length; i++) {
+          annatator += this.annformtem[i].id
+          if (i < this.annformtem.length - 1) {
+            annatator += ','
+          }
+        }
+        console.log('annformtem', this.annformtem)
+
+        console.log(annatator)
+        // var reviewer = ''
+        // for (let i = 0; i < this.revformtem.length; i++) {
+        //   var h = this.revformtem[i].id
+        //   reviewer += this.reviewerlabel[h].id
+        //   if (i < this.revformtem.length - 1) {
+        //     reviewer += ','
+        //   }
+        // }
+        // formData.append('annotators', annatator)
+        // formData.append('reviewers', reviewer)
+
+        formData.append('annotators', annatator)
+        formData.append('reviewers', '1')
+        const data = {
+          formdata: formData,
+          id: this.projectid
+        }
+        console.log(data)
+        this.$store.dispatch('project/fenpeiepoch', data)
+          .then((response) => {
+            console.log(response)
+            const data1 = {
+              id: this.projectid,
+              input: {
+                in_use: 1
+              }
+            }
+            this.$store.dispatch('project/project_use', data1)
+              .then((response1) => {
+                this.$message({
+                  type: 'success',
+                  message: '创建任务成功'
+                })
+                this.$message({ message: '成功新建标注任务！', type: 'success' })
+                this.$confirm('恭喜你成功新建了一个标注任务！', '提示', {
+                  confirmButtonText: '查看任务列表',
+                  cancelButtonText: '继续创建任务'
+                }).then(() => {
+                  this.$router.push({ path: '/taskManagement/taskList' })
+                }).catch(() => {
+                  this.active = 0
+                })
+                this.active++
               })
-              this.$message({ message: '成功新建标注任务！', type: 'success' })
-              this.$confirm('恭喜你成功新建了一个标注任务！', '提示', {
-                confirmButtonText: '查看任务列表',
-                cancelButtonText: '继续创建任务'
-              }).then(() => {
-                this.$router.push({ path: '/taskManagement/taskList' })
-              }).catch(() => {
-                this.active = 0
-              })
-              this.active++
-            })
+          })
+          .catch(() => {
+            console.log('error')
+          })
+      } else {
+        this.$message({
+          type: 'error',
+          message: '请选择标注者'
         })
-        .catch(() => {
-          console.log('error')
-        })
+      }
     }
+
   }
+
 }
 </script>
