@@ -915,20 +915,30 @@ const carouselPrefix = '?imageView2/2/h/440'
       let that=this;
       var mouseX=0;
       var mouseY=0;
+      var mouseX1=0;
+      var mouseY1=0;
       this.$nextTick(function () { //检测鼠标事件
         $('body').mousemove(function(e) { //鼠标位置
             e = e || window.event;
             mouseX = e.pageX || e.clientX + document.body.scroolLeft;
             mouseY = e.pageY || e.clientY + document.body.scrollTop;
+            mouseX1 = e.pageX - $("div.labelcontent1").offset().left;
+            mouseY1 = e.pageY - $("div.labelcontent1").offset().top;
         });
         $("div.labelcontent1").on('mouseup','.labelcontent',function () {
           console.log(mouseX,mouseY);
           
+          
+          
+          console.log('labelmouse',mouseX1,mouseY1);
+          
+
           $("div.block").css({
             position:"absolute",
             top:mouseY-120,
-            left:mouseX-560,
+            left:mouseX1,
           })
+          console.log('topleft',mouseY-120,mouseX-560);
                     
          if(that.tabactiveName!='字典匹配'&&that.tabactiveName!='正则匹配'&&window.getSelection().toString()!=""){
           // var para = that.tableData[that.docid].content.split(window.getSelection().anchorNode.wholeText)

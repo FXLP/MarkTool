@@ -74,9 +74,9 @@
           >
             确定
           </el-button>
-          <el-button @click="resetForm('specification')">
+          <!-- <el-button @click="resetForm('specification')">
             重置
-          </el-button>
+          </el-button> -->
         </el-form-item>
       </el-form>
     </div>
@@ -179,9 +179,6 @@
             :key="classe.key"
             :label="'分类标签名'+(index+1)"
             :prop="classe.name"
-            :rules="{
-              required: true, message: '分类标签名不能为空', trigger: 'blur'
-            }"
           >
             <el-input
               v-model="classe.name"
@@ -202,9 +199,9 @@
           >
             确定
           </el-button>
-          <el-button @click="resetForm('form2')">
+          <!-- <el-button @click="resetForm('form2')">
             重置
-          </el-button>
+          </el-button> -->
           <!-- <el-button
             type="primary"
             plain
@@ -624,13 +621,13 @@ export default {
         relationships: [
           {
             Rname: '关系名',
-            beginEntity: '前实体名',
-            endEntity: '后实体名'
+            beginEntity: '',
+            endEntity: ''
           },
           {
             Rname: '关系名',
-            beginEntity: '前实体名',
-            endEntity: '后实体名'
+            beginEntity: '',
+            endEntity: ''
           }
         ],
         classes: [
@@ -666,75 +663,115 @@ export default {
   },
   methods: {
     submit(specification, form2) {
+      var isempty = 1
       if (this.specification.labelType === '命名实体识别') {
-        for (let i = 0; i < this.form2.entityGroups.length; i++) {
-          const data = {
-            list: this.form2.entityGroups[i].entitys,
-            id: this.newgroupoutput[i].id
-          }
-          this.$store.dispatch('project/newEntitys', data)
-            .then((response) => {
-              console.log('newshiti', response)
-              if (i === this.form2.entityGroups.length - 1) {
-                this.finish()
-              }
-            })
-            .catch(() => {
-              console.log('error')
-            })
-        }
-        // this.finish()
-      } else if (this.specification.labelType === '关系抽取') {
-        // this.finish()
-        console.log('关系抽取1', this.form2.relationships)
-        let p = 1 // 判断是否创建过这个关系
-        for (let i = 0; i < this.form2.relationships.length; i++) {
-          for (let k = i - 1; k >= 0; k--) {
-            p = 1
-            if (this.form2.relationships[i].Rname === this.form2.relationships[k].Rname) {
-              p = 0
-              console.log('重复i', i)
+        for (let k = 0; k < this.form2.entityGroups.length; k++) {
+          for (let l = 0; l < this.form2.entityGroups[k].entitys.length; l++) {
+            console.log('color', this.form2.entityGroups[k].entitys[l].color)
+
+            if (this.form2.entityGroups[k].entitys[l].color === null) {
+              isempty = 0
+              break
+            }
+            if (this.form2.entityGroups[k].entitys[l].name === '') {
+              isempty = 0
               break
             }
           }
-          const data = {
-            list: {
-              name: this.form2.relationships[i].Rname
-            },
-            id: this.newtemoutput.id
-          }
-          if (p === 1) {
-            console.log('i进入了', i)
-            this.$store.dispatch('project/newRe', data)
+          // console.log('adadad',isempty);
+        }
+        if (!isempty) {
+          this.$message({
+            type: 'error',
+            message: '信息未填写完整'
+          })
+        } else {
+          for (let i = 0; i < this.form2.entityGroups.length; i++) {
+            const data = {
+              list: this.form2.entityGroups[i].entitys,
+              id: this.newgroupoutput[i].id
+            }
+            this.$store.dispatch('project/newEntitys', data)
               .then((response) => {
-                for (let j = 0; j < this.form2.relationships.length; j++) {
-                  if (this.form2.relationships[j].Rname === response.name) {
-                    const data1 = {
-                      id: response.id,
-                      list: {
-                        start_entity: this.form2.relationships[j].beginEntity,
-                        end_entity: this.form2.relationships[j].endEntity
-                      }
-                    }
-                    this.$store.dispatch('project/newReEntitys', data1)
-                      .then((response) => {
-                        console.log('newshiti', response)
-                        if (i === this.form2.entityGroups.length - 1) {
-                          this.finish()
-                        }
-                      })
-                      .catch(() => {
-                        console.log('error')
-                      })
-                  }
-                }
-                if (i === this.form2.relationships.length - 1) {
+                console.log('newshiti', response)
+                if (i === this.form2.entityGroups.length - 1) {
                   this.finish()
                 }
               })
               .catch(() => {
                 console.log('error')
               })
+          }
+        }
+        // this.finish()
+      } else if (this.specification.labelType === '关系抽取') {
+        // this.finish()
+        for (let l = 0; l < this.form2.relationships.length; l++) {
+          if (this.form2.relationships[l].beginEntity === '') {
+            isempty = 0
+            break
+          }
+          if (this.form2.relationships[l].endEntity === '') {
+            isempty = 0
+            break
+          }
+        }
+        if (!isempty) {
+          this.$message({
+            type: 'error',
+            message: '前后实体未填写完整'
+          })
+        } else {
+          console.log('关系抽取1', this.form2.relationships)
+          let p = 1 // 判断是否创建过这个关系
+          for (let i = 0; i < this.form2.relationships.length; i++) {
+            for (let k = i - 1; k >= 0; k--) {
+              p = 1
+              if (this.form2.relationships[i].Rname === this.form2.relationships[k].Rname) {
+                p = 0
+                console.log('重复i', i)
+                break
+              }
+            }
+            const data = {
+              list: {
+                name: this.form2.relationships[i].Rname
+              },
+              id: this.newtemoutput.id
+            }
+            if (p === 1) {
+              console.log('i进入了', i)
+              this.$store.dispatch('project/newRe', data)
+                .then((response) => {
+                  for (let j = 0; j < this.form2.relationships.length; j++) {
+                    if (this.form2.relationships[j].Rname === response.name) {
+                      const data1 = {
+                        id: response.id,
+                        list: {
+                          start_entity: this.form2.relationships[j].beginEntity,
+                          end_entity: this.form2.relationships[j].endEntity
+                        }
+                      }
+                      this.$store.dispatch('project/newReEntitys', data1)
+                        .then((response) => {
+                          console.log('newshiti', response)
+                          if (i === this.form2.entityGroups.length - 1) {
+                            this.finish()
+                          }
+                        })
+                        .catch(() => {
+                          console.log('error')
+                        })
+                    }
+                  }
+                  if (i === this.form2.relationships.length - 1) {
+                    this.finish()
+                  }
+                })
+                .catch(() => {
+                  console.log('error')
+                })
+            }
           }
         }
       } else if (this.specification.labelType === '文本分类') {
@@ -751,21 +788,43 @@ export default {
             console.log('error')
           })
       } else {
-        for (let i = 0; i < this.form2.entityGroups.length; i++) {
-          const data = {
-            list: this.form2.entityGroups[i].entitys,
-            id: this.newgroupoutput[i].id
+        for (let k = 0; k < this.form2.entityGroups.length; k++) {
+          for (let l = 0; l < this.form2.entityGroups[k].entitys.length; l++) {
+            console.log('color', this.form2.entityGroups[k].entitys[l].color)
+
+            if (this.form2.entityGroups[k].entitys[l].color === null) {
+              isempty = 0
+              break
+            }
+            if (this.form2.entityGroups[k].entitys[l].name === '') {
+              isempty = 0
+              break
+            }
           }
-          this.$store.dispatch('project/newEventEntitys', data)
-            .then((response) => {
-              console.log('newshiti', response)
-              if (i === this.form2.entityGroups.length - 1) {
-                this.finish()
-              }
-            })
-            .catch(() => {
-              console.log('error')
-            })
+          // console.log('adadad',isempty);
+        }
+        if (!isempty) {
+          this.$message({
+            type: 'error',
+            message: '信息未填写完整'
+          })
+        } else {
+          for (let i = 0; i < this.form2.entityGroups.length; i++) {
+            const data = {
+              list: this.form2.entityGroups[i].entitys,
+              id: this.newgroupoutput[i].id
+            }
+            this.$store.dispatch('project/newEventEntitys', data)
+              .then((response) => {
+                console.log('newshiti', response)
+                if (i === this.form2.entityGroups.length - 1) {
+                  this.finish()
+                }
+              })
+              .catch(() => {
+                console.log('error')
+              })
+          }
         }
         // this.finish()
       }
@@ -900,28 +959,51 @@ export default {
       })
     },
     reformchange() {
-      for (let i = 0; i < this.form2.entityGroups.length; i++) {
-        const data = {
-          list: this.form2.entityGroups[i].entitys,
-          id: this.newgroupoutput[i].id
+      var isempty = 1
+      for (let k = 0; k < this.form2.entityGroups.length; k++) {
+        for (let l = 0; l < this.form2.entityGroups[k].entitys.length; l++) {
+          console.log('color', this.form2.entityGroups[k].entitys[l].color)
+
+          if (this.form2.entityGroups[k].entitys[l].color === null) {
+            isempty = 0
+            break
+          }
+          if (this.form2.entityGroups[k].entitys[l].name === '') {
+            isempty = 0
+            break
+          }
         }
-        this.$store.dispatch('project/newEntitys', data)
-          .then((response) => {
-            console.log('newreshiti', response)
-            for (let j = 0; j < response.length; j++) {
-              for (let k = 0; k < this.form2.entityGroups[i].entitys.length; k++) {
-                if (response[j].name === this.form2.entityGroups[i].entitys[k].name) {
-                  this.form2.entityGroups[i].entitys[k].id = response[j].id
+        console.log('adadad', isempty)
+      }
+      if (!isempty) {
+        this.$message({
+          type: 'error',
+          message: '信息未填写完整'
+        })
+      } else {
+        for (let i = 0; i < this.form2.entityGroups.length; i++) {
+          const data = {
+            list: this.form2.entityGroups[i].entitys,
+            id: this.newgroupoutput[i].id
+          }
+          this.$store.dispatch('project/newEntitys', data)
+            .then((response) => {
+              console.log('newreshiti', response)
+              for (let j = 0; j < response.length; j++) {
+                for (let k = 0; k < this.form2.entityGroups[i].entitys.length; k++) {
+                  if (response[j].name === this.form2.entityGroups[i].entitys[k].name) {
+                    this.form2.entityGroups[i].entitys[k].id = response[j].id
+                  }
                 }
               }
-            }
-            if (i === this.form2.entityGroups.length - 1) {
-              this.reform3change = 1
-            }
-          })
-          .catch(() => {
-            console.log('error')
-          })
+              if (i === this.form2.entityGroups.length - 1) {
+                this.reform3change = 1
+              }
+            })
+            .catch(() => {
+              console.log('error')
+            })
+        }
       }
     },
     deletere(index) {
@@ -997,36 +1079,48 @@ export default {
       }
     },
     onSubmitForm2() {
+      var isempty = 1
       if (this.specification.labelType === '命名实体识别') {
         const list = []
-
-        for (let i = 0; i < this.form2.entityGroups.length; i++) {
-          const group = {}
-          group.name = this.form2.entityGroups[i].name
-          list[i] = group
-        }
-        const data = {
-          list: list,
-          id: this.newtemoutput.id
-        }
-        this.$store.dispatch('project/newEntitygroup', data)
-          .then((response) => {
-            console.log(this.newtemoutput.id)
-            console.log(response)
-            this.newgroupoutput = response
-            this.active++
-          })
-          .catch(() => {
-            console.log('error')
-          })
-      } else if (this.specification.labelType === '关系抽取') {
-        const list = []
-        var isempty = 1
         for (let k = 0; k < this.form2.entityGroups.length; k++) {
           if (this.form2.entityGroups[k].name === '') {
             isempty = 0
             break
-          }k
+          }
+        }
+        if (!isempty) {
+          this.$message({
+            type: 'error',
+            message: '请将信息填写完整'
+          })
+        } else {
+          for (let i = 0; i < this.form2.entityGroups.length; i++) {
+            const group = {}
+            group.name = this.form2.entityGroups[i].name
+            list[i] = group
+          }
+          const data = {
+            list: list,
+            id: this.newtemoutput.id
+          }
+          this.$store.dispatch('project/newEntitygroup', data)
+            .then((response) => {
+              console.log(this.newtemoutput.id)
+              console.log(response)
+              this.newgroupoutput = response
+              this.active++
+            })
+            .catch(() => {
+              console.log('error')
+            })
+        }
+      } else if (this.specification.labelType === '关系抽取') {
+        const list = []
+        for (let k = 0; k < this.form2.entityGroups.length; k++) {
+          if (this.form2.entityGroups[k].name === '') {
+            isempty = 0
+            break
+          }
         }
         for (let k = 0; k < this.form2.relationships.length; k++) {
           if (this.form2.relationships[k].Rname === '') {
@@ -1063,26 +1157,39 @@ export default {
       } else if (this.specification.labelType === '文本分类') {
         this.active++
       } else {
-        const list = []
-        for (let i = 0; i < this.form2.entityGroups.length; i++) {
-          const group = {}
-          group.name = this.form2.entityGroups[i].name
-          list[i] = group
+        for (let k = 0; k < this.form2.entityGroups.length; k++) {
+          if (this.form2.entityGroups[k].name === '') {
+            isempty = 0
+            break
+          }
         }
-        const data = {
-          list: list,
-          id: this.newtemoutput.id
+        if (!isempty) {
+          this.$message({
+            type: 'error',
+            message: '请将信息填写完整'
+          })
+        } else {
+          const list = []
+          for (let i = 0; i < this.form2.entityGroups.length; i++) {
+            const group = {}
+            group.name = this.form2.entityGroups[i].name
+            list[i] = group
+          }
+          const data = {
+            list: list,
+            id: this.newtemoutput.id
+          }
+          this.$store.dispatch('project/newEventgroup', data)
+            .then((response) => {
+              console.log(this.newtemoutput.id)
+              console.log(response)
+              this.newgroupoutput = response
+              this.active++
+            })
+            .catch(() => {
+              console.log('error')
+            })
         }
-        this.$store.dispatch('project/newEventgroup', data)
-          .then((response) => {
-            console.log(this.newtemoutput.id)
-            console.log(response)
-            this.newgroupoutput = response
-            this.active++
-          })
-          .catch(() => {
-            console.log('error')
-          })
       }
       // this.active++
     },
