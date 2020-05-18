@@ -149,7 +149,7 @@
           ref="form3"
           :model="form3"
           label-width="100px"
-          style="margin:100px"
+          style="margin:50px;margin-top:100px;"
           class="demo-ruleForm"
         >
           <el-form-item label="上传字典文件(可选)">
@@ -175,6 +175,10 @@
             >
               确定
             </el-button>
+            <div>
+              示例：
+            </div>
+            <img style="width:100%" src="@/assets/zidian.png">
             <!-- <el-button @click="resetForm('form3')">
               重置
             </el-button> -->
@@ -197,7 +201,7 @@
           ref="form5"
           :model="form5"
           label-width="100px"
-          style="margin:100px"
+          style="margin:50px;margin-top:100px;"
           class="demo-ruleForm"
         >
           <el-form-item label="上传标准文件(可选)">
@@ -233,6 +237,12 @@
             >
               上一步
             </el-button> -->
+            <div>
+              示例：
+            </div>
+            <div>
+              {"器官": ["肝","胰","肾","甲状腺","肾上腺","颈部淋巴结","腹腔"],"姓名": ["小王","小张"]}
+            </div>
           </el-form-item>
         </el-form>
       </div>
@@ -244,7 +254,7 @@
           ref="form6"
           :model="form6"
           label-width="100px"
-          style="margin:100px"
+          style="margin:50px;margin-top:100px;"
           class="demo-ruleForm"
         >
           <el-form-item label="上传正则文件(可选)">
@@ -270,6 +280,10 @@
             >
               确定
             </el-button>
+            <div>
+              示例：
+            </div>
+            <img style="width:100%" src="@/assets/zhengze.png">
             <!-- <el-button @click="resetForm('form3')">
               重置
             </el-button> -->

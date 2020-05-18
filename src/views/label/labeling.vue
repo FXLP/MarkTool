@@ -1,5 +1,5 @@
 <template>
-  <el-container style="height: auto">
+  <el-container class="labelcontainer" style="height: auto">
     <el-aside
       width="400px"
       style="background-color: white "
@@ -918,12 +918,15 @@ const carouselPrefix = '?imageView2/2/h/440'
       var mouseX1=0;
       var mouseY1=0;
       this.$nextTick(function () { //检测鼠标事件
-        $('body').mousemove(function(e) { //鼠标位置
+        $('div.labelcontent1').mousemove(function(e) { //鼠标位置
             e = e || window.event;
             mouseX = e.pageX || e.clientX + document.body.scroolLeft;
             mouseY = e.pageY || e.clientY + document.body.scrollTop;
-            mouseX1 = e.pageX - $("div.labelcontent1").offset().left;
-            mouseY1 = e.pageY - $("div.labelcontent1").offset().top;
+            if ($("div.labelcontent1").offset().left) {
+              mouseX1 = e.pageX - $("div.labelcontent1").offset().left;
+              mouseY1 = e.pageY - $("div.labelcontent1").offset().top;
+            }
+              
         });
         $("div.labelcontent1").on('mouseup','.labelcontent',function () {
           console.log(mouseX,mouseY);
@@ -1388,6 +1391,8 @@ const carouselPrefix = '?imageView2/2/h/440'
       },
       deleteentity(content,deletestr) {
         var loop = this.entityinput.length
+        this.selectstartentity = ''
+        this.selectendentity = ''
         for (let i = 0; i < loop; i++) { //删去input内相应的项
             if (content === this.entityinput[i].content) {
               const data = {
@@ -1413,6 +1418,10 @@ const carouselPrefix = '?imageView2/2/h/440'
                 })
             }
           }
+          if (this.template_type==='RE') {
+            this.reselectchange()
+          }
+          
           // for (let i = 0; i < this.entityinput1.length; i++) { //删去input内相应的项
           //   if (content === this.entityinput1[i].content) {
           //     const data = {
@@ -1988,6 +1997,7 @@ const carouselPrefix = '?imageView2/2/h/440'
         console.log('reselectchange',this.endentitys,this.startentitys);
       },
       addre(){
+        if (this.selectstartentity&&this.selectendentity) {
         console.log(this.selectstartentity,this.selectendentity);
         let data = {
           id:this.tableData[this.docid].id,
@@ -2026,6 +2036,13 @@ const carouselPrefix = '?imageView2/2/h/440'
               this.labeledre.push(list)
               console.log('112',this.labeledre);
         })
+        }
+        else{
+          this.$message({
+          type: 'error',
+          message: '前后实体未选择'
+        })
+        }
       },
       deletere(id){
         // console.log(id,this.labeledre);
@@ -2102,6 +2119,10 @@ const carouselPrefix = '?imageView2/2/h/440'
         }
       },
       addstandard(){
+        console.log('add1',this.standardid,this.standardentity);
+        if (this.standardid&&this.standardentity) {
+          
+        
         const data = {
           id:this.standardentity.id,
           list:{
@@ -2161,6 +2182,12 @@ const carouselPrefix = '?imageView2/2/h/440'
               this.$message({ message: '标注成功！', type: 'success' });
               this.standardid = ''
         })
+        }else{
+          this.$message({
+          type: 'error',
+          message: '未选择实体或标准'
+        })
+        }
       },
       addstandardoption(){
         this.dialogVisible=true
@@ -2173,6 +2200,10 @@ const carouselPrefix = '?imageView2/2/h/440'
         }
       },
       dialogadd(){
+        console.log('add2',this.dialogentity,this.dialoginput);
+        if (this.dialogentity&&this.dialoginput) {
+          
+        
         const data = {
           id:this.projectid,
           list:{
@@ -2196,6 +2227,12 @@ const carouselPrefix = '?imageView2/2/h/440'
               
               this.dialogVisible = false
         })
+        }else{
+          this.$message({
+          type: 'error',
+          message: '信息未填完整'
+        })
+        }
       },
       showlabeledstandard(label){
         this.standards=[]
@@ -2518,6 +2555,9 @@ const carouselPrefix = '?imageView2/2/h/440'
         }
       },
       dicadd(){
+        if (this.dicinputname&&this.dicinputentity&&this.dicinputstname) {
+          
+        
         const formData = new window.FormData()
         const input = [this.dicinputname,this.dicinputentity,this.dicinputstname]
         formData.append('type','manual')
@@ -2531,8 +2571,25 @@ const carouselPrefix = '?imageView2/2/h/440'
             this.showadddic = false
             this.getdic()
         })
+        }
+        else{
+          this.$message({
+          type: 'error',
+          message: '信息未填完整'
+        })
+        }
       },
       regularadd(){
+        var isempty = 1
+        for (let k = 0; k < this.regulartem.length; k++) {
+          if (!this.regulartem[k].id) {
+            isempty = 0
+            break
+          }
+        }
+        if (isempty&&this.regularinputname) {
+          
+        
         const formData = new window.FormData()
         var tem = ''
           for (let i = 0; i < this.regulartem.length; i++) {
@@ -2553,8 +2610,22 @@ const carouselPrefix = '?imageView2/2/h/440'
             this.showaddregular = false
             this.getregular()
         })
+        }else{
+          this.$message({
+          type: 'error',
+          message: '未输入表达式或对应实体'
+        })
+        }
       },
       regularmatch(){
+         var isempty = 1
+        for (let k = 0; k < this.regulartem.length; k++) {
+          if (!this.regulartem[k].id) {
+            isempty = 0
+            break
+          }
+        }
+        if (isempty&&this.regularinputname) {
          this.showdata = this.tableData[this.docid].content
         const formData = new window.FormData()
         formData.append('type','content')
@@ -2598,6 +2669,12 @@ const carouselPrefix = '?imageView2/2/h/440'
             // console.log('133',this.showregularentity);
             this.regularupdatedoc(this.showregularentity)
         })
+        }else{
+          this.$message({
+            type: 'error',
+            message: '未输入表达式或对应实体'
+          })
+        }
       },
       quickSort(arr) {
         var len = arr.length,
