@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import getters from './getters'
-
+// import VuexPersistence from 'vuex-persist'
 Vue.use(Vuex)
 
 // https://webpack.js.org/guides/dependency-management/#requirecontext
@@ -16,10 +16,13 @@ const modules = modulesFiles.keys().reduce((modules, modulePath) => {
   modules[moduleName] = value.default
   return modules
 }, {})
-
+// const vuexLocal = new VuexPersistence({
+//   storage: window.localStorage
+// })
 const store = new Vuex.Store({
   modules,
   getters
+  // plugins: [vuexLocal.plugin]
 })
 
 export default store

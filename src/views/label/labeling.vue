@@ -895,6 +895,12 @@ const carouselPrefix = '?imageView2/2/h/440'
       this.template_type = this.$route.query.template_type
       this.projectid = this.$route.query.projectid
       this.userid = this.$store.getters.userid
+      // console.log('getters', this.$store.state);
+      // console.log(JSON.stringify(this.$store.state.tagsView));
+      
+      // let obj = new Object();
+      
+      
       console.log('template', this.template_type);
       
       this.getDoc()
@@ -1011,6 +1017,36 @@ const carouselPrefix = '?imageView2/2/h/440'
       })
     },
     methods: {
+      getType(o){
+      return Object.prototype.toString.call(o).slice(8,-1);
+    },
+    isKeyType(o, type) {
+      return this.getType(o).toLowerCase() === type.toLowerCase();
+    },
+    deepClone(sth) {
+      let copy;
+      if (null == sth || "object" != typeof sth) return sth;
+      if (this.isKeyType(sth, 'date')) {
+        copy = new Date();
+        copy.setTime(sth.getTime());
+        return copy;
+      }
+      if (this.isKeyType(sth, 'array')) {
+        copy = [];
+        for (let i = 0, len = sth.length; i < len; i++) {
+          copy[i] = this.deepClone(sth[i]);
+        }
+        return copy;
+      }
+      if (this.isKeyType(sth, 'object')) {
+        copy = {};
+        for (let attr in sth) {
+          if (sth[attr].hasOwnProperty(attr)) copy[attr] = this.deepClone(sth[attr]);
+        }
+        return copy;
+      }
+      return null;
+    },
       ischongfulabel(start,end){
         for (let i = 0; i < this.entityinput.length; i++) {
           if(!(end<=this.entityinput[i].start_offset||start>=this.entityinput[i].end_offset))

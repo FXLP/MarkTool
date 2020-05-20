@@ -32,7 +32,7 @@ router.beforeEach(async(to, from, next) => {
       if (hasRoles) {
         const accessRoutes = await store.dispatch('permission/generateRoutes', store.getters.roles)
 
-        // dynamically add accessible routes
+        // // dynamically add accessible routes
         router.addRoutes(accessRoutes)
 
         next()
