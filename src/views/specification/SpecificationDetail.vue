@@ -247,48 +247,18 @@ export default {
       editEntityIndex: 0, // 编辑实体index
       specification: {
         id: '',
-        specificationName: '诈骗案件',
-        specificationFile: '诈骗标注规范文件',
+        specificationName: '',
+        specificationFile: '',
         template_type: '',
         entityGroups: [
           {
-            name: '嫌疑人', // index = 0
+            name: '', // index = 0
             entitys: [
               {
-                entityName: '嫌疑人姓名',
-                entityMatchName: 'suspectName',
-                entityColor: 'rgba(19, 206, 102, 0.8)'
+                entityName: '',
+                entityMatchName: '',
+                entityColor: ''
               }, {
-                entityName: '嫌疑人姓名',
-                entityMatchName: 'suspectName',
-                entityColor: 'rgba(19, 206, 102, 0.8)'
-              }
-            ]
-          },
-          {
-            name: '受害人',
-            entitys: [
-              {
-                entityName: '',
-                entityMatchName: '',
-                entityColor: ''
-              }
-            ]
-          },
-          {
-            name: '民警',
-            entitys: [
-              {
-                entityName: '',
-                entityMatchName: '',
-                entityColor: ''
-              }
-            ]
-          },
-          {
-            name: '案件相关',
-            entitys: [
-              {
                 entityName: '',
                 entityMatchName: '',
                 entityColor: ''
@@ -298,14 +268,14 @@ export default {
         ],
         relationships: [
           {
-            Rname: '嫌疑人-诈骗手段',
-            beginEntity: '嫌疑人姓名',
-            endEntity: '诈骗手段'
+            Rname: '',
+            beginEntity: '',
+            endEntity: ''
           }
         ],
         classes: [
-          { name: '分类名', color: '#9415E8' },
-          { name: '分类名', color: '#9415E8' }
+          { name: '', color: '' },
+          { name: '', color: '' }
         ]
       }
     }

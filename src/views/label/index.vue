@@ -71,7 +71,7 @@
         min-width="150"
         sortable
       >
-        <template slot-scope="scope">
+        <template slot-scope="scope" min-width="200">
           <el-progress
             :percentage="percent(scope.row.annotate_progress.waiting_num,scope.row.annotate_progress.total_num)"
             :format="format"
@@ -168,7 +168,7 @@ export default {
       if (b === 0) {
         return 0
       } else {
-        return a / b * 100
+        return (a / b * 100).toFixed(0)
       }
     },
     mark(index, row) { // need jump to with mission ID

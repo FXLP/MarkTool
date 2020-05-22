@@ -460,16 +460,9 @@
             title="实体集"
             :visible.sync="editEntityGroupDialog"
             width="800px"
-            :before-close="handleClose"
+            :close-on-click-modal="false"
           >
-            <el-button
-              circle
-              size="mini"
-              type="primary"
-              @click="newEntity()"
-            >
-              <i class="el-icon-plus" />
-            </el-button>
+
             <!-- 每次点击打开实体集对话框需要更新参数editIndex -->
             <el-table
               :data="form=form2.entityGroups[editIndex].entitys"
@@ -518,8 +511,17 @@
                     @click="deleteEntity(scope.$index)"
                   />
                 </template>
+
               </el-table-column>
             </el-table>
+            <el-button
+              circle
+              size="mini"
+              type="primary"
+              @click="newEntity()"
+            >
+              <i class="el-icon-plus" />
+            </el-button>
             <!-- <el-dialog
               title="编辑实体"
               :visible.sync="editEntityDialog"

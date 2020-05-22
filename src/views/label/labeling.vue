@@ -495,7 +495,8 @@
           </el-select>
           <el-select
             v-model="dicinputstname"
-            placeholder="请选择实体模板标准名称"
+            placeholder="请选择标准名称(可选)"
+            clearable
           >
             <el-option
               v-for="standard in dicinputstnamefilter"
