@@ -697,7 +697,7 @@
           </div>
           <div
             class="labelcontent1"
-            v-html="showdata_pre+showdata+showdata_back"
+            v-html="showdata_pre + changebr(showdata)+showdata_back"
           />
           <div
             v-if="template_type=='NER'||template_type=='RE'"
@@ -1020,6 +1020,9 @@ const carouselPrefix = '?imageView2/2/h/440'
       })
     },
     methods: {
+      changebr(showdata){
+         return showdata.replace(/\n/g,"<br/>");
+      },
       getType(o){
       return Object.prototype.toString.call(o).slice(8,-1);
     },
@@ -1094,9 +1097,9 @@ const carouselPrefix = '?imageView2/2/h/440'
           // console.log(this.projectid)
           // this.$store.commit('project/SET_PROJECTID', this.projectid)
           this.tableData = list
-          for (let i = 0; i < this.tableData.length; i++) {
-            this.tableData[i].content = this.tableData[i].content.replace(/\n/g,"<br>");
-          }
+          // for (let i = 0; i < this.tableData.length; i++) {
+          //   this.tableData[i].content = this.tableData[i].content.replace(/\n/g,"<br/>");
+          // }
           this.showdata = this.tableData[0].content
           console.log('n',this.tableData);
           
@@ -1370,7 +1373,7 @@ const carouselPrefix = '?imageView2/2/h/440'
             this.eventoptions.push(this.options[i])
           }
         }
-        console.log('xxxa',this.eventoptions,this.labeledeventoptions);
+        console.log('xxxda',this.eventoptions,'daad',this.labeledeventoptions);
         this.showdata=this.tableData[this.docid].content
         // this.updatedoc()
         for (let m = 0; m < this.labeledeventoptions.length; m++) {
@@ -1555,6 +1558,12 @@ const carouselPrefix = '?imageView2/2/h/440'
                     this.entityinput = this.labeledeventoptions[m].entities
                     // this.labeledeventchange()
                     this.showlabeledevent()
+                  }
+                }
+                var eventname = this.labeledevent1.name.split(this.labeledevent1.id)
+                for (let i = 0; i < this.options.length; i++) {
+                  if (eventname[0]===this.options[i].name && this.eventoptions.length===0) {
+                    this.eventoptions.push(this.options[i])
                   }
                 }
                 // this.entityinput = this.labeledeventoptions.entities
@@ -2405,10 +2414,6 @@ const carouselPrefix = '?imageView2/2/h/440'
              
             for (let i = 0; i < loop; i++) {
               for (let j = 0; j < this.entityinput.length; j++) {
-                console.log('11',i);
-                
-                console.log('1',i,this.submitdicentity[i].end_offset);
-                console.log('2',j,this.entityinput[j].end_offset);
                 if (!(this.submitdicentity[i].end_offset<=this.entityinput[j].start_offset||this.submitdicentity[i].start_offset>=this.entityinput[j].end_offset)) {
                   this.chongfudic.push(this.submitdicentity[i])
                   this.submitdicentity.splice(i,1)
@@ -2418,6 +2423,8 @@ const carouselPrefix = '?imageView2/2/h/440'
                 }
               }
             }
+            console.log('1111s',this.showdicentity);
+            
             this.dicupdatedoc(this.showdicentity)
         })
       },
@@ -2459,6 +2466,11 @@ const carouselPrefix = '?imageView2/2/h/440'
       },
       dicupdatedoc(response){
         this.showdata=this.tableData[this.docid].content
+        // console.log(this.tableData[this.docid].content);
+        
+        // this.tableData[this.docid].content = this.tableData[this.docid].content.replace(/<br\s*\/>/gi, "\n");  
+        // console.log(this.tableData[this.docid].content);
+        
         const list = response
         this.dicentity = response
         // this.entityinput = list
@@ -2489,8 +2501,11 @@ const carouselPrefix = '?imageView2/2/h/440'
             // this.showdata = str_new;   
           }         
         }
+        console.log('addlist',addlist);
+        
         var str_new = "";
         for (let i = 0; i < addcontent.length; i++) {
+          console.log('addcontent',addcontent,str_new);
           var start = 0
           if (i>0) {
             start = list[i].start_offset
@@ -2500,6 +2515,7 @@ const carouselPrefix = '?imageView2/2/h/440'
           } else {
             str_new += this.tableData[this.docid].content.slice(start,addlist[i].start_offset) + addcontent[i] + this.tableData[this.docid].content.slice(addlist[i].end_offset)
             this.showdata = str_new
+            this.showdata = this.showdata.replace(/\n/g,"<br/>");          
           }
         }
       },
