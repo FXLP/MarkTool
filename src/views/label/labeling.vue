@@ -1482,6 +1482,10 @@ const carouselPrefix = '?imageView2/2/h/440'
         let length = this.tableData.length - 1
         if(this.docid+1<=length)
         {  
+          this.labeledevent1={
+            name:'',
+            id:''
+          }
           this.selectedregularid = ''
           this.selecteddicid=''
           this.selectendentity=''
@@ -1498,6 +1502,10 @@ const carouselPrefix = '?imageView2/2/h/440'
 
         if(this.docid-1>=0)
         {
+          this.labeledevent1={
+            name:'',
+            id:''
+          }
           this.selectedregularid = ''
           this.selecteddicid=''
           this.selectendentity=''
@@ -1512,6 +1520,10 @@ const carouselPrefix = '?imageView2/2/h/440'
       },
       aside_click(id){
         console.log(id)
+        this.labeledevent1={
+            name:'',
+            id:''
+          }
         this.selectedregularid=''
         this.selecteddicid=''
         this.selectendentity=''
@@ -2644,11 +2656,10 @@ const carouselPrefix = '?imageView2/2/h/440'
         }
       },
       dicadd(){
-        if (this.dicinputname&&this.dicinputentity&&this.dicinputstname) {
-          
-        
+        if (this.dicinputname&&this.dicinputentity) {
         const formData = new window.FormData()
         const input = [this.dicinputname,this.dicinputentity,this.dicinputstname]
+        console.log(input);
         formData.append('type','manual')
         formData.append('data',input)
          const data = {
