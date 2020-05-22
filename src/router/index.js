@@ -132,6 +132,47 @@ export const constantRoutes = [
  */
 export const asyncRoutes = [
   {
+    path: '/specification',
+    component: Layout,
+    // redirect: '/permission/page',
+    alwaysShow: true, // will always show the root menu
+    name: '标注规范',
+    meta: {
+      title: '标注规范',
+      icon: 'edit'
+      // roles: ['admin','annotator'] // you can set roles in root nav
+    },
+    children: [
+      {
+        path: 'specificationList',
+        component: () => import('@/views/specification/specificationList'),
+        name: '规范列表',
+        meta: {
+          title: '规范列表'
+          // roles: ['admin','annotator'] // or you can only set roles in sub nav
+        }
+      },
+      {
+        path: 'newSpecification',
+        component: () => import('@/views/specification/newSpecification'),
+        name: '新建规范',
+        meta: {
+          title: '新建规范'
+          // if do not set roles, means: this page does not require permission
+        }
+      },
+      {
+        path: 'specificationDetail',
+        component: () => import('@/views/specification/specificationDetail'),
+        name: '规范详情',
+        hidden: true,
+        meta: {
+          title: '规范详情'
+        }
+      }
+    ]
+  },
+  {
     path: '/taskManagement',
     component: Layout,
     // redirect: '/permission/page',
@@ -180,47 +221,6 @@ export const asyncRoutes = [
         meta: {
           title: '任务详情'
           // roles: ['admin','annotator']
-        }
-      }
-    ]
-  },
-  {
-    path: '/specification',
-    component: Layout,
-    // redirect: '/permission/page',
-    alwaysShow: true, // will always show the root menu
-    name: '标注规范',
-    meta: {
-      title: '标注规范',
-      icon: 'edit'
-      // roles: ['admin','annotator'] // you can set roles in root nav
-    },
-    children: [
-      {
-        path: 'specificationList',
-        component: () => import('@/views/specification/specificationList'),
-        name: '规范列表',
-        meta: {
-          title: '规范列表'
-          // roles: ['admin','annotator'] // or you can only set roles in sub nav
-        }
-      },
-      {
-        path: 'newSpecification',
-        component: () => import('@/views/specification/newSpecification'),
-        name: '新建规范',
-        meta: {
-          title: '新建规范'
-          // if do not set roles, means: this page does not require permission
-        }
-      },
-      {
-        path: 'specificationDetail',
-        component: () => import('@/views/specification/specificationDetail'),
-        name: '规范详情',
-        hidden: true,
-        meta: {
-          title: '规范详情'
         }
       }
     ]

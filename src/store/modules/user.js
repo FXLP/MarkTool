@@ -45,7 +45,7 @@ const actions = {
         console.log('denglu', response)
         const data = response
         commit('SET_USERID', data.user_id)
-        // commit('SET_ROLES', data.roles)
+        commit('SET_ROLES', data.roles)
         commit('SET_TOKEN', data.token)
         setToken(data.token)
         resolve()

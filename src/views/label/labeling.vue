@@ -12,6 +12,7 @@
           v-for="data in tableData"
           :key="data.id"
           class="box-card asidelist"
+          :body-style="docid===data.key?'background-color:#eeeeee':'background-color:#ffffff'"
           @click.native="aside_click(data.key)"
         >
           {{ data.content }}
@@ -57,7 +58,7 @@
                     <el-badge :value="badgefilter(entity.id)" class="item">
                       <div
                         class="labelstyle"
-                        :style="{background:entity.color,'font-size':'18px',display:'inline-block',margin:'5px','padding-left':'10px','padding-right':'10px','margin-left':'15px',}"
+                        :style="{background:entity.color,color:isLight(entity.color),'font-size':'18px',display:'inline-block',margin:'5px','padding-left':'10px','padding-right':'10px','margin-left':'15px',}"
                       >
                         {{ entity.name }}
                       </div>
@@ -901,6 +902,7 @@ const carouselPrefix = '?imageView2/2/h/440'
       // let obj = new Object();
       
       
+      
       console.log('template', this.template_type);
       
       this.getDoc()
@@ -1403,7 +1405,7 @@ const carouselPrefix = '?imageView2/2/h/440'
                 // for (let index = 0; index < str.length-1; index++) {
                 //   str_new += str[index]+'<div class="labelstyle" style="background:' +color+'">'+content+'<div class="deletelabel">x</div></div>';
                 // }
-                addcontent.push('<div class="labelstyle" style="background:' +color+'">'+content+'<div class="deletelabel">x</div></div>') 
+                addcontent.push('<div class="labelstyle" style="background:' +color+';color:' +this.isLight(color)+'">'+content+'<div class="deletelabel">x</div></div>') 
 
                 // str_new += str[str.length-1]
                 // this.showdata = str_new;   
@@ -1595,7 +1597,7 @@ const carouselPrefix = '?imageView2/2/h/440'
                 // for (let index = 0; index < str.length-1; index++) {
                 //   str_new += str[index]+'<div class="labelstyle" style="background:' +color+'">'+content+'<div class="deletelabel">x</div></div>';
                 // }
-                addcontent.push('<div class="labelstyle" style="background:' +color+'">'+content+'<div class="deletelabel">x</div></div>') 
+                addcontent.push('<div class="labelstyle" style="background:' +color+';color:' +this.isLight(color) + '">'+content+'<div class="deletelabel">x</div></div>') 
 
                 // str_new += str[str.length-1]
                 // this.showdata = str_new;   
@@ -1616,6 +1618,38 @@ const carouselPrefix = '?imageView2/2/h/440'
             }
             // }
         // }
+      },
+      colorchange(color){
+        var reg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/;
+        // 把颜色值变成小写
+        if (reg.test(color)) {
+          // 如果只有三位的值，需变成六位，如：#fff => #ffffff
+          if (color.length === 4) {
+            var colorNew = "#";
+            for (var i = 1; i < 4; i += 1) {
+              colorNew += color.slice(i, i + 1).concat(color.slice(i, i + 1));
+            }
+            color = colorNew;
+          }
+          // 处理六位的颜色值，转为RGB
+          var colorChange = [];
+          for (var i = 1; i < 7; i += 2) {
+            colorChange.push(parseInt("0x" + color.slice(i, i + 2)));
+          }
+          return "RGB(" + colorChange.join(",") + ")";
+        } else {
+          return color;
+        }
+      },
+      isLight(color){
+        var color1 = this.colorchange(color)
+        var RgbValue = color1.replace("RGB(", "").replace(")", "");
+        var rgb = RgbValue.split(",");
+        if (0.213 * rgb[0] +0.715 * rgb[1] +0.072 * rgb[2] >255 / 2){
+          return '#303133'
+        }else{
+          return '#ffffff'
+        }
       },
       updatedoc(){
         if (this.template_type == 'NER') {
@@ -1669,7 +1703,7 @@ const carouselPrefix = '?imageView2/2/h/440'
                   // for (let index = 0; index < str.length-1; index++) {
                   //   str_new += str[index]+'<div class="labelstyle" style="background:' +color+'">'+content+'<div class="deletelabel">x</div></div>';
                   // }
-                  addcontent.push('<div class="labelstyle" style="background:' +color+'">'+content+'<div class="deletelabel">x</div></div>') 
+                  addcontent.push('<div class="labelstyle" style="background:' +color+';color:' +this.isLight(color) +'">'+content+'<div class="deletelabel">x</div></div>') 
                   // str_new += str[str.length-1]
                   // this.showdata = str_new;   
                 }         
@@ -1815,7 +1849,7 @@ const carouselPrefix = '?imageView2/2/h/440'
                   // for (let index = 0; index < str.length-1; index++) {
                   //   str_new += str[index]+'<div class="labelstyle" style="background:' +color+'">'+content+'<div class="deletelabel">x</div></div>';
                   // }
-                  addcontent.push('<div class="labelstyle" style="background:' +color+'">'+content+'<div class="deletelabel">x</div></div>') 
+                  addcontent.push('<div class="labelstyle" style="background:' +color+';color:' +this.isLight(color)+'">'+content+'<div class="deletelabel">x</div></div>') 
                   // str_new += str[str.length-1]
                   // this.showdata = str_new;   
                 }         
@@ -1860,11 +1894,11 @@ const carouselPrefix = '?imageView2/2/h/440'
         var para = this.tableData[this.docid].content.split(this.selectpara)
         const start_offset = para[0].length+this.selectstart
         const end_offset = start_offset + content.length
-        var addpara = this.selectpara.slice(0,this.selectstart)+'<div class="labelstyle" style="background:' +this.selectvalue[1].color+'">'+content+'<div class="deletelabel">x</div></div>'+this.selectpara.slice(this.selectend)
+        var addpara = this.selectpara.slice(0,this.selectstart)+'<div class="labelstyle" style="background:' +this.selectvalue[1].color+';color:' +this.isLight(this.selectvalue[1].color)+'">'+content+'<div class="deletelabel">x</div></div>'+this.selectpara.slice(this.selectend)
         var str = this.showdata.split(this.selectpara);
         var str_new = "";
         str_new = str[0] + addpara + str[1]
-        this.showdata = str_new;
+        // this.showdata = str_new;
 
         // console.log('show',this.showdata);
         // console.log('doc',this.tableData[this.docid]);
@@ -1889,6 +1923,7 @@ const carouselPrefix = '?imageView2/2/h/440'
         }
         this.$store.dispatch('user/labelentity', data)
           .then((response) => {
+            this.showdata = str_new;
              if(this.template_type==='RE'){
               const data = {
                 docid:this.tableData[this.docid].id,
@@ -1948,7 +1983,7 @@ const carouselPrefix = '?imageView2/2/h/440'
         var para = this.tableData[this.docid].content.split(this.selectpara)
         const start_offset = para[0].length+this.selectstart
         const end_offset = start_offset + content.length
-        var addpara = this.selectpara.slice(0,this.selectstart)+'<div class="labelstyle" style="background:' +this.selectvalue[1].color+'">'+content+'<div class="deletelabel">x</div></div>'+this.selectpara.slice(this.selectend)
+        var addpara = this.selectpara.slice(0,this.selectstart)+'<div class="labelstyle" style="background:' +this.selectvalue[1].color+';color:' +this.isLight(this.selectvalue[1].color)+'">'+content+'<div class="deletelabel">x</div></div>'+this.selectpara.slice(this.selectend)
         // console.log('add',addpara);
 
         // }
@@ -1958,7 +1993,7 @@ const carouselPrefix = '?imageView2/2/h/440'
         //   str_new += str[index]+'<div class="labelstyle" style="background:' +this.selectvalue[1].color+'">'+content+'<div class="deletelabel">x</div></div>';
         // }
         str_new = str[0] + addpara + str[1]
-        this.showdata = str_new;
+        // this.showdata = str_new;
         // console.log('show',this.showdata);
         console.log('doc',this.tableData[this.docid]);
         var docdata = this.tableData[this.docid].content
@@ -1984,6 +2019,7 @@ const carouselPrefix = '?imageView2/2/h/440'
         }
         this.$store.dispatch('user/labelentity', data)
           .then((response) => {
+            this.showdata = str_new;
             // console.log(response);
             // data.list.id = response.id
             // // this.entityinput.push(data.list)
@@ -2447,7 +2483,7 @@ const carouselPrefix = '?imageView2/2/h/440'
             // for (let index = 0; index < str.length-1; index++) {
             //   str_new += str[index]+'<div class="labelstyle" style="background:' +color+'">'+content+'<div class="deletelabel">x</div></div>';
             // }
-            addcontent.push('<div class="labelstyle" style="background:' +color+'">'+content+'</div>') 
+            addcontent.push('<div class="labelstyle" style="background:' +color+';color:' +this.isLight(color)+'">'+content+'</div>') 
             // str_new += str[str.length-1]
             // this.showdata = str_new;   
           }         
@@ -2493,7 +2529,7 @@ const carouselPrefix = '?imageView2/2/h/440'
             // for (let index = 0; index < str.length-1; index++) {
             //   str_new += str[index]+'<div class="labelstyle" style="background:' +color+'">'+content+'<div class="deletelabel">x</div></div>';
             // }
-            addcontent.push('<div class="labelstyle" style="background:' +color+'">'+content+'</div>') 
+            addcontent.push('<div class="labelstyle" style="background:' +color+';color:' +this.isLight(color)+'">'+content+'</div>') 
             // str_new += str[str.length-1]
             // this.showdata = str_new;   
           }         

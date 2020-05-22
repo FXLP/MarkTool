@@ -74,6 +74,8 @@ export default {
     },
     logout() {
       this.$cookies.remove('Admin-Token')
+      sessionStorage.clear()
+      localStorage.clear()
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     }
   }

@@ -1,4 +1,4 @@
-import router from './router'
+import router, { resetRouter } from './router'
 import store from './store'
 import { Message } from 'element-ui'
 import NProgress from 'nprogress' // progress bar
@@ -30,11 +30,6 @@ router.beforeEach(async(to, from, next) => {
       console.log('hasroles', hasRoles, store.getters.roles)
 
       if (hasRoles) {
-        const accessRoutes = await store.dispatch('permission/generateRoutes', store.getters.roles)
-
-        // // dynamically add accessible routes
-        router.addRoutes(accessRoutes)
-
         next()
       } else {
         try {
@@ -48,6 +43,7 @@ router.beforeEach(async(to, from, next) => {
           const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
 
           // dynamically add accessible routes
+          resetRouter()
           router.addRoutes(accessRoutes)
 
           // hack method to ensure that addRoutes is complete

@@ -595,11 +595,11 @@ export default {
               {
                 id: 0,
                 name: 'entity1',
-                color: '#eeeeee'
+                color: '#00FF95'
               }, {
                 id: 1,
                 name: 'entity2',
-                color: '#eeeeee'
+                color: '#00D4FF'
               }
             ]
           },
@@ -608,12 +608,12 @@ export default {
             entitys: [
               {
                 id: 2,
-                name: 'entity1',
-                color: '#eeeeee'
+                name: 'entity3',
+                color: '#CD5454'
               }, {
                 id: 3,
-                name: 'entity2',
-                color: '#eeeeee'
+                name: 'entity4',
+                color: '#FBBC00'
               }
             ]
           }
@@ -911,12 +911,12 @@ export default {
         entitys: [
           {
             id: 0,
-            name: 'entity1',
-            color: '#eeeeee'
+            name: '',
+            color: this.color16()
           }, {
             id: 1,
-            name: 'entity2',
-            color: '#eeeeee'
+            name: '',
+            color: this.color16()
           }
         ],
         key: Date.now()
@@ -1205,10 +1205,17 @@ export default {
     deleteEntity(index) {
       this.form2.entityGroups[this.editIndex].entitys.splice(index, 1)
     },
+    color16() { // 十六进制颜色随机
+      var r = Math.floor(Math.random() * 256)
+      var g = Math.floor(Math.random() * 256)
+      var b = Math.floor(Math.random() * 256)
+      var color = '#' + r.toString(16) + g.toString(16) + b.toString(16)
+      return color
+    },
     newEntity() {
       this.form2.entityGroups[this.editIndex].entitys.push({
         'name': '',
-        'color': '',
+        'color': this.color16(),
         key: Date.now()
       })
     },

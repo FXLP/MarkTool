@@ -74,7 +74,7 @@
 <script>
 import { validUsername } from '@/utils/validate'
 // import SocialSign from './components/SocialSignin'
-
+import router from '@/router'
 export default {
   name: 'Login',
   // components: { SocialSign },
@@ -168,8 +168,20 @@ export default {
             .then((response) => {
               // console.log('success',response);
               this.$store.commit('user/SET_NAME', this.loginForm.username)
-              this.$router.push({ path: '/' })
-              this.loading = false
+              // localStorage.setItem('store', JSON.stringify(this.$store.state))
+              const { roles } = this.$store.dispatch('user/getRoles')
+                .then((response1) => {
+                  const { roles } = response1
+                  this.$store.dispatch('permission/generateRoutes', roles)
+                    .then((response2) => {
+                      const accessRoutes = response2
+                      console.log('access', accessRoutes)
+
+                      router.addRoutes(accessRoutes)
+                      this.$router.push({ path: '/' })
+                      this.loading = false
+                    })
+                })
             })
             .catch(() => {
               // console.log('fail',error);

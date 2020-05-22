@@ -174,11 +174,19 @@ export default {
       this.deleterow = row
       this.deleteindex = index
     },
+    compare(property) {
+      return function(a, b) {
+        var value1 = a[property]
+        var value2 = b[property]
+        return value1 - value2
+      }
+    },
     getList() {
       this.$store.dispatch('project/getallProject')
         .then((response) => {
-          console.log(response)
-          this.list = response
+          console.log('1', response)
+          // console.log('2',response.sort(this.compare("id")))
+          this.list = response.reverse()
         })
         .catch(() => {
           console.log('error')

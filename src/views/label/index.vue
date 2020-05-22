@@ -147,7 +147,7 @@ export default {
     },
     getList() {
       this.$store.dispatch('user/getEpoch', this.userid).then((response) => {
-        this.list = response
+        this.list = response.reverse()
         for (let i = 0; i < this.list.length; i++) {
           // this.total = this.list.length
           this.$store.dispatch('project/getProject', this.list[i].project).then((response1) => {
