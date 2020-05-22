@@ -1206,10 +1206,19 @@ export default {
       this.form2.entityGroups[this.editIndex].entitys.splice(index, 1)
     },
     color16() { // 十六进制颜色随机
-      var r = Math.floor(Math.random() * 256)
-      var g = Math.floor(Math.random() * 256)
-      var b = Math.floor(Math.random() * 256)
+      var r = Math.floor(Math.random() * 240) + 16
+      var g = Math.floor(Math.random() * 240) + 16
+      var b = Math.floor(Math.random() * 240) + 16
       var color = '#' + r.toString(16) + g.toString(16) + b.toString(16)
+      console.log(r, g, b, color)
+
+      for (let i = 0; i < this.form2.entityGroups.length; i++) {
+        for (let j = 0; j < this.form2.entityGroups[i].entitys.length; j++) {
+          if (this.form2.entityGroups[i].entitys[j].color === color) {
+            this.color16()
+          }
+        }
+      }
       return color
     },
     newEntity() {

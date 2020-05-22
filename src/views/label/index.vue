@@ -54,7 +54,7 @@
         min-width="100"
       >
         <template slot-scope="scope">
-          <span>{{ scope.row.annotate_progress.finish_num }}</span>
+          <span>{{ scope.row.annotate_progress.waiting_num }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -73,7 +73,7 @@
       >
         <template slot-scope="scope">
           <el-progress
-            :percentage="percent(scope.row.annotate_progress.finish_num,scope.row.annotate_progress.total_num)"
+            :percentage="percent(scope.row.annotate_progress.waiting_num,scope.row.annotate_progress.total_num)"
             :format="format"
           />
         </template>
@@ -160,7 +160,7 @@ export default {
               }
             })
           })
-          // console.log(this.list)
+          console.log(this.list)
         }
       })
     },
