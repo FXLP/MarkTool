@@ -884,9 +884,9 @@ const carouselPrefix = '?imageView2/2/h/440'
             console.log('dicoptionfilter',this.labeledevent1);
             
             var eventname = this.labeledevent1.name.split(this.labeledevent1.id)
-            for (let i = 0; i < this.options.length; i++) {
-              if(this.options[i].name===eventname[0]){
-                filterArr = this.dicoption
+            for (let i = 0; i < this.dicoption.length; i++) {
+              if(this.dicoption[i].group_name===eventname[0]){
+                filterArr.push(this.dicoption[i])
               }
             }
           }
