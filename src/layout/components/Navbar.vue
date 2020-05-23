@@ -5,8 +5,9 @@
     <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
 
     <div class="right-menu">
+      <span v-if="username!=''" class="showusername">你好，{{ username }}</span>
       <template v-if="device!=='mobile'">
-        <span v-if="username!=''" class="showusername">你好，{{ username }}</span>
+
         <search id="header-search" class="right-menu-item" />
 
         <error-log class="errLog-container right-menu-item hover-effect" />

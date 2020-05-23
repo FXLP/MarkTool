@@ -834,13 +834,18 @@ const carouselPrefix = '?imageView2/2/h/440'
       },
       dicinputfilter(){
         var filterArr =[]
-        for (let i = 0; i < this.options.length; i++) {
-          for (let j = 0; j < this.options[i].children.length; j++) {
-            filterArr.push(this.options[i].children[j])
+        if (this.options.length>0) {
+          console.log('ddd',this.options);
+          
+          for (let i = 0; i < this.options.length; i++) {
+            if (this.options[i].children) {  
+              for (let j = 0; j < this.options[i].children.length; j++) {
+                filterArr.push(this.options[i].children[j])
+              }
+            }
           }
+          console.log('addregular',filterArr);
         }
-        console.log('addregular',filterArr);
-        
         return filterArr
       },
       dicoptionfilter(){
@@ -968,10 +973,33 @@ const carouselPrefix = '?imageView2/2/h/440'
                 that.selectend = that.selectstart
                 that.selectstart = temp
               }
-              that.selectpara = window.getSelection().anchorNode.wholeText
-              var para = that.tableData[that.docid].content.split(window.getSelection().anchorNode.wholeText)
+              // that.selectpara = window.getSelection().anchorNode.wholeText
+              that.selectpara = ''
+              var windowselect = window.getSelection().anchorNode
+              while(1){
+                if(windowselect.nodeName==='DIV'){
+                  that.selectpara+=windowselect.firstChild.data
+                }else if(windowselect.nodeName==='#text'){
+                  that.selectpara+=windowselect.data
+                }else if(windowselect.nodeName==='BR'){
+                  that.selectpara+='\n'
+                }
+                if (windowselect.nextSibling) {
+                  windowselect = windowselect.nextSibling
+                }
+                else{
+                  break
+                }
+              }
+              var para = that.tableData[that.docid].content.split(that.selectpara)
+              console.log('addaaa',that.selectpara);
+              
+              console.log('adad',para);
+              
               const start_offset = para[0].length+that.selectstart
               const end_offset = start_offset + window.getSelection().toString().length
+              console.log('aaa',start_offset,end_offset);
+              
               if(that.ischongfulabel(start_offset,end_offset)){
                 setTimeout(() => {
                   if(that.template_type === 'RE'||that.template_type === 'NER'||(that.template_type==='EVENT' && that.labeledevent!='')){
@@ -2006,7 +2034,7 @@ const carouselPrefix = '?imageView2/2/h/440'
         const start_offset = para[0].length+this.selectstart
         const end_offset = start_offset + content.length
         var addpara = this.selectpara.slice(0,this.selectstart)+'<div class="labelstyle" style="background:' +this.selectvalue[1].color+';color:' +this.isLight(this.selectvalue[1].color)+'">'+content+'<div class="deletelabel">x</div></div>'+this.selectpara.slice(this.selectend)
-        // console.log('add',addpara);
+        console.log('addpara',addpara);
 
         // }
         var str = this.showdata.split(this.selectpara);
@@ -2022,6 +2050,7 @@ const carouselPrefix = '?imageView2/2/h/440'
         // console.log('position',docdata.indexOf(content));
         // console.log('position1',content.length);
         console.log('sl',para[0].length+this.selectstart);
+        console.log('beforechange',this.showdata);
         
         // const start_offset = para[0].length+this.selectstart
         // const end_offset = start_offset + content.length
@@ -2041,7 +2070,9 @@ const carouselPrefix = '?imageView2/2/h/440'
         }
         this.$store.dispatch('user/labelentity', data)
           .then((response) => {
-            this.showdata = str_new;
+            // this.showdata = str_new;
+            // console.log('afterchange',this.showdata);
+
             // console.log(response);
             // data.list.id = response.id
             // // this.entityinput.push(data.list)
@@ -2862,7 +2893,10 @@ const carouselPrefix = '?imageView2/2/h/440'
         selectvalue:"",
         labeledclass:'',
         labeledevent:'',
-        labeledevent1:{},
+        labeledevent1:{
+          name:'',
+          id:''
+        },
         labeledeventoptions:[],
         revalue1:'',
         startentitys:[],
