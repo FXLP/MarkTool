@@ -1496,7 +1496,10 @@ const carouselPrefix = '?imageView2/2/h/440'
         var loop = this.entityinput.length
         this.selectstartentity = ''
         this.selectendentity = ''
+       
+        
         for (let i = 0; i < loop; i++) { //删去input内相应的项
+         console.log('dddw',content,this.entityinput[i].content);
             if (content === this.entityinput[i].content) {
               const data = {
                 docid:this.tableData[this.docid].id,
@@ -1515,7 +1518,7 @@ const carouselPrefix = '?imageView2/2/h/440'
                     }
                     new_str +=str[str.length-1];
                   //  console.log(deletestr,str,new_str)
-                    this.showdata = new_str;
+                    // this.showdata = new_str;
                     this.showlabeledstandard(this.itemlabel)
                   // this.updatedoc()
                 })
@@ -1524,7 +1527,7 @@ const carouselPrefix = '?imageView2/2/h/440'
           if (this.template_type==='RE') {
             this.reselectchange()
           }
-          
+          this.showlabeledevent()
           // for (let i = 0; i < this.entityinput1.length; i++) { //删去input内相应的项
           //   if (content === this.entityinput1[i].content) {
           //     const data = {
@@ -1977,10 +1980,18 @@ const carouselPrefix = '?imageView2/2/h/440'
         console.log('content', content);
 
         var para = this.tableData[this.docid].content.split(this.selectpara)
+        
+        
         const start_offset = para[0].length+this.selectstart
         const end_offset = start_offset + content.length
         var addpara = this.selectpara.slice(0,this.selectstart)+'<div class="labelstyle" style="background:' +this.selectvalue[1].color+';color:' +this.isLight(this.selectvalue[1].color)+'">'+content+'<div class="deletelabel">x</div></div>'+this.selectpara.slice(this.selectend)
+        // console.log('addpara',addpara);
+        console.log('addpara',addpara);
+        console.log('aaaaaa',this.showdata,'s',this.selectpara);
+        
         var str = this.showdata.split(this.selectpara);
+        console.log('str',str);
+        
         var str_new = "";
         str_new = str[0] + addpara + str[1]
         // this.showdata = str_new;
@@ -1990,7 +2001,7 @@ const carouselPrefix = '?imageView2/2/h/440'
         var docdata = this.tableData[this.docid].content
         // console.log('position',docdata.indexOf(content));
         // console.log('position1',content.length);
-        console.log('sl',para[0].length+this.selectstart);
+        // console.log('sl',para[0].length+this.selectstart);
         
         
         
@@ -2008,7 +2019,7 @@ const carouselPrefix = '?imageView2/2/h/440'
         }
         this.$store.dispatch('user/labelentity', data)
           .then((response) => {
-            this.showdata = str_new;
+            // this.showdata = str_new;
              if(this.template_type==='RE'){
               const data = {
                 docid:this.tableData[this.docid].id,
@@ -2020,6 +2031,7 @@ const carouselPrefix = '?imageView2/2/h/440'
                   const list = response.entities
                   this.entityinput = list
                   this.reselectchange()
+                  this.showlabeledevent()
                 })
               }else{
                 const data = {
@@ -2031,6 +2043,7 @@ const carouselPrefix = '?imageView2/2/h/440'
                     console.log('updatedoc1',response)
                     const list = response
                     this.entityinput = list
+                    this.showlabeledevent()
                 })
             }
           })
@@ -2070,7 +2083,6 @@ const carouselPrefix = '?imageView2/2/h/440'
         const end_offset = start_offset + content.length
         var addpara = this.selectpara.slice(0,this.selectstart)+'<div class="labelstyle" style="background:' +this.selectvalue[1].color+';color:' +this.isLight(this.selectvalue[1].color)+'">'+content+'<div class="deletelabel">x</div></div>'+this.selectpara.slice(this.selectend)
         console.log('addpara',addpara);
-
         // }
         var str = this.showdata.split(this.selectpara);
         var str_new = "";
