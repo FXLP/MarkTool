@@ -900,9 +900,13 @@ const carouselPrefix = '?imageView2/2/h/440'
         }else{
           if (JSON.stringify(this.labeledevent1) != "{}") {
             var eventname = this.labeledevent1.name.split(this.labeledevent1.id)
+            console.log('adadad',this.regularoption);
+            // filterArr = this.regularoption
             for (let i = 0; i < this.regularoption.length; i++) {
-              if(this.regularoption[i].group_name===eventname[0]){
-                filterArr.push(this.regularoption[i])
+              for (let j = 0; j < this.regularoption[i].entity_template_list.length; j++) {
+                if(this.regularoption[i].entity_template_list[j].group_name===eventname[0]){
+                  filterArr.push(this.regularoption[i])
+                }
               }
             }
           }
