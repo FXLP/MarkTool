@@ -899,7 +899,12 @@ const carouselPrefix = '?imageView2/2/h/440'
           filterArr = this.regularoption
         }else{
           if (JSON.stringify(this.labeledevent1) != "{}") {
-            filterArr = this.regularoption
+            var eventname = this.labeledevent1.name.split(this.labeledevent1.id)
+            for (let i = 0; i < this.regularoption.length; i++) {
+              if(this.regularoption[i].group_name===eventname[0]){
+                filterArr.push(this.regularoption[i])
+              }
+            }
           }
         }
         return filterArr
