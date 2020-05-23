@@ -97,8 +97,8 @@ export default {
       reguser: '',
       regpass: '',
       loginForm: {
-        username: 'ecust',
-        password: 'ecustlab301'
+        username: 'admin',
+        password: 'admin'
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
