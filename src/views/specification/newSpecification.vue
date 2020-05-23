@@ -666,7 +666,17 @@ export default {
   methods: {
     submit(specification, form2) {
       var isempty = 1
+      var ischongfu = 0
       if (this.specification.labelType === '命名实体识别') {
+        for (let i = 0; i < this.form2.entityGroups.length; i++) {
+          for (let j = 0; j < this.form2.entityGroups[i].entitys.length - 1; j++) {
+            for (let k = j + 1; k < this.form2.entityGroups[i].entitys.length; k++) {
+              if (this.form2.entityGroups[i].entitys[j].name === this.form2.entityGroups[i].entitys[k].name) {
+                ischongfu = 1
+              }
+            }
+          }
+        }
         for (let k = 0; k < this.form2.entityGroups.length; k++) {
           for (let l = 0; l < this.form2.entityGroups[k].entitys.length; l++) {
             console.log('color', this.form2.entityGroups[k].entitys[l].color)
@@ -686,6 +696,11 @@ export default {
           this.$message({
             type: 'error',
             message: '信息未填写完整'
+          })
+        } else if (ischongfu) {
+          this.$message({
+            type: 'error',
+            message: '实体集内存在同名实体'
           })
         } else {
           for (let i = 0; i < this.form2.entityGroups.length; i++) {
@@ -790,6 +805,15 @@ export default {
             console.log('error')
           })
       } else {
+        for (let i = 0; i < this.form2.entityGroups.length; i++) {
+          for (let j = 0; j < this.form2.entityGroups[i].entitys.length - 1; j++) {
+            for (let k = j + 1; k < this.form2.entityGroups[i].entitys.length; k++) {
+              if (this.form2.entityGroups[i].entitys[j].name === this.form2.entityGroups[i].entitys[k].name) {
+                ischongfu = 1
+              }
+            }
+          }
+        }
         for (let k = 0; k < this.form2.entityGroups.length; k++) {
           for (let l = 0; l < this.form2.entityGroups[k].entitys.length; l++) {
             console.log('color', this.form2.entityGroups[k].entitys[l].color)
@@ -809,6 +833,11 @@ export default {
           this.$message({
             type: 'error',
             message: '信息未填写完整'
+          })
+        } else if (ischongfu) {
+          this.$message({
+            type: 'error',
+            message: '事件集内存在同名实体'
           })
         } else {
           for (let i = 0; i < this.form2.entityGroups.length; i++) {
@@ -961,7 +990,17 @@ export default {
       })
     },
     reformchange() {
+      var ischongfu = 0
       var isempty = 1
+      for (let i = 0; i < this.form2.entityGroups.length; i++) {
+        for (let j = 0; j < this.form2.entityGroups[i].entitys.length - 1; j++) {
+          for (let k = j + 1; k < this.form2.entityGroups[i].entitys.length; k++) {
+            if (this.form2.entityGroups[i].entitys[j].name === this.form2.entityGroups[i].entitys[k].name) {
+              ischongfu = 1
+            }
+          }
+        }
+      }
       for (let k = 0; k < this.form2.entityGroups.length; k++) {
         for (let l = 0; l < this.form2.entityGroups[k].entitys.length; l++) {
           console.log('color', this.form2.entityGroups[k].entitys[l].color)
@@ -981,6 +1020,11 @@ export default {
         this.$message({
           type: 'error',
           message: '信息未填写完整'
+        })
+      } else if (ischongfu) {
+        this.$message({
+          type: 'error',
+          message: '实体集内存在重复实体'
         })
       } else {
         for (let i = 0; i < this.form2.entityGroups.length; i++) {
@@ -1082,6 +1126,7 @@ export default {
     },
     onSubmitForm2() {
       var isempty = 1
+      var ischongfu = 0
       if (this.specification.labelType === '命名实体识别') {
         const list = []
         for (let k = 0; k < this.form2.entityGroups.length; k++) {
@@ -1090,10 +1135,22 @@ export default {
             break
           }
         }
+        for (let i = 0; i < this.form2.entityGroups.length - 1; i++) {
+          for (let j = i + 1; j < this.form2.entityGroups.length; j++) {
+            if (this.form2.entityGroups[i].name === this.form2.entityGroups[j].name) {
+              ischongfu = 1
+            }
+          }
+        }
         if (!isempty) {
           this.$message({
             type: 'error',
             message: '请将信息填写完整'
+          })
+        } else if (ischongfu) {
+          this.$message({
+            type: 'error',
+            message: '存在同名实体集'
           })
         } else {
           for (let i = 0; i < this.form2.entityGroups.length; i++) {
@@ -1124,16 +1181,35 @@ export default {
             break
           }
         }
+        for (let i = 0; i < this.form2.entityGroups.length - 1; i++) {
+          for (let j = i + 1; j < this.form2.entityGroups.length; j++) {
+            if (this.form2.entityGroups[i].name === this.form2.entityGroups[j].name) {
+              ischongfu = 1
+            }
+          }
+        }
         for (let k = 0; k < this.form2.relationships.length; k++) {
           if (this.form2.relationships[k].Rname === '') {
             isempty = 0
             break
           }
         }
+        for (let i = 0; i < this.form2.relationships.length - 1; i++) {
+          for (let j = i + 1; j < this.form2.relationships.length; j++) {
+            if (this.form2.relationships[i].Rname === this.form2.relationships[j].Rname) {
+              ischongfu = 1
+            }
+          }
+        }
         if (!isempty) {
           this.$message({
             type: 'error',
             message: '请将信息填写完整'
+          })
+        } else if (ischongfu) {
+          this.$message({
+            type: 'error',
+            message: '存在同名实体/关系集'
           })
         } else {
           for (let i = 0; i < this.form2.entityGroups.length; i++) {
@@ -1159,6 +1235,13 @@ export default {
       } else if (this.specification.labelType === '文本分类') {
         this.active++
       } else {
+        for (let i = 0; i < this.form2.entityGroups.length - 1; i++) {
+          for (let j = i + 1; j < this.form2.entityGroups.length; j++) {
+            if (this.form2.entityGroups[i].name === this.form2.entityGroups[j].name) {
+              ischongfu = 1
+            }
+          }
+        }
         for (let k = 0; k < this.form2.entityGroups.length; k++) {
           if (this.form2.entityGroups[k].name === '') {
             isempty = 0
@@ -1169,6 +1252,11 @@ export default {
           this.$message({
             type: 'error',
             message: '请将信息填写完整'
+          })
+        } else if (ischongfu) {
+          this.$message({
+            type: 'error',
+            message: '存在同名事件集'
           })
         } else {
           const list = []

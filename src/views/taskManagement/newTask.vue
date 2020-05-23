@@ -240,9 +240,7 @@
             <div>
               示例：
             </div>
-            <div>
-              {"器官": ["肝","胰","肾","甲状腺","肾上腺","颈部淋巴结","腹腔"],"姓名": ["小王","小张"]}
-            </div>
+            <img style="width:100%" src="@/assets/biaozhun.png">
           </el-form-item>
         </el-form>
       </div>

@@ -345,7 +345,7 @@
               name="标记标准"
             >
               <el-collapse
-                v-for="(item) in options"
+                v-for="item in options"
                 :key="item.id"
                 v-model="activeName"
                 accordion
@@ -392,7 +392,7 @@
                   <div>
                     已标记的标准：
                   </div>
-                  <div v-for="st in labeledstandard" :key="st.content">
+                  <div v-for="st in labeledstandardfilter" :key="st.content">
                     {{ st.content }} - {{ st.standard_name }}
                   </div>
                 </el-collapse-item>
@@ -413,7 +413,7 @@
                 <el-option
                   v-for="dic in dicoptionfilter"
                   :key="dic.id"
-                  :label="dic.name"
+                  :label="dic.group_name+'-'+dic.name"
                   :value="dic.id"
                 />
               </el-select>
@@ -458,7 +458,7 @@
               v-for="entity in dialogoption"
               :key="entity.id"
               :label="entity.label"
-              :value="entity.name"
+              :value="entity.id"
             />
           </el-select>
           <el-input
@@ -489,7 +489,7 @@
             <el-option
               v-for="entity in dicinputfilter"
               :key="entity.id"
-              :label="entity.label"
+              :label="entity.groupname+'-'+entity.label"
               :value="entity.id"
             />
           </el-select>
@@ -572,7 +572,7 @@
                   <el-option
                     v-for="(item,index1) in dicinputfilter"
                     :key="index1"
-                    :label="item.name"
+                    :label="item.groupname+'-'+item.name"
                     :value="item.id"
                   />
                 </el-select>
@@ -808,6 +808,32 @@ const carouselPrefix = '?imageView2/2/h/440'
         Kanban,splitPane
     },
     computed:{
+      labeledstandardfilter(){
+        var filterArr =[]
+        for (let i = 0; i < this.options.length; i++) {
+          if (this.options[i].label===this.itemlabel) {
+            for (let j = 0; j < this.entityinput.length; j++) {
+              if(this.entityinput[j].standard != null){
+                for (let k = 0; k < this.options[i].children.length; k++) {
+                  if((this.options[i].children[k].id===this.entityinput[j].entity_template)&&this.options[i].children[k].standard){
+                    for (let l = 0; l < this.options[i].children[k].standard.length; l++) {
+                      if (this.options[i].children[k].standard[l].id===this.entityinput[j].standard) {
+                        filterArr.push({
+                          standard_name:this.options[i].children[k].standard[l].standard_name,
+                          content:this.entityinput[j].content
+                        })
+                      }
+                    }
+
+                  }
+
+                }
+              }
+            }
+          }
+        }
+        return filterArr
+      },
 			filterentitys(){
         var filterArr =[]
         if(this.template_type!='EVENT'){
@@ -835,11 +861,10 @@ const carouselPrefix = '?imageView2/2/h/440'
       dicinputfilter(){
         var filterArr =[]
         if (this.options.length>0) {
-          console.log('ddd',this.options);
-          
           for (let i = 0; i < this.options.length; i++) {
             if (this.options[i].children) {  
               for (let j = 0; j < this.options[i].children.length; j++) {
+                this.options[i].children[j].groupname = this.options[i].label
                 filterArr.push(this.options[i].children[j])
               }
             }
@@ -882,10 +907,14 @@ const carouselPrefix = '?imageView2/2/h/440'
       dicinputstnamefilter(){
         var filterArr = []
         console.log('字典选择标准',this.options,this.dicinputentity);
-        for (let i = 0; i < this.options.length; i++) {
-          for (let j = 0; j < this.options[i].children.length; j++) {
-            if(this.options[i].children[j].id===this.dicinputentity){
-              filterArr = this.options[i].children[j].standard
+        if (this.options.length>0) {
+          for (let i = 0; i < this.options.length; i++) {
+            if (this.options[i].children) {          
+              for (let j = 0; j < this.options[i].children.length; j++) {
+                if(this.options[i].children[j].id===this.dicinputentity){
+                  filterArr = this.options[i].children[j].standard
+                }
+              }
             }
           }
         }
@@ -1081,7 +1110,11 @@ const carouselPrefix = '?imageView2/2/h/440'
       }
       return null;
     },
-      ischongfulabel(start,end){
+      ischongfulabel(start,end){       
+        // console.log('aaaddddd',this.tableData[this.docid].content.length,start); 
+        if (start>=this.tableData[this.docid].content.length) {
+          return false
+        }
         for (let i = 0; i < this.entityinput.length; i++) {
           if(!(end<=this.entityinput[i].start_offset||start>=this.entityinput[i].end_offset))
           {
@@ -1158,7 +1191,7 @@ const carouselPrefix = '?imageView2/2/h/440'
                   }
                   this.$store.dispatch('project/getstandard',getstandardid)
                   .then((response1) => {
-                    console.log('response1',response1);
+                    // console.log('response1',response1);
                     
                     // list[i].children[j].standard = response1
                     list[i].children[j].standard = []
@@ -1222,7 +1255,7 @@ const carouselPrefix = '?imageView2/2/h/440'
                   }
                    this.$store.dispatch('project/getstandard',getstandardid)
                   .then((response1) => {
-                    console.log('response1',response1);
+                    // console.log('response1',response1);
                     
                     // list[i].children[j].standard = response1
                     list[i].children[j].standard = []
@@ -1596,6 +1629,8 @@ const carouselPrefix = '?imageView2/2/h/440'
                  for (let m = 0; m < this.labeledeventoptions.length; m++) {
                   if(this.labeledeventoptions[m].id===this.labeledevent1.id){
                     this.entityinput = this.labeledeventoptions[m].entities
+                    console.log('huodeinput',this.entityinput);
+                    
                     // this.labeledeventchange()
                     this.showlabeledevent()
                   }
@@ -2236,6 +2271,7 @@ const carouselPrefix = '?imageView2/2/h/440'
         for (let i = 0; i < children.length; i++) {
           if (children[i].id === id.entityid){
             this.standards = children[i].standard
+            this.standardid = ''
             break;
           }
           if(i===children.length-1){
@@ -2327,8 +2363,6 @@ const carouselPrefix = '?imageView2/2/h/440'
       dialogadd(){
         console.log('add2',this.dialogentity,this.dialoginput);
         if (this.dialogentity&&this.dialoginput) {
-          
-        
         const data = {
           id:this.projectid,
           list:{
@@ -2390,34 +2424,42 @@ const carouselPrefix = '?imageView2/2/h/440'
               })
           }
         }else{
-          this.getlabeledeventoptions()
+          // this.getlabeledeventoptions()
         }
-        setTimeout(() => {
+        // setTimeout(() => {
           
-        console.log('h',this.entityinput,this.options);
-        this.labeledstandard=[]
-        for (let i = 0; i < this.options.length; i++) {
-          if (this.options[i].label===label) {
-            for (let j = 0; j < this.entityinput.length; j++) {
-              if(this.entityinput[j].standard != null){
-                for (let k = 0; k < this.options[i].children.length; k++) {
-                  if(this.options[i].children[k].id===this.entityinput[j].entity_template){
-                    for (let l = 0; l < this.options[i].children[k].standard.length; l++) {
-                      if (this.options[i].children[k].standard[l].id===this.entityinput[j].standard) {
-                        this.labeledstandard.push({
-                          standard_name:this.options[i].children[k].standard[l].standard_name,
-                          content:this.entityinput[j].content
-                        })
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-        console.log('labeledstandard',this.labeledstandard);
-        }, 1000);
+        // console.log('h',this.entityinput,this.options);
+        // this.labeledstandard.splice(0,this.labeledstandard.length)
+        // this.labeledstandard.push({
+        //   standard_name:'',
+        //   content:''
+        // })
+        // this.labeledstandard = []
+        // // this.$set(this.labeledstandard,[])
+        // // var temp = []
+        // for (let i = 0; i < this.options.length; i++) {
+        //   if (this.options[i].label===label) {
+        //     for (let j = 0; j < this.entityinput.length; j++) {
+        //       if(this.entityinput[j].standard != null){
+        //         for (let k = 0; k < this.options[i].children.length; k++) {
+        //           if(this.options[i].children[k].id===this.entityinput[j].entity_template){
+        //             for (let l = 0; l < this.options[i].children[k].standard.length; l++) {
+        //               if (this.options[i].children[k].standard[l].id===this.entityinput[j].standard) {
+        //                 this.labeledstandard.push({
+        //                   standard_name:this.options[i].children[k].standard[l].standard_name,
+        //                   content:this.entityinput[j].content
+        //                 })
+        //               }
+        //             }
+        //           }
+        //         }
+        //       }
+        //     }
+        //   }
+        // }
+        // // this.labeledstandard = temp
+        // console.log('labeledstandard',this.labeledstandard);
+        // }, 500);
         
       },
       getdic(){

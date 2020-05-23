@@ -153,6 +153,7 @@
       >
         <!-- 每次点击打开实体集对话框需要更新参数editIndex -->
         <el-table
+          v-if="specification.entityGroups"
           :data="specification.entityGroups[editIndex].entitys"
           height="600px"
         >
@@ -195,6 +196,7 @@
           append-to-body
         >
           <el-form
+            v-if="specification.entityGroups&&specification.entityGroups[editIndex].entitys"
             ref="form"
             :model="form=specification.entityGroups[editIndex].entitys[editEntityIndex]"
             label-width="150px"

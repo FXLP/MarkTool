@@ -74,7 +74,6 @@
         <template slot-scope="scope" min-width="200">
           <el-progress
             :percentage="percent(scope.row.annotate_progress.waiting_num,scope.row.annotate_progress.total_num)"
-            :format="format"
           />
         </template>
       </el-table-column>
@@ -168,7 +167,7 @@ export default {
       if (b === 0) {
         return 0
       } else {
-        return (a / b * 100).toFixed(0)
+        return parseInt((a / b * 100).toFixed(0))
       }
     },
     mark(index, row) { // need jump to with mission ID
