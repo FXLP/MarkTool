@@ -860,17 +860,19 @@ const carouselPrefix = '?imageView2/2/h/440'
       },
       dicinputfilter(){
         var filterArr =[]
-        if (this.options.length>0) {
+        setTimeout(() => {
+        // if (this.options.length>0) {
           for (let i = 0; i < this.options.length; i++) {
-            if (this.options[i].children) {  
+            // if (this.options[i].children) {  
               for (let j = 0; j < this.options[i].children.length; j++) {
                 this.options[i].children[j].groupname = this.options[i].label
                 filterArr.push(this.options[i].children[j])
               }
-            }
+            // }
           }
           console.log('addregular',filterArr);
-        }
+        // }
+        }, 500);
         return filterArr
       },
       dicoptionfilter(){
