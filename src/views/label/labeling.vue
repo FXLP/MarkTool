@@ -862,17 +862,23 @@ const carouselPrefix = '?imageView2/2/h/440'
         var filterArr =[]
         setTimeout(() => {
         // if (this.options.length>0) {
-          for (let i = 0; i < this.options.length; i++) {
-            // if (this.options[i].children) {  
-              for (let j = 0; j < this.options[i].children.length; j++) {
-                this.options[i].children[j].groupname = this.options[i].label
-                filterArr.push(this.options[i].children[j])
-              }
-            // }
-          }
+          console.log('awdawd');
+          // if (JSON.stringify(this.labeledevent1) != "{}") {
+            var eventname = this.labeledevent1.name.split(this.labeledevent1.id)
+            for (let i = 0; i < this.options.length; i++) {
+              // if (this.options[i].children) {  
+                for (let j = 0; j < this.options[i].children.length; j++) {
+                  this.options[i].children[j].groupname = this.options[i].label
+                  // if (this.options[i].label===eventname[0]) {
+                    filterArr.push(this.options[i].children[j])
+                  // }
+                }
+              // }
+            }
+          // }
           console.log('addregular',filterArr);
         // }
-        }, 500);
+        }, 1000);
         return filterArr
       },
       dicoptionfilter(){
@@ -1438,8 +1444,8 @@ const carouselPrefix = '?imageView2/2/h/440'
       labeledeventchange(){
         console.log(this.labeledevent1);
         var eventname = this.labeledevent1.name.split(this.labeledevent1.id)
-        console.log(eventname);
-        
+        console.log('eventname',eventname);
+        this.eventoptions=[]
         for (let i = 0; i < this.options.length; i++) {
           if (eventname[0]===this.options[i].name && this.eventoptions.length===0) {
             this.eventoptions.push(this.options[i])
