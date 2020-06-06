@@ -363,9 +363,9 @@ export function regularmatch(formdata) {
   })
 }
 
-export function deletedic(dicid) {
+export function deletedic(projectid, entityid) {
   return request({
-    url: '/api/dics/' + dicid + '/',
+    url: '/api/projects/' + projectid + '/entitytemplates/' + entityid + '/dics/',
     method: 'delete'
   })
 }

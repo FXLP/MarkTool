@@ -466,12 +466,12 @@
           <div v-if="standardguanli=='2'">
             <el-select
               v-model="deletestandardid"
-              placeholder="请选择标记的标准"
+              placeholder="请选择删除的标准"
             >
               <el-option
                 v-for="standard in deletestlist"
                 :key="standard.id"
-                :label="standard.standard_name"
+                :label="standard.label+'-'+standard.standard_name"
                 :value="standard.id"
               />
             </el-select>
@@ -884,29 +884,57 @@ const carouselPrefix = '?imageView2/2/h/440'
     computed:{
       labeledstandardfilter(){
         var filterArr =[]
-        for (let i = 0; i < this.options.length; i++) {
-          if (this.options[i].label===this.itemlabel) {
-            for (let j = 0; j < this.entityinput.length; j++) {
-              if(this.entityinput[j].standard != null){
-                for (let k = 0; k < this.options[i].children.length; k++) {
-                  if((this.options[i].children[k].id===this.entityinput[j].entity_template)&&this.options[i].children[k].standard){
-                    for (let l = 0; l < this.options[i].children[k].standard.length; l++) {
-                      if (this.options[i].children[k].standard[l].id===this.entityinput[j].standard) {
-                        filterArr.push({
-                          standard_name:this.options[i].children[k].standard[l].standard_name,
-                          content:this.entityinput[j].content
-                        })
+        // setTimeout(() => {    
+          
+          if(this.template_type==='EVENT'){
+            for (let i = 0; i < this.options.length; i++) {
+              if (this.options[i].label===this.itemlabel) {
+                for (let j = 0; j < this.entityinput.length; j++) {
+                  if(this.entityinput[j].standard != null){
+                    for (let k = 0; k < this.options[i].children.length; k++) {
+                      if((this.options[i].children[k].id===this.entityinput[j].entity_template)&&this.options[i].children[k].standard){
+                        for (let l = 0; l < this.options[i].children[k].standard.length; l++) {
+                          if (this.options[i].children[k].standard[l].id===this.entityinput[j].standard) {
+                            filterArr.push({
+                              standard_name:this.options[i].children[k].standard[l].standard_name,
+                              content:this.entityinput[j].content
+                            })
+                          }
+                        }
                       }
                     }
-
                   }
-
                 }
               }
             }
+          }else{
+            for (let i = 0; i < this.options.length; i++) {
+              // if (this.options[i].label===this.itemlabel) {
+                for (let j = 0; j < this.entityinput.length; j++) {
+                  if(this.entityinput[j].standard != null&&this.options[i].children){
+                    for (let k = 0; k < this.options[i].children.length; k++) {
+                      if((this.options[i].children[k].id===this.entityinput[j].entity_template)&&this.options[i].children[k].standard){
+                        for (let l = 0; l < this.options[i].children[k].standard.length; l++) {
+                          if (this.options[i].children[k].standard[l].id===this.entityinput[j].standard) {
+                            filterArr.push({
+                              standard_name:this.options[i].children[k].standard[l].standard_name,
+                              content:this.entityinput[j].content
+                            })
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              // }
+            }
           }
-        }
-        return filterArr
+          console.log('lastshow',filterArr);
+          
+          return filterArr
+        // }, 500);
+        
+        
       },
 			filterentitys(){
         var filterArr =[]
@@ -1213,6 +1241,19 @@ const carouselPrefix = '?imageView2/2/h/440'
       })
     },
     methods: {
+    // judgeoptions(){
+    //   for (let i = 0; i < this.options.length; i++) {
+    //     if (!this.options[i].children) {
+    //       return false
+    //     }
+    //     for (let j = 0; j < this.options[i].children.length; j++) {
+    //       if (!this.options[i].children[j].standard) {
+    //         return false
+    //       }
+    //     }
+    //   }
+    //   return true
+    // },
     showtipscontent(){
       var standard = ''
       var id = ''
@@ -2539,9 +2580,12 @@ const carouselPrefix = '?imageView2/2/h/440'
         console.log(item);
         for (let i = 0; i < item.length; i++) {
           for (let j = 0; j < item[i].standard.length; j++) {
+            item[i].standard[j].label = item[i].label
             this.deletestlist.push(item[i].standard[j])
           }
         }
+        console.log('deletest',this.deletestlist);
+        
         for (let i = 0; i < this.options.length; i++) {
           if(this.activeName===this.options[i].label)
           {
@@ -2567,10 +2611,15 @@ const carouselPrefix = '?imageView2/2/h/440'
               this.$message({ message: '添加成功！', type: 'success' });
               if(this.template_type == 'EVENT') {
                   this.geteventEntitys()
-                  this.showlabeledstandard(this.itemlabel)
+                  setTimeout(() => {
+                    this.showlabeledstandard(this.itemlabel)  
+                  }, 500);
+                  
                 }else{
                   this.getEntitys()
-                  this.showlabeledstandard(this.itemlabel)
+                   setTimeout(() => {
+                    this.showlabeledstandard(this.itemlabel)  
+                  }, 500);
                 }
               
               this.dialogVisible = false
@@ -2615,6 +2664,7 @@ const carouselPrefix = '?imageView2/2/h/440'
         // console.log(label,this.options);
         console.log('q',this.entityinput);
         if(this.template_type!='EVENT'){
+          this.itemlabel = label
           if(this.template_type==='RE'){
             const data = {
               docid:this.tableData[this.docid].id,
@@ -2911,10 +2961,12 @@ const carouselPrefix = '?imageView2/2/h/440'
         this.activeName=''
         if(name==='字典匹配'){
           this.selecteddicid=''
+          this.dicinputstname = ''
           this.submitdicentity = []
              this.showdicentity = []
              this.chongfudic = []
           this.showdata = this.showdata = this.tableData[this.docid].content
+          this.getdic()
         }else if(name==='正则匹配'){
           this.selectedregularid=''
           this.submitregularentity = []
@@ -3010,10 +3062,19 @@ const carouselPrefix = '?imageView2/2/h/440'
       },
       dicdelete(){
          if (this.deletedicid) {
-           this.$store.dispatch('project/deletedic', this.deletedicid)
+           const data = {
+             projectid:this.projectid,
+             entityid:this.deletedicid
+           }
+           this.$store.dispatch('project/deletedic', data)
             .then((response) => {
               this.showadddic = false
               this.deletedicid = ''
+              this.selecteddicid = ''
+              this.showdicentity = ''
+              this.submitdicentity = ''
+              this.chongfudic = ''
+              this.showdata = this.tableData[this.docid].content
               this.getdic()
                this.$message({
                 type: 'success',
@@ -3071,6 +3132,11 @@ const carouselPrefix = '?imageView2/2/h/440'
             .then((response) => {
               this.showaddregular = false
               this.deleteregularid = ''
+              this.selectedregularid = ''
+              this.submitregularentity = ''
+              this.chongfuregular = ''
+              this.showregularentity = ''
+              this.showdata = this.tableData[this.docid].content
               this.getregular()
                this.$message({
                 type: 'success',

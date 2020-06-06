@@ -490,8 +490,9 @@ const actions = {
   },
   deletedic({ commit, state }, id) {
     return new Promise((resolve, reject) => {
-      const dicid = id
-      deletedic(dicid).then(response => {
+      const projectid = id.projectid
+      const entityid = id.entityid
+      deletedic(projectid, entityid).then(response => {
         // console.log(response)
         const data = response
         resolve(data)
