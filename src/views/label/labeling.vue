@@ -1,24 +1,34 @@
 <template>
   <el-container class="labelcontainer" style="height: auto">
-    <el-aside
-      width="400px"
-      style="background-color: white "
-    >
-      <div class="aside-container">
-        <div class="aside-title">
-          标注数据列表
+    <el-container style="min-width:300px">
+      <el-aside
+        style="position: relative;top: 5px;background-color: white;font-size:15px;min-width:340px;min-height: 300px;max-height:400px"
+      >
+        <div class="aside-container">
+          <div class="aside-title">
+            标注数据列表
+          </div>
+          <el-card
+            v-for="data in tableData"
+            :key="data.id"
+            class="box-card asidelist"
+            :body-style="docid===data.key?'background-color:#eeeeee':'background-color:#ffffff'"
+            @click.native="aside_click(data.key)"
+          >
+            {{ data.content }}
+          </el-card>
         </div>
-        <el-card
-          v-for="data in tableData"
-          :key="data.id"
-          class="box-card asidelist"
-          :body-style="docid===data.key?'background-color:#eeeeee':'background-color:#ffffff'"
-          @click.native="aside_click(data.key)"
-        >
-          {{ data.content }}
-        </el-card>
-      </div>
-    </el-aside>
+      </el-aside>
+      <br>
+      <el-card class="standardcard">
+        <div slot="header" class="clearfix" style="">
+          <span>已标注的标准</span>
+        </div>
+        <div v-for="st in labeledstandardfilter" :key="st.content" class="standardcontainer">
+          '{{ st.content }}' - {{ st.standard_name }}
+        </div>
+      </el-card>
+    </el-container>
     <el-container class="right-container">
       <div
         class="components-container"
@@ -40,13 +50,12 @@
               label="实体统计"
               name="实体统计"
             >
-              <el-collapse
+              <div
                 v-for="(item) in options"
                 :key="item.id"
-                v-model="activeName2"
-                accordion
               >
-                <el-collapse-item
+                {{ item.label }}:
+                <div
                   :title="item.label"
                   :name="item.label"
                 >
@@ -58,15 +67,15 @@
                     <el-badge :value="badgefilter(entity.id)" class="item">
                       <div
                         class="labelstyle"
-                        :style="{background:entity.color,color:isLight(entity.color),'font-size':'18px',display:'inline-block',margin:'5px','padding-left':'10px','padding-right':'10px','margin-left':'15px',}"
+                        :style="{background:entity.color,color:isLight(entity.color),'font-size':'12px',display:'inline-block',margin:'5px','padding-left':'10px','padding-right':'10px','margin-left':'15px',}"
                       >
                         {{ entity.name }}
                       </div>
                     </el-badge>
                     <!-- <el-color-picker v-model="entity.color" disabled /> -->
                   </div>
-                </el-collapse-item>
-              </el-collapse>
+                </div>
+              </div>
             </el-tab-pane>
             <!-- <el-tab-pane
               v-if="template_type=='NULL'"
@@ -388,13 +397,13 @@
                     circle
                     @click="addstandard()"
                   />
-                  <el-button @click="addstandardoption">添加标准名称</el-button>
-                  <div>
+                  <el-button @click="addstandardoption(item.children)">管理标准名称</el-button>
+                  <!-- <div>
                     已标记的标准：
                   </div>
                   <div v-for="st in labeledstandardfilter" :key="st.content">
                     {{ st.content }} - {{ st.standard_name }}
-                  </div>
+                  </div> -->
                 </el-collapse-item>
               </el-collapse>
             </el-tab-pane>
@@ -417,7 +426,7 @@
                   :value="dic.id"
                 />
               </el-select>
-              <el-button @click="showadddic=true">添加字典</el-button>
+              <el-button @click="showadddic=true">字典管理</el-button>
               <el-button @click="confirmdicuse=true">应用此字典</el-button>
             </el-tab-pane>
             <el-tab-pane
@@ -439,75 +448,116 @@
                   :value="regular.re.id"
                 />
               </el-select>
-              <el-button @click="showaddregular=true">添加正则表达式</el-button>
+              <el-button @click="showaddregular=true">管理正则表达式</el-button>
               <el-button @click="confirmregularuse=true">应用此正则匹配</el-button>
             </el-tab-pane>
           </el-tabs>
         </el-card>
         <el-dialog
-          title="添加标准名称"
+          title="管理标准名称"
           :visible.sync="dialogVisible"
           width="30%"
           :before-close="handleClose"
         >
-          <el-select
-            v-model="dialogentity"
-            placeholder="请选择添加标准的实体"
-          >
-            <el-option
-              v-for="entity in dialogoption"
-              :key="entity.id"
-              :label="entity.label"
-              :value="entity.id"
+          <template>
+            <el-radio v-model="standardguanli" label="1">添加</el-radio>
+            <el-radio v-model="standardguanli" label="2">删除</el-radio>
+          </template>
+          <div v-if="standardguanli=='2'">
+            <el-select
+              v-model="deletestandardid"
+              placeholder="请选择标记的标准"
+            >
+              <el-option
+                v-for="standard in deletestlist"
+                :key="standard.id"
+                :label="standard.standard_name"
+                :value="standard.id"
+              />
+            </el-select>
+          </div>
+          <div v-if="standardguanli=='1'">
+            <el-select
+              v-model="dialogentity"
+              placeholder="请选择添加标准的实体"
+            >
+              <el-option
+                v-for="entity in dialogoption"
+                :key="entity.id"
+                :label="entity.label"
+                :value="entity.id"
+              />
+            </el-select>
+            <el-input
+              v-model="dialoginput"
+              placeholder="请输入标准"
+              clearable
             />
-          </el-select>
-          <el-input
-            v-model="dialoginput"
-            placeholder="请输入标准"
-            clearable
-          />
+          </div>
           <span slot="footer" class="dialog-footer">
             <el-button @click="dialogVisible = false">取 消</el-button>
-            <el-button type="primary" @click="dialogadd">确 定</el-button>
+            <el-button v-if="standardguanli=='1'" type="primary" @click="dialogadd">确 定</el-button>
+            <el-button v-if="standardguanli=='2'" type="primary" @click="dialogdelete">删 除</el-button>
           </span>
         </el-dialog>
         <el-dialog
-          title="添加字典"
+          title="字典管理"
           :visible.sync="showadddic"
           width="30%"
           :before-close="handleClose"
         >
-          <el-input
-            v-model="dicinputname"
-            placeholder="请输入字典名称"
-            clearable
-          />
-          <el-select
-            v-model="dicinputentity"
-            placeholder="请选择实体模板"
-          >
-            <el-option
-              v-for="entity in dicinputfilter"
-              :key="entity.id"
-              :label="entity.groupname+'-'+entity.label"
-              :value="entity.id"
+          <template>
+            <el-radio v-model="dicguanli" label="1">添加</el-radio>
+            <el-radio v-model="dicguanli" label="2">删除</el-radio>
+          </template>
+          <div v-if="dicguanli=='2'">
+            <el-select
+              v-model="deletedicid"
+              placeholder="选择实体字典"
+            >
+              <el-option
+                v-for="dic in dicoptionfilter"
+                :key="dic.id"
+                :label="dic.group_name+'-'+dic.name"
+                :value="dic.id"
+              />
+            </el-select>
+          </div>
+          <div v-if="dicguanli=='1'">
+            <el-input
+              v-model="dicinputname"
+              placeholder="请输入字典名称"
+              clearable
             />
-          </el-select>
-          <el-select
-            v-model="dicinputstname"
-            placeholder="请选择标准名称(可选)"
-            clearable
-          >
-            <el-option
-              v-for="standard in dicinputstnamefilter"
-              :key="standard.id"
-              :label="standard.standard_name"
-              :value="standard.id"
-            />
-          </el-select>
+            <el-select
+              v-model="dicinputentity"
+              placeholder="请选择实体模板"
+            >
+              <el-option
+                v-for="entity in dicinputfilter"
+                :key="entity.id"
+                :label="entity.groupname+'-'+entity.label"
+                :value="entity.id"
+              />
+            </el-select>
+            <el-select
+              v-model="dicinputstname"
+              placeholder="请选择标准名称(可选)"
+              clearable
+            >
+              <el-option
+                v-for="standard in dicinputstnamefilter"
+                :key="standard.id"
+                :label="standard.standard_name"
+                :value="standard.id"
+              />
+            </el-select>
+          </div>
+
           <span slot="footer" class="dialog-footer">
             <el-button @click="showadddic = false">取 消</el-button>
-            <el-button type="primary" @click="dicadd">确 定</el-button>
+            <el-button v-if="dicguanli=='1'" type="primav-ifry" @click="dicadd">确 定</el-button>
+            <el-button v-if="dicguanli=='2'" type="primav-ifry" @click="dicdelete">删 除</el-button>
           </span>
         </el-dialog>
         <el-dialog
@@ -545,55 +595,75 @@
           </span>
         </el-dialog>
         <el-dialog
-          title="添加正则表达式"
+          title="管理正则表达式"
           :visible.sync="showaddregular"
           width="30%"
           :before-close="handleClose"
         >
-          <el-input
-            v-model="regularinputname"
-            placeholder="请输入正则表达式"
-            style="margin-bottom:10px"
-            clearable
-          />
+          <template>
+            <el-radio v-model="regularguanli" label="1">添加</el-radio>
+            <el-radio v-model="regularguanli" label="2">删除</el-radio>
+          </template>
+          <div v-if="regularguanli=='2'">
+            <el-select
+              v-model="deleteregularid"
+              placeholder="选择正则表达式"
+            >
+              <el-option
+                v-for="regular in regularoptionfilter"
+                :key="regular.re.id"
+                :label="regular.re.content"
+                :value="regular.re.id"
+              />
+            </el-select>
+          </div>
+          <div v-if="regularguanli=='1'">
+            <el-input
+              v-model="regularinputname"
+              placeholder="请输入正则表达式"
+              style="margin-bottom:10px"
+              clearable
+            />
 
-          <el-form
-            label-width="100px"
-            class="demo-ruleForm"
-          >
-            <el-form-item
-              v-for="(regular,index) in regulartem"
-              :key="index"
-              label="选择对应实体"
-              prop="regulartem"
+            <el-form
+              label-width="100px"
+              class="demo-ruleForm"
             >
-              <div>
-                <el-select v-model="regular.id">
-                  <el-option
-                    v-for="(item,index1) in dicinputfilter"
-                    :key="index1"
-                    :label="item.groupname+'-'+item.name"
-                    :value="item.id"
+              <el-form-item
+                v-for="(regular,index) in regulartem"
+                :key="index"
+                label="选择对应实体"
+                prop="regulartem"
+              >
+                <div>
+                  <el-select v-model="regular.id">
+                    <el-option
+                      v-for="(item,index1) in dicinputfilter"
+                      :key="index1"
+                      :label="item.groupname+'-'+item.name"
+                      :value="item.id"
+                    />
+                  </el-select>
+                  <el-button
+                    type="danger"
+                    size="mini"
+                    icon="el-icon-delete"
+                    circle
+                    @click.prevent="removeregulartem(index)"
                   />
-                </el-select>
-                <el-button
-                  type="danger"
-                  size="mini"
-                  icon="el-icon-delete"
-                  circle
-                  @click.prevent="removeregulartem(index)"
-                />
-              </div>
-            </el-form-item>
-            <el-button
-              circle
-              size="mini"
-              type="primary"
-              @click="newregulartem()"
-            >
-              <i class="el-icon-plus" />
-            </el-button>
-          </el-form>
+                </div>
+              </el-form-item>
+              <el-button
+                circle
+                size="mini"
+                type="primary"
+                @click="newregulartem()"
+              >
+                <i class="el-icon-plus" />
+              </el-button>
+            </el-form>
+          </div>
+
           <!-- <el-select
             v-model="regularinputentity"
             placeholder="请选择正则对应的实体"
@@ -607,8 +677,9 @@
           </el-select> -->
           <span slot="footer" class="dialog-footer">
             <el-button @click="showaddregular = false">取 消</el-button>
-            <el-button type="primary" @click="regularmatch">直接匹配</el-button>
-            <el-button type="primary" @click="regularadd">保存</el-button>
+            <el-button v-if="regularguanli=='1'" type="primary" @click="regularmatch">直接匹配</el-button>
+            <el-button v-if="regularguanli=='1'" type="primary" @click="regularadd">保存</el-button>
+            <el-button v-if="regularguanli=='2'" type="primary" @click="regulardelete">删除</el-button>
           </span>
         </el-dialog>
         <el-card
@@ -722,6 +793,9 @@
               @change="eventselectchange"
             />
           </div>
+          <el-tooltip v-model="tipsshow" manual="true" class="hovertips" effect="dark" :content="showtipscontent()" placement="top-start">
+            <el-button class="hoveritem">隐藏</el-button>
+          </el-tooltip>
         </el-card>
         <!-- <el-dialog
               title="新增标准"
@@ -860,25 +934,29 @@ const carouselPrefix = '?imageView2/2/h/440'
       },
       dicinputfilter(){
         var filterArr =[]
-        // setTimeout(() => {
-        // if (this.options.length>0) {
-          console.log('awdawd',this.labeledevent1);
-          if (JSON.stringify(this.labeledevent1) != "{}"&&this.labeledevent1.name!="") {
-            var eventname = this.labeledevent1.name.split(this.labeledevent1.id)
+          if(this.template_type!='EVENT'){
             for (let i = 0; i < this.options.length; i++) {
-              // if (this.options[i].children) {  
-                for (let j = 0; j < this.options[i].children.length; j++) {
-                  this.options[i].children[j].groupname = this.options[i].label
-                  if (this.options[i].label===eventname[0]) {
-                    filterArr.push(this.options[i].children[j])
+                  for (let j = 0; j < this.options[i].children.length; j++) {
+                    this.options[i].children[j].groupname = this.options[i].label
+                      filterArr.push(this.options[i].children[j])
                   }
-                }
-              // }
+              }
+          }
+          else{
+            console.log('awdawd',this.labeledevent1);
+            if (JSON.stringify(this.labeledevent1) != "{}"&&this.labeledevent1.name!="") {
+              var eventname = this.labeledevent1.name.split(this.labeledevent1.id)
+              for (let i = 0; i < this.options.length; i++) {
+                  for (let j = 0; j < this.options[i].children.length; j++) {
+                    this.options[i].children[j].groupname = this.options[i].label
+                    if (this.options[i].label===eventname[0]) {
+                      filterArr.push(this.options[i].children[j])
+                    }
+                  }
+              }
             }
           }
           console.log('addregular',filterArr);
-        // }
-        // }, 1000);
         return filterArr
       },
       dicoptionfilter(){
@@ -914,6 +992,7 @@ const carouselPrefix = '?imageView2/2/h/440'
               for (let j = 0; j < this.regularoption[i].entity_template_list.length; j++) {
                 if(this.regularoption[i].entity_template_list[j].group_name===eventname[0]){
                   filterArr.push(this.regularoption[i])
+                  break
                 }
               }
             }
@@ -977,7 +1056,9 @@ const carouselPrefix = '?imageView2/2/h/440'
       var mouseY=0;
       var mouseX1=0;
       var mouseY1=0;
+      
       this.$nextTick(function () { //检测鼠标事件
+        
         $('div.labelcontent1').mousemove(function(e) { //鼠标位置
             e = e || window.event;
             mouseX = e.pageX || e.clientX + document.body.scroolLeft;
@@ -986,16 +1067,41 @@ const carouselPrefix = '?imageView2/2/h/440'
               mouseX1 = e.pageX - $("div.labelcontent1").offset().left;
               mouseY1 = e.pageY - $("div.labelcontent1").offset().top;
             }
-              
+            $(".hoveritem").css({
+            position:"absolute",
+            top:mouseY-80,
+            left:mouseX1,
+          })
         });
-        $("div.labelcontent1").on('mouseup','.labelcontent',function () {
-          console.log(mouseX,mouseY);
-          
-          
-          
-          console.log('labelmouse',mouseX1,mouseY1);
-          
 
+        $('div.labelcontent1').on("mouseenter",".labelstyle",function(e){ 
+          if (that.tabactiveName!='字典匹配'&&that.tabactiveName!='正则匹配') {
+            setTimeout(() => {
+              console.log('hover',mouseY-80,mouseX1);
+              var content = $(this)[0].innerText;
+              content = content.split('\nx');
+              that.tipscontent = content
+              that.tipsshow = true
+            }, 200);
+          }
+          // console.log($(".hoveritem"));
+          
+          // $(".hoveritem").trigger('mouseover');
+        })
+        $('div.labelcontent1').on("mouseleave",".labelstyle",function(e){ 
+          // $('.hoveritem').trigger('mouseout');
+          setTimeout(() => {
+            that.tipsshow = false
+            $(".hoveritem").css({
+              position:"absolute",
+              top:mouseY-80,
+              left:mouseX1,
+            })
+          }, 222);
+        })
+        $("div.labelcontent1").on('mouseup','.labelcontent',function () {
+          console.log(mouseX,mouseY); 
+          console.log('labelmouse',mouseX1,mouseY1);
           $("div.block").css({
             position:"absolute",
             top:mouseY-120,
@@ -1074,30 +1180,77 @@ const carouselPrefix = '?imageView2/2/h/440'
         $("div.labelcontent1").on('mouseup','.deletelabel',function () {
           // console.log('12331',$(this).parent());
           // console.log($(this).parent()[0].outerHTML);
-          var deletestr =that.escape2Html($(this).parent()[0].outerHTML);
-          var content = $(this).parent()[0].innerText;
-          content = content.split('\nx');
-        //   var str =  that.showdata.split(deletestr);
-        //   console.log(deletestr,content,str);
-        //   var new_str = ""
-        //   for (let i = 0; i < str.length-1; i++) { // 将删除的词的样式去除后连接起来
-        //     new_str+=str[i]+content[0]
-        //   }
-        //   new_str +=str[str.length-1];
-        // //  console.log(deletestr,str,new_str)
-        //   that.showdata = new_str;
-          console.log('content',content[0]);
-          that.deleteentity(content[0],deletestr)
-          console.log('afterdeleteinput',that.entityinput);
-          
+          if(that.tabactiveName==='字典匹配')
+          {
+            console.log($(this).parent());
+            
+            var deletestr =that.escape2Html($(this).parent()[0].outerHTML);
+            var content = $(this).parent()[0].innerText;
+            content = content.split('\nx');
+            console.log('content',content[0]);
+            that.deletedicmatch($(this).parent()[0].attributes.name.value)
+          }else if(that.tabactiveName==='正则匹配')
+          {
+            console.log($(this).parent());
+            
+            var deletestr =that.escape2Html($(this).parent()[0].outerHTML);
+            var content = $(this).parent()[0].innerText;
+            content = content.split('\nx');
+            console.log('content',content[0]);
+            that.deleteregmatch($(this).parent()[0].attributes.name.value)
+          }
+          else
+          {
+            that.tipsshow = false
+            var deletestr =that.escape2Html($(this).parent()[0].outerHTML);
+            var content = $(this).parent()[0].innerText;
+            content = content.split('\nx');
+            console.log('content',content[0]);
+            that.deleteentity(content[0],deletestr)
+            console.log('afterdeleteinput',that.entityinput);
+          }
         })
       })
     },
     methods: {
-      changebr(showdata){
+    showtipscontent(){
+      var standard = ''
+      var id = ''
+      var name = ''
+      var stname = ''
+      console.log(this.tipscontent[0],this.entityinput);
+      
+      for (let i = 0; i < this.entityinput.length; i++) {
+        if(this.tipscontent[0]===this.entityinput[i].content){
+          id = this.entityinput[i].entity_template
+          standard = this.entityinput[i].standard
+        }
+      }
+      // return '实体名称：'+id+'  标准名称：'+standard
+      console.log(this.options);
+      
+      for (let i = 0; i < this.options.length; i++) {
+        for (let j = 0; j < this.options[i].children.length; j++) {
+          if (this.options[i].children[j].id===id) {
+            name = this.options[i].children[j].name
+            // console.log(id);
+            
+            if (standard) {
+              for (let k = 0; k < this.options[i].children[j].standard.length; k++) {
+                if(this.options[i].children[j].standard[k].id===standard){
+                  stname = this.options[i].children[j].standard[k].standard_name
+                }
+              }
+            }
+            return '实体名称：'+name+'  标准名称：'+stname
+          }
+        }
+      }
+    },
+    changebr(showdata){
          return showdata.replace(/\n/g,"<br/>");
-      },
-      getType(o){
+    },
+    getType(o){
       return Object.prototype.toString.call(o).slice(8,-1);
     },
     isKeyType(o, type) {
@@ -1445,6 +1598,7 @@ const carouselPrefix = '?imageView2/2/h/440'
         console.log(this.labeledevent1);
         var eventname = this.labeledevent1.name.split(this.labeledevent1.id)
         console.log('eventname',eventname);
+        this.itemlabel = eventname[0]
         this.eventoptions=[]
         for (let i = 0; i < this.options.length; i++) {
           if (eventname[0]===this.options[i].name && this.eventoptions.length===0) {
@@ -2001,7 +2155,7 @@ const carouselPrefix = '?imageView2/2/h/440'
         
         const start_offset = para[0].length+this.selectstart
         const end_offset = start_offset + content.length
-        var addpara = this.selectpara.slice(0,this.selectstart)+'<div class="labelstyle" style="background:' +this.selectvalue[1].color+';color:' +this.isLight(this.selectvalue[1].color)+'">'+content+'<div class="deletelabel">x</div></div>'+this.selectpara.slice(this.selectend)
+        var addpara = this.selectpara.slice(0,this.selectstart)+' <el-tooltip content="提示文字" placement="top-start"><div class="labelstyle" style="background:' +this.selectvalue[1].color+';color:' +this.isLight(this.selectvalue[1].color)+'">'+content+'<div class="deletelabel">x</div></div>'+this.selectpara.slice(this.selectend)
         // console.log('addpara',addpara);
         console.log('addpara',addpara);
         console.log('aaaaaa',this.showdata,'s',this.selectpara);
@@ -2379,9 +2533,15 @@ const carouselPrefix = '?imageView2/2/h/440'
         })
         }
       },
-      addstandardoption(){
+      addstandardoption(item){
         this.dialogVisible=true
-        console.log(this.options,this.activeName);
+        this.deletestlist = []
+        console.log(item);
+        for (let i = 0; i < item.length; i++) {
+          for (let j = 0; j < item[i].standard.length; j++) {
+            this.deletestlist.push(item[i].standard[j])
+          }
+        }
         for (let i = 0; i < this.options.length; i++) {
           if(this.activeName===this.options[i].label)
           {
@@ -2422,10 +2582,36 @@ const carouselPrefix = '?imageView2/2/h/440'
         })
         }
       },
+      dialogdelete(){
+        if (this.deletestandardid) {
+           this.$store.dispatch('project/deletest', this.deletestandardid)
+            .then((response) => {
+              this.dialogVisible = false
+              this.deletestandardid = ''
+              this.deletestlist = []
+               if(this.template_type == 'EVENT') {
+                  this.geteventEntitys()
+                  this.showlabeledstandard(this.itemlabel)
+                }else{
+                  this.getEntitys()
+                  this.showlabeledstandard(this.itemlabel)
+                }
+               this.$message({
+                type: 'success',
+                message: '删除成功'
+              })
+            })
+         }else{
+          this.$message({
+          type: 'error',
+          message: '信息未填完整'
+        })
+        }
+      },
       showlabeledstandard(label){
         this.standards=[]
         this.standardentity=[]
-        this.itemlabel = label
+        // this.itemlabel = label
         // console.log(label,this.options);
         console.log('q',this.entityinput);
         if(this.template_type!='EVENT'){
@@ -2542,6 +2728,29 @@ const carouselPrefix = '?imageView2/2/h/440'
             this.dicupdatedoc(this.showdicentity)
         })
       },
+      deletedicmatch(name){
+        console.log('???//',name);
+        
+        for (let i = 0; i < this.showdicentity.length; i++) {
+          if (this.showdicentity[i].start_offset===Number(name)) {
+            this.showdicentity.splice(i,1)
+            break
+          }
+        }
+        for (let i = 0; i < this.chongfudic.length; i++) {
+           if (this.chongfudic[i].start_offset===Number(name)) {
+            this.chongfudic.splice(i,1)
+            break
+          }
+        }
+         for (let i = 0; i < this.submitdicentity.length; i++) {
+           if (this.submitdicentity[i].start_offset===Number(name)) {
+            this.submitdicentity.splice(i,1)
+            break
+          }
+        }
+        this.dicupdatedoc(this.showdicentity)
+      },
       regularchange(){
         this.showdata = this.tableData[this.docid].content
         const formData = new window.FormData()
@@ -2578,6 +2787,27 @@ const carouselPrefix = '?imageView2/2/h/440'
             this.regularupdatedoc(this.showregularentity)
         })
       },
+      deleteregmatch(name){
+         for (let i = 0; i < this.showregularentity.length; i++) {
+          if (this.showregularentity[i].start_offset===Number(name)) {
+            this.showregularentity.splice(i,1)
+            break
+          }
+        }
+        for (let i = 0; i < this.chongfuregular.length; i++) {
+           if (this.chongfuregular[i].start_offset===Number(name)) {
+            this.chongfuregular.splice(i,1)
+            break
+          }
+        }
+         for (let i = 0; i < this.submitregularentity.length; i++) {
+           if (this.submitregularentity[i].start_offset===Number(name)) {
+            this.submitregularentity.splice(i,1)
+            break
+          }
+        }
+        this.regularupdatedoc(this.showregularentity)
+      },
       dicupdatedoc(response){
         this.showdata=this.tableData[this.docid].content
         // console.log(this.tableData[this.docid].content);
@@ -2586,6 +2816,8 @@ const carouselPrefix = '?imageView2/2/h/440'
         // console.log(this.tableData[this.docid].content);
         
         const list = response
+        console.log('dddd',list);
+        
         this.dicentity = response
         // this.entityinput = list
         var addcontent = []
@@ -2610,7 +2842,7 @@ const carouselPrefix = '?imageView2/2/h/440'
             // for (let index = 0; index < str.length-1; index++) {
             //   str_new += str[index]+'<div class="labelstyle" style="background:' +color+'">'+content+'<div class="deletelabel">x</div></div>';
             // }
-            addcontent.push('<div class="labelstyle" style="background:' +color+';color:' +this.isLight(color)+'">'+content+'</div>') 
+            addcontent.push('<div class="labelstyle" name="' + list[i].start_offset + '" style="background:' +color+';color:' +this.isLight(color)+'">'+content+'<div class="deletelabel">x</div></div>') 
             // str_new += str[str.length-1]
             // this.showdata = str_new;   
           }         
@@ -2633,6 +2865,7 @@ const carouselPrefix = '?imageView2/2/h/440'
           }
         }
       },
+      
       regularupdatedoc(response){
         this.showdata=this.tableData[this.docid].content
         const list = response
@@ -2655,14 +2888,7 @@ const carouselPrefix = '?imageView2/2/h/440'
                 }
               }
             }
-            // var str = this.showdata.split(content);
-            // var str_new = "";
-            // for (let index = 0; index < str.length-1; index++) {
-            //   str_new += str[index]+'<div class="labelstyle" style="background:' +color+'">'+content+'<div class="deletelabel">x</div></div>';
-            // }
-            addcontent.push('<div class="labelstyle" style="background:' +color+';color:' +this.isLight(color)+'">'+content+'</div>') 
-            // str_new += str[str.length-1]
-            // this.showdata = str_new;   
+            addcontent.push('<div class="labelstyle" name="' + list[i].start_offset + '" style="background:' +color+';color:' +this.isLight(color)+'">'+content+'<div class="deletelabel">x</div></div>') 
           }         
         }
         var str_new = "";
@@ -2679,6 +2905,7 @@ const carouselPrefix = '?imageView2/2/h/440'
           }
         }
       },
+      
       tabclick(name){
         console.log(name);
         this.activeName=''
@@ -2781,6 +3008,25 @@ const carouselPrefix = '?imageView2/2/h/440'
         })
         }
       },
+      dicdelete(){
+         if (this.deletedicid) {
+           this.$store.dispatch('project/deletedic', this.deletedicid)
+            .then((response) => {
+              this.showadddic = false
+              this.deletedicid = ''
+              this.getdic()
+               this.$message({
+                type: 'success',
+                message: '删除成功'
+              })
+            })
+         }else{
+          this.$message({
+          type: 'error',
+          message: '信息未填完整'
+        })
+        }
+      },
       regularadd(){
         var isempty = 1
         for (let k = 0; k < this.regulartem.length; k++) {
@@ -2816,6 +3062,25 @@ const carouselPrefix = '?imageView2/2/h/440'
           this.$message({
           type: 'error',
           message: '未输入表达式或对应实体'
+        })
+        }
+      },
+      regulardelete(){
+        if (this.deleteregularid) {
+           this.$store.dispatch('project/deleteregular', this.deleteregularid)
+            .then((response) => {
+              this.showaddregular = false
+              this.deleteregularid = ''
+              this.getregular()
+               this.$message({
+                type: 'success',
+                message: '删除成功'
+              })
+            })
+         }else{
+          this.$message({
+          type: 'error',
+          message: '信息未填完整'
         })
         }
       },
@@ -2910,6 +3175,15 @@ const carouselPrefix = '?imageView2/2/h/440'
     },
     data() {
       return {
+        tipscontent:'',
+        tipsshow:false,
+        deletestlist:[],
+        deletestandardid:'',
+        standardguanli:'',
+        deleteregularid:'',
+        regularguanli:'',
+        deletedicid:'',
+        dicguanli:'',
         deleteArr:[],
         showregularentity:[],
         showdicentity:[],
@@ -3193,7 +3467,7 @@ div.block .el-input{
 }
 .aside-container{
   min-height: 90%;
-  min-width: 300px;
+  // min-width: 300px;
   height: auto;
   overflow: hidden;
   background: #f0f0f0;
@@ -3237,5 +3511,28 @@ div.block .el-input{
   text-align: center;
   -webkit-border-radius: 2.75em;
   border-radius: 2.75em;
+}
+.hoveritem{
+  visibility: hidden;
+  position:absolute;
+  // display: none;
+}
+.asidecontent{
+  box-shadow: 5px;
+}
+.standardcard{
+  position: absolute;
+  top:400px;
+  margin-left:10px;
+  min-width: 320px;
+  height: 300px;
+  max-width: 320px;
+}
+.standardcontainer{
+  display: inline-block;
+  box-shadow: 0px 0px 3px #888888;
+    margin: 5px;
+    padding: 8px;
+    border-radius: 5px;
 }
 </style>

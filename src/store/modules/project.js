@@ -1,4 +1,4 @@
-import { getProject, getTemplate, getallTemplate, getTemplatedet, getentitys, getallProject, newTemplate, newEntitygroup, newEntitys, newEventgroup, getEventgroup, newClass, getClass, newRe, getRe, getEventEntitys, newEventEntitys, getReEntitys, newReEntitys, template_use, project_use, newProject, uploadlabelfile, uploaddic, fenpeiepoch, getallepoches, getannres, fileaddstandard, manualaddstandard, getstandard, delProject, delTemplate, getdic, dicmatch, uploadregular, getregular, regularmatch } from '@/api/project'
+import { getProject, getTemplate, getallTemplate, getTemplatedet, getentitys, getallProject, newTemplate, newEntitygroup, newEntitys, newEventgroup, getEventgroup, newClass, getClass, newRe, getRe, getEventEntitys, newEventEntitys, getReEntitys, newReEntitys, template_use, project_use, newProject, uploadlabelfile, uploaddic, fenpeiepoch, getallepoches, getannres, fileaddstandard, manualaddstandard, getstandard, delProject, delTemplate, getdic, dicmatch, uploadregular, getregular, regularmatch, deletedic, deleteregular, deletest } from '@/api/project'
 import qs from 'qs'
 import { template } from '@babel/core'
 
@@ -480,6 +480,42 @@ const actions = {
     const formdata = list.formdata
     return new Promise((resolve, reject) => {
       regularmatch(formdata).then(response => {
+        // console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  deletedic({ commit, state }, id) {
+    return new Promise((resolve, reject) => {
+      const dicid = id
+      deletedic(dicid).then(response => {
+        // console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  deleteregular({ commit, state }, id) {
+    return new Promise((resolve, reject) => {
+      const reid = id
+      deleteregular(reid).then(response => {
+        // console.log(response)
+        const data = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  deletest({ commit, state }, id) {
+    return new Promise((resolve, reject) => {
+      const stid = id
+      deletest(stid).then(response => {
         // console.log(response)
         const data = response
         resolve(data)

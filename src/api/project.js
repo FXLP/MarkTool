@@ -362,3 +362,24 @@ export function regularmatch(formdata) {
     data: formdata
   })
 }
+
+export function deletedic(dicid) {
+  return request({
+    url: '/api/dics/' + dicid + '/',
+    method: 'delete'
+  })
+}
+
+export function deleteregular(reid) {
+  return request({
+    url: '/api/res/' + reid + '/',
+    method: 'delete'
+  })
+}
+
+export function deletest(stid) {
+  return request({
+    url: '/api/standards/' + stid + '/',
+    method: 'delete'
+  })
+}
