@@ -793,7 +793,8 @@
               @change="eventselectchange"
             />
           </div>
-          <el-tooltip v-model="tipsshow" manual="true" class="hovertips" effect="dark" :content="showtipscontent()" placement="top-start">
+          <el-tooltip v-model="tipsshow" manual="true" class="hovertips" effect="dark" placement="top-start">
+            <div slot="content">{{ showtipscontent1() }}<br>{{ showtipscontent2() }}</div>
             <el-button class="hoveritem">隐藏</el-button>
           </el-tooltip>
         </el-card>
@@ -1106,9 +1107,11 @@ const carouselPrefix = '?imageView2/2/h/440'
           if (that.tabactiveName!='字典匹配'&&that.tabactiveName!='正则匹配') {
             setTimeout(() => {
               console.log('hover',mouseY-80,mouseX1);
-              var content = $(this)[0].innerText;
-              content = content.split('\nx');
-              that.tipscontent = content
+              console.log($(this)[0].attributes.name.value);
+              
+              // var content = $(this)[0].innerText;
+              // content = content.split('\nx');
+              that.tipscontent = $(this)[0].attributes.name.value
               that.tipsshow = true
             }, 200);
           }
@@ -1233,8 +1236,8 @@ const carouselPrefix = '?imageView2/2/h/440'
             var deletestr =that.escape2Html($(this).parent()[0].outerHTML);
             var content = $(this).parent()[0].innerText;
             content = content.split('\nx');
-            console.log('content',content[0]);
-            that.deleteentity(content[0],deletestr)
+            console.log('content',$(this).parent()[0].attributes.name.value);
+            that.deleteentity($(this).parent()[0].attributes.name.value)
             console.log('afterdeleteinput',that.entityinput);
           }
         })
@@ -1254,15 +1257,15 @@ const carouselPrefix = '?imageView2/2/h/440'
     //   }
     //   return true
     // },
-    showtipscontent(){
+    showtipscontent1(){
       var standard = ''
       var id = ''
       var name = ''
       var stname = ''
-      console.log(this.tipscontent[0],this.entityinput);
+      console.log(this.tipscontent,this.entityinput);
       
       for (let i = 0; i < this.entityinput.length; i++) {
-        if(this.tipscontent[0]===this.entityinput[i].content){
+        if(Number(this.tipscontent)===this.entityinput[i].start_offset){
           id = this.entityinput[i].entity_template
           standard = this.entityinput[i].standard
         }
@@ -1283,7 +1286,41 @@ const carouselPrefix = '?imageView2/2/h/440'
                 }
               }
             }
-            return '实体名称：'+name+'  标准名称：'+stname
+            return name
+          }
+        }
+      }
+    },
+    showtipscontent2(){
+      var standard = ''
+      var id = ''
+      var name = ''
+      var stname = ''
+      console.log(this.tipscontent,this.entityinput);
+      
+      for (let i = 0; i < this.entityinput.length; i++) {
+        if(Number(this.tipscontent)===this.entityinput[i].start_offset){
+          id = this.entityinput[i].entity_template
+          standard = this.entityinput[i].standard
+        }
+      }
+      // return '实体名称：'+id+'  标准名称：'+standard
+      console.log(this.options);
+      
+      for (let i = 0; i < this.options.length; i++) {
+        for (let j = 0; j < this.options[i].children.length; j++) {
+          if (this.options[i].children[j].id===id) {
+            name = this.options[i].children[j].name
+            // console.log(id);
+            
+            if (standard) {
+              for (let k = 0; k < this.options[i].children[j].standard.length; k++) {
+                if(this.options[i].children[j].standard[k].id===standard){
+                  stname = this.options[i].children[j].standard[k].standard_name
+                }
+              }
+            }
+            return stname
           }
         }
       }
@@ -1682,7 +1719,7 @@ const carouselPrefix = '?imageView2/2/h/440'
                 // for (let index = 0; index < str.length-1; index++) {
                 //   str_new += str[index]+'<div class="labelstyle" style="background:' +color+'">'+content+'<div class="deletelabel">x</div></div>';
                 // }
-                addcontent.push('<div class="labelstyle" style="background:' +color+';color:' +this.isLight(color)+'">'+content+'<div class="deletelabel">x</div></div>') 
+                addcontent.push('<div class="labelstyle" name="' + this.labeledeventoptions[m].entities[i].start_offset + '" style="background:' +color+';color:' +this.isLight(color)+'">'+content+'<div class="deletelabel">x</div></div>') 
 
                 // str_new += str[str.length-1]
                 // this.showdata = str_new;   
@@ -1704,7 +1741,7 @@ const carouselPrefix = '?imageView2/2/h/440'
             }
         }
       },
-      deleteentity(content,deletestr) {
+      deleteentity(content) {
         var loop = this.entityinput.length
         this.selectstartentity = ''
         this.selectendentity = ''
@@ -1712,7 +1749,7 @@ const carouselPrefix = '?imageView2/2/h/440'
         
         for (let i = 0; i < loop; i++) { //删去input内相应的项
          console.log('dddw',content,this.entityinput[i].content);
-            if (content === this.entityinput[i].content) {
+            if (Number(content) === this.entityinput[i].start_offset) {
               const data = {
                 docid:this.tableData[this.docid].id,
                 entityid:this.entityinput[i].id
@@ -1722,13 +1759,13 @@ const carouselPrefix = '?imageView2/2/h/440'
               loop--
               this.$store.dispatch('user/deleteentity', data)
                 .then((response) => {
-                   var str =  this.showdata.split(deletestr);
-                    console.log('DELETE',deletestr,content,str);
-                    var new_str = ""
-                    for (let j = 0; j < str.length-1; j++) { // 将删除的词的样式去除后连接起来
-                      new_str+=str[j]+content
-                    }
-                    new_str +=str[str.length-1];
+                  //  var str =  this.showdata.split(deletestr);
+                  //   console.log('DELETE',deletestr,content,str);
+                  //   var new_str = ""
+                  //   for (let j = 0; j < str.length-1; j++) { // 将删除的词的样式去除后连接起来
+                  //     new_str+=str[j]+content
+                  //   }
+                  //   new_str +=str[str.length-1];
                   //  console.log(deletestr,str,new_str)
                     // this.showdata = new_str;
                     this.showlabeledstandard(this.itemlabel)
@@ -1897,7 +1934,7 @@ const carouselPrefix = '?imageView2/2/h/440'
                 // for (let index = 0; index < str.length-1; index++) {
                 //   str_new += str[index]+'<div class="labelstyle" style="background:' +color+'">'+content+'<div class="deletelabel">x</div></div>';
                 // }
-                addcontent.push('<div class="labelstyle" style="background:' +color+';color:' +this.isLight(color) + '">'+content+'<div class="deletelabel">x</div></div>') 
+                addcontent.push('<div class="labelstyle" name="' + this.entityinput[i].start_offset + '" style="background:' +color+';color:' +this.isLight(color) + '">'+content+'<div class="deletelabel">x</div></div>') 
 
                 // str_new += str[str.length-1]
                 // this.showdata = str_new;   
@@ -2003,7 +2040,7 @@ const carouselPrefix = '?imageView2/2/h/440'
                   // for (let index = 0; index < str.length-1; index++) {
                   //   str_new += str[index]+'<div class="labelstyle" style="background:' +color+'">'+content+'<div class="deletelabel">x</div></div>';
                   // }
-                  addcontent.push('<div class="labelstyle" style="background:' +color+';color:' +this.isLight(color) +'">'+content+'<div class="deletelabel">x</div></div>') 
+                  addcontent.push('<div class="labelstyle" name="' + list[i].start_offset + '"  style="background:' +color+';color:' +this.isLight(color) +'">'+content+'<div class="deletelabel">x</div></div>') 
                   // str_new += str[str.length-1]
                   // this.showdata = str_new;   
                 }         
@@ -2149,7 +2186,7 @@ const carouselPrefix = '?imageView2/2/h/440'
                   // for (let index = 0; index < str.length-1; index++) {
                   //   str_new += str[index]+'<div class="labelstyle" style="background:' +color+'">'+content+'<div class="deletelabel">x</div></div>';
                   // }
-                  addcontent.push('<div class="labelstyle" style="background:' +color+';color:' +this.isLight(color)+'">'+content+'<div class="deletelabel">x</div></div>') 
+                  addcontent.push('<div class="labelstyle" name="' + list[i].start_offset + '" style="background:' +color+';color:' +this.isLight(color)+'">'+content+'<div class="deletelabel">x</div></div>') 
                   // str_new += str[str.length-1]
                   // this.showdata = str_new;   
                 }         
