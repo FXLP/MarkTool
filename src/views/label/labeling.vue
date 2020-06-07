@@ -886,6 +886,7 @@ const carouselPrefix = '?imageView2/2/h/440'
       labeledstandardfilter(){
         var filterArr =[]
         // setTimeout(() => {    
+          console.log('stf',this.entityinput,this.options,this.itemlabel,this.template_type);
           
           if(this.template_type==='EVENT'){
             for (let i = 0; i < this.options.length; i++) {
@@ -1056,6 +1057,8 @@ const carouselPrefix = '?imageView2/2/h/440'
       this.template_type = this.$route.query.template_type
       this.projectid = this.$route.query.projectid
       this.userid = this.$store.getters.userid
+      console.log('projectid',this.projectid);
+      
       // console.log('getters', this.$store.state);
       // console.log(JSON.stringify(this.$store.state.tagsView));
       
@@ -1441,14 +1444,14 @@ const carouselPrefix = '?imageView2/2/h/440'
                   .then((response1) => {
                     // console.log('response1',response1);
                     
-                    // list[i].children[j].standard = response1
-                    list[i].children[j].standard = []
-                    for (let m = 0; m < response1.length; m++) {
-                      if(response1[m].project === this.projectid){
-                        list[i].children[j].standard.push(response1[m])
-                        // console.log(12221);
-                      }
-                    }
+                    list[i].children[j].standard = response1
+                    // list[i].children[j].standard = []
+                    // for (let m = 0; m < response1.length; m++) {
+                    //   if(response1[m].project === this.projectid){
+                    //     list[i].children[j].standard.push(response1[m])
+                    //     // console.log(12221);
+                    //   }
+                    // }
                     })
                   .catch(() => {
                     console.log('error')
@@ -1505,13 +1508,13 @@ const carouselPrefix = '?imageView2/2/h/440'
                   .then((response1) => {
                     // console.log('response1',response1);
                     
-                    // list[i].children[j].standard = response1
-                    list[i].children[j].standard = []
-                    for (let k = 0; k < response1.length; k++) {
-                      if(response1[k].project === this.projectid){
-                        list[i].children[j].standard.push(response1[k])
-                      }
-                    }
+                    list[i].children[j].standard = response1
+                    // list[i].children[j].standard = []
+                    // for (let k = 0; k < response1.length; k++) {
+                    //   if(response1[k].project === this.projectid){
+                    //     list[i].children[j].standard.push(response1[k])
+                    //   }
+                    // }
                     })
                   .catch(() => {
                     console.log('error')
@@ -1520,8 +1523,9 @@ const carouselPrefix = '?imageView2/2/h/440'
                 if (i === list.length-1){
                   this.options = list
                   this.activeName2 = this.options[0].label
-                  this.updatedoc()
                   console.log('last', list);
+                  this.updatedoc()
+                  
                 }
               })
               .catch(() => {
