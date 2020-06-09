@@ -1143,12 +1143,13 @@ const carouselPrefix = '?imageView2/2/h/440'
           })
           console.log('topleft',mouseY-120,mouseX-560);
                     
-         if(that.tabactiveName!='字典匹配'&&that.tabactiveName!='正则匹配'&&window.getSelection().toString()!=""){
+         if(that.tabactiveName!='字典匹配'&&that.tabactiveName!='正则匹配'&&window.getSelection().toString()!=""&&!window.getSelection().toString().match(/^\s+$/)){
           // var para = that.tableData[that.docid].content.split(window.getSelection().anchorNode.wholeText)
           // const start_offset = para[0].length+window.getSelection().anchorOffset
           // const end_offset = start_offset + window.getSelection().toString().length
           // console.log(111,para,window.getSelection().toString(),start_offset,end_offset);
-          
+            console.log(window.getSelection().toString().match(/^\s+$/));
+            
             if(window.getSelection().anchorNode.data===window.getSelection().focusNode.data){
               that.selecttext = window.getSelection().toString();
               console.log(window.getSelection().anchorOffset,window.getSelection().focusOffset,window.getSelection());
@@ -3557,6 +3558,7 @@ html{
     word-break: break-all;
     overflow: hidden;
     padding-bottom: 10px;
+    white-space: pre-wrap;
 }
 .labelstyle{
   background: #F38181;
