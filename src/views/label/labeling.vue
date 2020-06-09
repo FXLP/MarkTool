@@ -66,7 +66,7 @@
                   >
                     <el-badge :value="badgefilter(entity.id)" class="item">
                       <div
-                        class="labelstyle"
+                        class="labelstyle labelstyle1"
                         :style="{background:entity.color,color:isLight(entity.color),'font-size':'12px',display:'inline-block',margin:'5px','padding-left':'10px','padding-right':'10px','margin-left':'15px',}"
                       >
                         {{ entity.name }}
@@ -341,7 +341,7 @@
                 style="display:inline-block"
               >
                 <div
-                  class="labelstyle"
+                  class="labelstyle labelstyle1"
                   :style="{background:cls.color,'font-size':'20px',display:'inline-block',margin:'10px'}"
                 >
                   {{ cls.name }}
@@ -702,7 +702,7 @@
             </el-select>
             <div v-if="labeledclass!=''">
               <div
-                class="labelstyle"
+                class="labelstyle labelstyle1"
                 :style="{background:labeledclass.color,'font-size':'20px'}"
               >
                 {{ labeledclass.name }}<div
@@ -1161,28 +1161,35 @@ const carouselPrefix = '?imageView2/2/h/440'
               }
               // that.selectpara = window.getSelection().anchorNode.wholeText
               that.selectpara = ''
-              var windowselect = window.getSelection().anchorNode
-              while(1){
-                if(windowselect.nodeName==='DIV'){
-                  that.selectpara+=windowselect.firstChild.data
-                }else if(windowselect.nodeName==='#text'){
-                  that.selectpara+=windowselect.data
-                }else if(windowselect.nodeName==='BR'){
-                  that.selectpara+='\n'
-                }
-                if (windowselect.nextSibling) {
-                  windowselect = windowselect.nextSibling
-                }
-                else{
-                  break
+              if (window.getSelection().anchorNode.previousSibling) {
+                var windowselect = window.getSelection().anchorNode.previousSibling
+                while(1){
+                  if(windowselect.nodeName==='DIV'){
+                    that.selectpara+=windowselect.firstChild.data
+                  }else if(windowselect.nodeName==='#text'){
+                    that.selectpara+=windowselect.data
+                  }else if(windowselect.nodeName==='BR'){
+                    that.selectpara+='\n'
+                  }
+                  if (windowselect.previousSibling) {
+                    windowselect = windowselect.previousSibling
+                  }
+                  else{
+                    break
+                  }
                 }
               }
-              var para = that.tableData[that.docid].content.split(that.selectpara)
+              var para = that.selectpara
+              // console.log('test1',that.tableData[that.docid].content);
+              
               console.log('addaaa',that.selectpara);
+              console.log(that.tableData[that.docid].content);
               
-              console.log('adad',para);
-              
-              const start_offset = para[0].length+that.selectstart
+              // console.log('adad',para);
+              // if (!para[0]) {
+              //   para[0] = para[para.length-1]
+              // }
+              const start_offset = that.selectpara.length+that.selectstart
               const end_offset = start_offset + window.getSelection().toString().length
               console.log('aaa',start_offset,end_offset);
               
@@ -2232,10 +2239,12 @@ const carouselPrefix = '?imageView2/2/h/440'
         var content = this.selecttext
         console.log('content', content);
 
-        var para = this.tableData[this.docid].content.split(this.selectpara)
+        // var para = this.tableData[this.docid].content.split(this.selectpara)
+        // if(!para[0]){
+        //   para[0] = para[para.length-1]
+        // }
         
-        
-        const start_offset = para[0].length+this.selectstart
+        const start_offset = this.selectpara.length+this.selectstart
         const end_offset = start_offset + content.length
         var addpara = this.selectpara.slice(0,this.selectstart)+' <el-tooltip content="提示文字" placement="top-start"><div class="labelstyle" style="background:' +this.selectvalue[1].color+';color:' +this.isLight(this.selectvalue[1].color)+'">'+content+'<div class="deletelabel">x</div></div>'+this.selectpara.slice(this.selectend)
         // console.log('addpara',addpara);
@@ -2331,8 +2340,11 @@ const carouselPrefix = '?imageView2/2/h/440'
         //console.log(that.showdata);
         // for (let i = this.selectstart; i < this.selectend; i++) {
         console.log('showdata',this.showdata.split(this.selectpara));
-        var para = this.tableData[this.docid].content.split(this.selectpara)
-        const start_offset = para[0].length+this.selectstart
+        // var para = this.tableData[this.docid].content.split(this.selectpara)
+        // if(!para[0]){
+        //   para[0] = para[para.length-1]
+        // }
+        const start_offset = this.selectpara.length+this.selectstart
         const end_offset = start_offset + content.length
         var addpara = this.selectpara.slice(0,this.selectstart)+'<div class="labelstyle" style="background:' +this.selectvalue[1].color+';color:' +this.isLight(this.selectvalue[1].color)+'">'+content+'<div class="deletelabel">x</div></div>'+this.selectpara.slice(this.selectend)
         console.log('addpara',addpara);
@@ -2349,7 +2361,7 @@ const carouselPrefix = '?imageView2/2/h/440'
         var docdata = this.tableData[this.docid].content
         // console.log('position',docdata.indexOf(content));
         // console.log('position1',content.length);
-        console.log('sl',para[0].length+this.selectstart);
+        // console.log('sl',para[0].length+this.selectstart);
         console.log('beforechange',this.showdata);
         
         // const start_offset = para[0].length+this.selectstart
@@ -3542,6 +3554,9 @@ html{
     line-height: 175%;
     font-size:20px;
     z-index: 1;
+    word-break: break-all;
+    overflow: hidden;
+    padding-bottom: 10px;
 }
 .labelstyle{
   background: #F38181;
@@ -3551,6 +3566,10 @@ html{
   margin-left:3px;
   margin-right:3px;
   padding:3px;
+  white-space: pre-wrap;
+}
+.labelstyle1{
+  white-space: normal;
 }
 .deletelabel{
   margin-left: 5px;
@@ -3629,10 +3648,10 @@ div.block .el-input{
 }
 .standardcard{
   position: absolute;
-  top:400px;
+  top:420px;
   margin-left:10px;
   min-width: 320px;
-  height: 300px;
+  min-height: 300px;
   max-width: 320px;
 }
 .standardcontainer{
