@@ -1899,6 +1899,7 @@ const carouselPrefix = '?imageView2/2/h/440'
           this.revalue1 = ''
           this.activeName=''
           this.docid++ 
+          this.tabactiveName = '实体统计'
           this.updatedoc()
           this.showdata = this.tableData[this.docid].content
         }
@@ -1919,6 +1920,7 @@ const carouselPrefix = '?imageView2/2/h/440'
           this.revalue1 = ''
           this.activeName=''
           this.docid-- 
+          this.tabactiveName = '实体统计'
           this.updatedoc()
           this.showdata = this.tableData[this.docid].content
         }
@@ -1938,6 +1940,7 @@ const carouselPrefix = '?imageView2/2/h/440'
         this.docid = id
         this.showdata = this.tableData[id].content
         this.activeName = ''
+        this.tabactiveName = '实体统计'
         this.updatedoc()
       },
       getlabeledeventoptions(){
