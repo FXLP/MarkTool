@@ -1780,7 +1780,7 @@ const carouselPrefix = '?imageView2/2/h/440'
             this.entityinput = this.labeledeventoptions[m].entities
             if(this.activeName!=''){
               console.log(123142143);
-              this.showlabeledstandard(this.itemlabel)
+              this.showlabeledstandard(this.itemlabel) 
             }
             var addcontent = []
             var addlist = []
@@ -1997,6 +1997,7 @@ const carouselPrefix = '?imageView2/2/h/440'
                     this.eventoptions.push(this.options[i])
                   }
                 }
+                this.showlabeledstandard(eventname[0])
                 // this.entityinput = this.labeledeventoptions.entities
                 console.log('xxxxxxa',this.labeledeventoptions);
               }
