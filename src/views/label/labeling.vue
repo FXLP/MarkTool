@@ -561,6 +561,16 @@
           </span>
         </el-dialog>
         <el-dialog
+          title="是否确认删除此事件"
+          width="30%"
+          :visible.sync="deleteevent"
+        >
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="deleteevent = false">取 消</el-button>
+            <el-button type="primary" @click="deleteevent">确 定</el-button>
+          </span>
+        </el-dialog>
+        <el-dialog
           title="是否确认应用"
           :visible.sync="confirmdicuse"
           width="30%"
@@ -750,7 +760,7 @@
                   :value="{name:item.name,id:item.id}"
                 />
               </el-select>
-              <el-button type="danger" icon="el-icon-delete" circle @click="deleteevent" />
+              <el-button type="danger" icon="el-icon-delete" circle @click="(labeledevent1 != '{}'&&labeledevent1.name!='')?deleteevent=true:deleteevent=false" />
             </div>
             <!-- <div v-if="labeledevent!=''">
               事件组：<div
@@ -1091,6 +1101,8 @@ const carouselPrefix = '?imageView2/2/h/440'
       
       this.$nextTick(function () { //检测鼠标事件
         
+        // console.log('text',$('div.labelstyle').text());
+         
         $('div.labelcontent1').mousemove(function(e) { //鼠标位置
             e = e || window.event;
             mouseX = e.pageX || e.clientX + document.body.scroolLeft;
@@ -1149,17 +1161,67 @@ const carouselPrefix = '?imageView2/2/h/440'
           // const end_offset = start_offset + window.getSelection().toString().length
           // console.log(111,para,window.getSelection().toString(),start_offset,end_offset);
             console.log(window.getSelection().toString().match(/^\s+$/));
+            console.log('papa',window.getSelection())
             
-            if(window.getSelection().anchorNode.data===window.getSelection().focusNode.data){
+            // if(window.getSelection().anchorNode.data===window.getSelection().focusNode.data){
+            if(window.getSelection().anchorNode.nextSibling.className!='deletelabel'&&window.getSelection().focusNode.nextSibling.className!='deletelabel'){
               that.selecttext = window.getSelection().toString();
               console.log(window.getSelection().anchorOffset,window.getSelection().focusOffset,window.getSelection());
-              that.selectstart = window.getSelection().anchorOffset
-              that.selectend = window.getSelection().focusOffset
-              if(that.selectstart>that.selectend){
-                var temp = that.selectend
-                that.selectend = that.selectstart
-                that.selectstart = temp
+              if(window.getSelection().anchorNode.data===window.getSelection().focusNode.data){
+                that.selectstart = window.getSelection().anchorOffset
+                that.selectend = window.getSelection().focusOffset
+                if(that.selectstart>that.selectend){
+                  var temp = that.selectend
+                  that.selectend = that.selectstart
+                  that.selectstart = temp
+                }
               }
+              else{
+                var judgestart = 0
+                var anchor =  window.getSelection().anchorNode
+                var pretext = ''
+                var nexttext = ''
+                if (anchor.nextSibling) {
+                  anchor = anchor.nextSibling
+                  while(anchor){
+                    if (anchor.nodeName==='#text') {
+                      nexttext = anchor.data
+                      break
+                    }
+                    else{
+                      anchor=anchor.nextSibling
+                    }
+                  }
+                  if(nexttext===window.getSelection().focusNode.data){
+                    judgestart = 1  //起始在前
+                  }
+                }
+                anchor =  window.getSelection().anchorNode
+                if (anchor.previousSibling) {
+                  anchor = anchor.previousSibling
+                  while(anchor){
+                    if (anchor.nodeName==='#text') {
+                      pretext = anchor.data
+                      break
+                    }
+                    else{
+                      anchor=anchor.previousSibling
+                    }
+                  }
+                  if(pretext===window.getSelection().anchorNode.data){
+                    judgestart = 2   //起始在后
+                  }
+                }
+                if(judgestart===1){
+                  that.selectstart = window.getSelection().anchorOffset
+                }
+                else if(judgestart===2){
+                  that.selectstart = window.getSelection().focusOffset
+                }
+                console.log('judgestart',that.selectstart);
+              }
+              
+              
               // that.selectpara = window.getSelection().anchorNode.wholeText
               that.selectpara = ''
               if (window.getSelection().anchorNode.previousSibling) {
@@ -1167,6 +1229,20 @@ const carouselPrefix = '?imageView2/2/h/440'
                 while(1){
                   if(windowselect.nodeName==='DIV'){
                     that.selectpara+=windowselect.firstChild.data
+                    var windowselect1 = windowselect.firstChild.nextSibling
+                    while(windowselect1.className!='deletelabel'){
+                      if(windowselect1.nodeName==='BR'){
+                        that.selectpara+='\n'
+                      }else if(windowselect1.nodeName==='#text'){
+                        that.selectpara+=windowselect1.data
+                      }
+                      if (windowselect1.nextSibling) {
+                        windowselect1 = windowselect1.nextSibling
+                      }
+                      else{
+                        break
+                      }
+                    }
                   }else if(windowselect.nodeName==='#text'){
                     that.selectpara+=windowselect.data
                   }else if(windowselect.nodeName==='BR'){
@@ -1698,6 +1774,7 @@ const carouselPrefix = '?imageView2/2/h/440'
         console.log('xxxda',this.eventoptions,'daad',this.labeledeventoptions);
         this.showdata=this.tableData[this.docid].content
         // this.updatedoc()
+
         for (let m = 0; m < this.labeledeventoptions.length; m++) {
           if(this.labeledeventoptions[m].id===this.labeledevent1.id){
             this.entityinput = this.labeledeventoptions[m].entities
@@ -1747,10 +1824,14 @@ const carouselPrefix = '?imageView2/2/h/440'
                 str_new += this.tableData[this.docid].content.slice(start,addlist[i].start_offset) + addcontent[i] + this.tableData[this.docid].content.slice(addlist[i].end_offset,addlist[i+1].start_offset)
               } else {
                 str_new += this.tableData[this.docid].content.slice(start,addlist[i].start_offset) + addcontent[i] + this.tableData[this.docid].content.slice(addlist[i].end_offset)
-                this.showdata = str_new
+                console.log('tabact',this.tabactiveName);
+                
+                if (this.tabactiveName!='字典匹配'&&this.tabactiveName!='正则匹配') {
+                  this.showdata = str_new
+                }
               }
             }
-            }
+          }
         }
       },
       deleteentity(content) {
@@ -1866,7 +1947,7 @@ const carouselPrefix = '?imageView2/2/h/440'
           }
           this.$store.dispatch('user/getuserlabel', data)
             .then((response) => {
-              console.log('getlabelevent', response,this.options)
+              // console.log('getlabelevent', response,this.options)
               if (response.length < 1) {
                 this.labeledevent = ''
               } else {
@@ -1890,15 +1971,23 @@ const carouselPrefix = '?imageView2/2/h/440'
                   }
                 }
                 this.labeledeventoptions = response
+                console.log('labelaaaaa',this.labeledeventoptions,this.labeledevent1);
+                if (this.labeledeventoptions.length!=0) {
+                  this.labeledevent1 = {
+                    id:this.labeledeventoptions[0].id,
+                    name:this.labeledeventoptions[0].name
+                  }
+                }
                  for (let m = 0; m < this.labeledeventoptions.length; m++) {
                   if(this.labeledeventoptions[m].id===this.labeledevent1.id){
                     this.entityinput = this.labeledeventoptions[m].entities
-                    console.log('huodeinput',this.entityinput);
+                    // console.log('huodeinput',this.entityinput);
                     
                     // this.labeledeventchange()
                     this.showlabeledevent()
                   }
                 }
+                
                 var eventname = this.labeledevent1.name.split(this.labeledevent1.id)
                 for (let i = 0; i < this.options.length; i++) {
                   if (eventname[0]===this.options[i].name && this.eventoptions.length===0) {
@@ -1962,7 +2051,9 @@ const carouselPrefix = '?imageView2/2/h/440'
                 str_new += this.tableData[this.docid].content.slice(start,addlist[i].start_offset) + addcontent[i] + this.tableData[this.docid].content.slice(addlist[i].end_offset,addlist[i+1].start_offset)
               } else {
                 str_new += this.tableData[this.docid].content.slice(start,addlist[i].start_offset) + addcontent[i] + this.tableData[this.docid].content.slice(addlist[i].end_offset)
-                this.showdata = str_new
+                if (this.tabactiveName!='正则匹配'&&this.tabactiveName!='字典匹配') {
+                  this.showdata = str_new
+                }
               }
             }
             // }
@@ -3295,6 +3386,7 @@ const carouselPrefix = '?imageView2/2/h/440'
     },
     data() {
       return {
+        deleteevent:false,
         tipscontent:'',
         tipsshow:false,
         deletestlist:[],
