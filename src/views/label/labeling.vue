@@ -77,171 +77,6 @@
                 </div>
               </div>
             </el-tab-pane>
-            <!-- <el-tab-pane
-              v-if="template_type=='NULL'"
-              label="自动标注"
-              name="自动标注"
-            >
-              <div class="user-images">
-                <el-carousel
-                  :interval="6000"
-                  type="card"
-                  height="220px"
-                >
-                  <el-carousel-item
-                    v-for="item in carouselImages"
-                    :key="item"
-                  >
-                    <img
-                      :src="item+carouselPrefix"
-                      class="image"
-                    >
-                  </el-carousel-item>
-                </el-carousel>
-              </div>
-              <div style="text-align:center">
-                <div style="float: left;">
-                  <el-button
-                    type="info"
-                    @click="Dictionary_annotation=true"
-                  >
-                    字典标注
-                  </el-button>
-                </div>
-                <div style="float: right;">
-                  <el-button
-                    type="info"
-                    @click="Event_annotation=true"
-                  >
-                    事件标注
-                  </el-button>
-                </div>
-                <el-button
-                  type="info"
-                  @click="Model_annotation=true"
-                >
-                  模型标注
-                </el-button>
-              </div>
-              <el-dialog
-                title="字典标注"
-                :visible.sync="Dictionary_annotation"
-                width="500px"
-                :before-close="handleClose"
-              >
-                <el-table
-                  ref="multipleTable"
-                  :data="entityTableData"
-                  tooltip-effect="dark"
-                  height="350px"
-                  @selection-change="handleSelectionChange"
-                >
-                  <el-table-column
-                    type="selection"
-                    width="55"
-                  />
-                  <el-table-column
-                    label="实体名称"
-                    width="200"
-                  >
-                    <template slot-scope="scope">
-                      {{ scope.row.entityContent }}
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    prop="entityType"
-                    label="实体类型"
-                    width="200"
-                  />
-                </el-table>
-                <span
-                  slot="footer"
-                  class="dialog-footer"
-                >
-                  <el-button @click="Dictionary_annotation = false">取 消</el-button>
-                  <el-button
-                    type="primary"
-                    @click="handleDictionaryAnnotation()"
-                  >标注所选项</el-button>
-                </span>
-              </el-dialog>
-              <el-dialog
-                title="模型标注"
-                :visible.sync="Model_annotation"
-                width="500px"
-                :before-close="handleClose"
-              >
-                <el-table
-                  :data="modelTableData"
-                  height="400px"
-                  style="width: 100%"
-                >
-                  <el-table-column
-                    label="模型ID"
-                    prop="modelID"
-                  />
-                  <el-table-column
-                    label="模型名称"
-                    prop="modelName"
-                  />
-                  <el-table-column align="right">
-                    <template slot-scope="scope">
-                      <el-button
-                        size="mini"
-                        @click="handleModelAnnotation(scope.$index, scope.row)"
-                      >
-                        标注
-                      </el-button>
-                    </template>
-                  </el-table-column>
-                </el-table>
-              </el-dialog>
-              <el-dialog
-                title="事件标注"
-                :visible.sync="Event_annotation"
-                width="500px"
-                :before-close="handleClose"
-              >
-                <el-table
-                  ref="multipleTable"
-                  :data="entityTableData"
-                  tooltip-effect="dark"
-                  height="350px"
-                  @selection-change="handleSelectionChange"
-                >
-                  <el-table-column
-                    type="selection"
-                    width="55"
-                  />
-                  <el-table-column
-                    label="实体名称"
-                    width="200"
-                  >
-                    <template slot-scope="scope">
-                      {{ scope.row.entityContent }}
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    label="实体类型"
-                    width="200"
-                  >
-                    <template slot-scope="scope">
-                      {{ scope.row.entityType }}
-                    </template>
-                  </el-table-column>
-                </el-table>
-                <span
-                  slot="footer"
-                  class="dialog-footer"
-                >
-                  <el-button @click="Event_annotation = false">取 消</el-button>
-                  <el-button
-                    type="primary"
-                    @click="handleEventAnnotation()"
-                  >标注所选项</el-button>
-                </span>
-              </el-dialog>
-            </el-tab-pane> -->
             <el-tab-pane
               v-if="template_type=='RE'"
               label="关系标注"
@@ -1122,6 +957,8 @@ const carouselPrefix = '?imageView2/2/h/440'
           if (that.tabactiveName!='字典匹配'&&that.tabactiveName!='正则匹配') {
             setTimeout(() => {
               console.log('hover',mouseY-80,mouseX1);
+              console.log($(this)[0]);
+              
               console.log($(this)[0].attributes.name.value);
               
               // var content = $(this)[0].innerText;
@@ -1226,13 +1063,15 @@ const carouselPrefix = '?imageView2/2/h/440'
               that.selectpara = ''
               console.log('jssss',judgestart);
               
-              if (judgestart===1&&window.getSelection().anchorNode.previousSibling||judgestart===2&&window.getSelection().focusNode.previousSibling) {
+              if (judgestart===0||judgestart===1&&window.getSelection().anchorNode.previousSibling||judgestart===2&&window.getSelection().focusNode.previousSibling) {
                 var windowselect = ''
                 
                 if (judgestart === 1) {
                   windowselect = window.getSelection().anchorNode.previousSibling
-                } else {
+                } else if(judgestart === 2){
                   windowselect = window.getSelection().focusNode.previousSibling
+                } else{
+                  windowselect = window.getSelection().anchorNode.previousSibling
                 }
                 
                 while(1){
