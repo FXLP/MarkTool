@@ -968,7 +968,7 @@ const carouselPrefix = '?imageView2/2/h/440'
             }
           }
         }
-        console.log('filter',filterArr,this.entityinput,this.itemlabel);
+        console.log('filter',this.itemlabel,filterArr,this.entityinput);
         
 				return filterArr;
       },
@@ -1164,7 +1164,8 @@ const carouselPrefix = '?imageView2/2/h/440'
             console.log('papa',window.getSelection())
             
             // if(window.getSelection().anchorNode.data===window.getSelection().focusNode.data){
-            if(window.getSelection().anchorNode.nextSibling.className!='deletelabel'&&window.getSelection().focusNode.nextSibling.className!='deletelabel'){
+            var judgestart = 0
+            if(!(window.getSelection().anchorNode.nextSibling&&window.getSelection().anchorNode.nextSibling.className==='deletelabel'||window.getSelection().focusNode.nextSibling&&window.getSelection().focusNode.nextSibling.className==='deletelabel')){
               that.selecttext = window.getSelection().toString();
               console.log(window.getSelection().anchorOffset,window.getSelection().focusOffset,window.getSelection());
               if(window.getSelection().anchorNode.data===window.getSelection().focusNode.data){
@@ -1177,7 +1178,6 @@ const carouselPrefix = '?imageView2/2/h/440'
                 }
               }
               else{
-                var judgestart = 0
                 var anchor =  window.getSelection().anchorNode
                 var pretext = ''
                 var nexttext = ''
@@ -1208,7 +1208,7 @@ const carouselPrefix = '?imageView2/2/h/440'
                       anchor=anchor.previousSibling
                     }
                   }
-                  if(pretext===window.getSelection().anchorNode.data){
+                  if(pretext===window.getSelection().focusNode.data){
                     judgestart = 2   //起始在后
                   }
                 }
@@ -1218,14 +1218,23 @@ const carouselPrefix = '?imageView2/2/h/440'
                 else if(judgestart===2){
                   that.selectstart = window.getSelection().focusOffset
                 }
-                console.log('judgestart',that.selectstart);
+                console.log('judgestart',that.selectstart,judgestart);
               }
               
               
               // that.selectpara = window.getSelection().anchorNode.wholeText
               that.selectpara = ''
-              if (window.getSelection().anchorNode.previousSibling) {
-                var windowselect = window.getSelection().anchorNode.previousSibling
+              console.log('jssss',judgestart);
+              
+              if (judgestart===1&&window.getSelection().anchorNode.previousSibling||judgestart===2&&window.getSelection().focusNode.previousSibling) {
+                var windowselect = ''
+                
+                if (judgestart === 1) {
+                  windowselect = window.getSelection().anchorNode.previousSibling
+                } else {
+                  windowselect = window.getSelection().focusNode.previousSibling
+                }
+                
                 while(1){
                   if(windowselect.nodeName==='DIV'){
                     that.selectpara+=windowselect.firstChild.data
@@ -1992,6 +2001,7 @@ const carouselPrefix = '?imageView2/2/h/440'
                 }
                 
                 var eventname = this.labeledevent1.name.split(this.labeledevent1.id)
+                this.itemlabel = eventname[0]
                 for (let i = 0; i < this.options.length; i++) {
                   if (eventname[0]===this.options[i].name && this.eventoptions.length===0) {
                     this.eventoptions.push(this.options[i])
