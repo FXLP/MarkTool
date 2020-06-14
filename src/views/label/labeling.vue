@@ -9,13 +9,13 @@
             标注数据列表
           </div>
           <el-card
-            v-for="data in tableData"
+            v-for="(data,index) in tableData"
             :key="data.id"
             class="box-card asidelist"
             :body-style="docid===data.key?'background-color:#eeeeee':'background-color:#ffffff'"
             @click.native="aside_click(data.key)"
           >
-            {{ data.content }}
+            {{ index+1 }} : {{ data.content }}
           </el-card>
         </div>
       </el-aside>
@@ -1192,107 +1192,77 @@ const carouselPrefix = '?imageView2/2/h/440'
     //   }
     //   return true
     // },
-    showtipscontent1(){
-      var standard = ''
-      var id = ''
-      var name = ''
-      var stname = ''
-      console.log(this.tipscontent,this.entityinput);
-      
-      for (let i = 0; i < this.entityinput.length; i++) {
-        if(Number(this.tipscontent)===this.entityinput[i].start_offset){
-          id = this.entityinput[i].entity_template
-          standard = this.entityinput[i].standard
-        }
-      }
-      // return '实体名称：'+id+'  标准名称：'+standard
-      console.log(this.options);
-      
-      for (let i = 0; i < this.options.length; i++) {
-        for (let j = 0; j < this.options[i].children.length; j++) {
-          if (this.options[i].children[j].id===id) {
-            name = this.options[i].children[j].name
-            // console.log(id);
-            
-            if (standard) {
-              for (let k = 0; k < this.options[i].children[j].standard.length; k++) {
-                if(this.options[i].children[j].standard[k].id===standard){
-                  stname = this.options[i].children[j].standard[k].standard_name
-                }
-              }
-            }
-            return name
+      showtipscontent1(){
+        var standard = ''
+        var id = ''
+        var name = ''
+        var stname = ''
+        console.log(this.tipscontent,this.entityinput);
+        
+        for (let i = 0; i < this.entityinput.length; i++) {
+          if(Number(this.tipscontent)===this.entityinput[i].start_offset){
+            id = this.entityinput[i].entity_template
+            standard = this.entityinput[i].standard
           }
         }
-      }
-    },
-    showtipscontent2(){
-      var standard = ''
-      var id = ''
-      var name = ''
-      var stname = ''
-      console.log(this.tipscontent,this.entityinput);
-      
-      for (let i = 0; i < this.entityinput.length; i++) {
-        if(Number(this.tipscontent)===this.entityinput[i].start_offset){
-          id = this.entityinput[i].entity_template
-          standard = this.entityinput[i].standard
-        }
-      }
-      // return '实体名称：'+id+'  标准名称：'+standard
-      console.log(this.options);
-      
-      for (let i = 0; i < this.options.length; i++) {
-        for (let j = 0; j < this.options[i].children.length; j++) {
-          if (this.options[i].children[j].id===id) {
-            name = this.options[i].children[j].name
-            // console.log(id);
-            
-            if (standard) {
-              for (let k = 0; k < this.options[i].children[j].standard.length; k++) {
-                if(this.options[i].children[j].standard[k].id===standard){
-                  stname = this.options[i].children[j].standard[k].standard_name
+        // return '实体名称：'+id+'  标准名称：'+standard
+        console.log(this.options);
+        
+        for (let i = 0; i < this.options.length; i++) {
+          for (let j = 0; j < this.options[i].children.length; j++) {
+            if (this.options[i].children[j].id===id) {
+              name = this.options[i].children[j].name
+              // console.log(id);
+              
+              if (standard) {
+                for (let k = 0; k < this.options[i].children[j].standard.length; k++) {
+                  if(this.options[i].children[j].standard[k].id===standard){
+                    stname = this.options[i].children[j].standard[k].standard_name
+                  }
                 }
               }
+              return name
             }
-            return stname
           }
         }
-      }
-    },
-    changebr(showdata){
-         return showdata.replace(/\n/g,"<br/>");
-    },
-    getType(o){
-      return Object.prototype.toString.call(o).slice(8,-1);
-    },
-    isKeyType(o, type) {
-      return this.getType(o).toLowerCase() === type.toLowerCase();
-    },
-    deepClone(sth) {
-      let copy;
-      if (null == sth || "object" != typeof sth) return sth;
-      if (this.isKeyType(sth, 'date')) {
-        copy = new Date();
-        copy.setTime(sth.getTime());
-        return copy;
-      }
-      if (this.isKeyType(sth, 'array')) {
-        copy = [];
-        for (let i = 0, len = sth.length; i < len; i++) {
-          copy[i] = this.deepClone(sth[i]);
+      },
+      showtipscontent2(){
+        var standard = ''
+        var id = ''
+        var name = ''
+        var stname = ''
+        console.log(this.tipscontent,this.entityinput);
+        
+        for (let i = 0; i < this.entityinput.length; i++) {
+          if(Number(this.tipscontent)===this.entityinput[i].start_offset){
+            id = this.entityinput[i].entity_template
+            standard = this.entityinput[i].standard
+          }
         }
-        return copy;
-      }
-      if (this.isKeyType(sth, 'object')) {
-        copy = {};
-        for (let attr in sth) {
-          if (sth[attr].hasOwnProperty(attr)) copy[attr] = this.deepClone(sth[attr]);
+        // return '实体名称：'+id+'  标准名称：'+standard
+        console.log(this.options);
+        
+        for (let i = 0; i < this.options.length; i++) {
+          for (let j = 0; j < this.options[i].children.length; j++) {
+            if (this.options[i].children[j].id===id) {
+              name = this.options[i].children[j].name
+              // console.log(id);
+              
+              if (standard) {
+                for (let k = 0; k < this.options[i].children[j].standard.length; k++) {
+                  if(this.options[i].children[j].standard[k].id===standard){
+                    stname = this.options[i].children[j].standard[k].standard_name
+                  }
+                }
+              }
+              return stname
+            }
+          }
         }
-        return copy;
-      }
-      return null;
-    },
+      },
+      changebr(showdata){
+          return showdata.replace(/\n/g,"<br/>");
+      },
       ischongfulabel(start,end){       
         // console.log('aaaddddd',this.tableData[this.docid].content.length,start); 
         if (start>=this.tableData[this.docid].content.length) {
@@ -2913,7 +2883,6 @@ const carouselPrefix = '?imageView2/2/h/440'
           }
         }
       },
-      
       regularupdatedoc(response){
         this.showdata=this.tableData[this.docid].content
         const list = response
@@ -2953,7 +2922,6 @@ const carouselPrefix = '?imageView2/2/h/440'
           }
         }
       },
-      
       tabclick(name){
         console.log(name);
         this.activeName=''
