@@ -1073,8 +1073,9 @@ const carouselPrefix = '?imageView2/2/h/440'
                 } else{
                   windowselect = window.getSelection().anchorNode.previousSibling
                 }
+                console.log('12212',windowselect);
                 
-                while(1){
+                while(windowselect){
                   if(windowselect.nodeName==='DIV'){
                     that.selectpara+=windowselect.firstChild.data
                     var windowselect1 = windowselect.firstChild.nextSibling
