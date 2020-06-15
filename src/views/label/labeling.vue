@@ -1794,7 +1794,7 @@ const carouselPrefix = '?imageView2/2/h/440'
                 }
                 this.labeledeventoptions = response
                 console.log('labelaaaaa',this.labeledeventoptions,this.labeledevent1);
-                if (this.labeledeventoptions.length!=0) {
+                if (this.labeledeventoptions.length!=0&&this.labeledevent1.name==="") {
                   this.labeledevent1 = {
                     id:this.labeledeventoptions[0].id,
                     name:this.labeledeventoptions[0].name
@@ -1811,7 +1811,10 @@ const carouselPrefix = '?imageView2/2/h/440'
                 }
                 
                 var eventname = this.labeledevent1.name.split(this.labeledevent1.id)
-                this.itemlabel = eventname[0]
+                if(this.itemlabel===''){
+                  console.log('fafafa',this.itemlabel);
+                  this.itemlabel = eventname[0]
+                }
                 for (let i = 0; i < this.options.length; i++) {
                   if (eventname[0]===this.options[i].name && this.eventoptions.length===0) {
                     this.eventoptions.push(this.options[i])
