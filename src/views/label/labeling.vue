@@ -398,10 +398,10 @@
         <el-dialog
           title="是否确认删除此事件"
           width="30%"
-          :visible.sync="deleteevent"
+          :visible.sync="deleteevent1"
         >
           <span slot="footer" class="dialog-footer">
-            <el-button @click="deleteevent = false">取 消</el-button>
+            <el-button @click="deleteevent1 = false">取 消</el-button>
             <el-button type="primary" @click="deleteevent">确 定</el-button>
           </span>
         </el-dialog>
@@ -595,7 +595,7 @@
                   :value="{name:item.name,id:item.id}"
                 />
               </el-select>
-              <el-button type="danger" icon="el-icon-delete" circle @click="(labeledevent1 != '{}'&&labeledevent1.name!='')?deleteevent=true:deleteevent=false" />
+              <el-button type="danger" icon="el-icon-delete" circle @click="(labeledevent1 != '{}'&&labeledevent1.name!='')?deleteevent1=true:deleteevent1=false" />
             </div>
             <!-- <div v-if="labeledevent!=''">
               事件组：<div
@@ -1121,7 +1121,7 @@ const carouselPrefix = '?imageView2/2/h/440'
               
               if(that.ischongfulabel(start_offset,end_offset)){
                 setTimeout(() => {
-                  if(that.template_type === 'RE'||that.template_type === 'NER'||(that.template_type==='EVENT' && that.labeledevent!='')){
+                  if(that.template_type === 'RE'||that.template_type === 'NER'||(that.template_type==='EVENT' && that.labeledevent1.name!='')){
                     $("div.block .el-input").trigger("click")
                   }
                 }, 200);
@@ -1510,14 +1510,18 @@ const carouselPrefix = '?imageView2/2/h/440'
         console.log(data);
         if (JSON.stringify(this.labeledevent1) != "{}") {
           this.$store.dispatch('user/deleteevent',data).then((response) =>{
-            console.log('deleteevent',response)
+            // console.log('deleteevent',response)
+            this.deleteevent1 = false
             for (let i = 0; i < this.labeledeventoptions.length; i++) {
               if(this.labeledeventoptions[i].id===this.labeledevent1.id){
                 this.labeledeventoptions.splice(i,1)
                 this.showdata=this.tableData[this.docid].content
               }
             }
-            this.labeledevent1 = {}
+            this.labeledevent1 = {
+              name:'',
+              id:''
+            }
             
           })
         }
@@ -3211,7 +3215,7 @@ const carouselPrefix = '?imageView2/2/h/440'
     },
     data() {
       return {
-        deleteevent:false,
+        deleteevent1:false,
         tipscontent:'',
         tipsshow:false,
         deletestlist:[],
