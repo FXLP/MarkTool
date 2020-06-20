@@ -1002,7 +1002,8 @@ const carouselPrefix = '?imageView2/2/h/440'
             
             // if(window.getSelection().anchorNode.data===window.getSelection().focusNode.data){
             var judgestart = 0
-            if(!(window.getSelection().anchorNode.nextSibling&&window.getSelection().anchorNode.nextSibling.className==='deletelabel'||window.getSelection().focusNode.nextSibling&&window.getSelection().focusNode.nextSibling.className==='deletelabel')){
+            // if(!(window.getSelection().anchorNode.nextSibling&&window.getSelection().anchorNode.nextSibling.className==='deletelabel'||window.getSelection().focusNode.nextSibling&&window.getSelection().focusNode.nextSibling.className==='deletelabel')){   
+            if(window.getSelection().anchorNode.nodeName===window.getSelection().focusNode.nodeName){
               that.selecttext = window.getSelection().toString();
               console.log(window.getSelection().anchorOffset,window.getSelection().focusOffset,window.getSelection());
               if(window.getSelection().anchorNode.data===window.getSelection().focusNode.data){
@@ -1072,6 +1073,11 @@ const carouselPrefix = '?imageView2/2/h/440'
                   windowselect = window.getSelection().focusNode.previousSibling
                 } else{
                   windowselect = window.getSelection().anchorNode.previousSibling
+                }
+                if (judgestart===0&&window.getSelection().anchorNode.nextSibling) {
+                  if (window.getSelection().anchorNode.nextSibling.className==='deletelabel') {
+                    windowselect = window.getSelection().anchorNode.parentNode.previousSibling
+                  }
                 }
                 console.log('12212',windowselect);
                 
@@ -1270,6 +1276,9 @@ const carouselPrefix = '?imageView2/2/h/440'
           return false
         }
         for (let i = 0; i < this.entityinput.length; i++) {
+          if((start>=this.entityinput[i].start_offset&&start<=this.entityinput[i].end_offset)&&(end>=this.entityinput[i].start_offset&&end<=this.entityinput[i].end_offset)){
+            return true
+          }
           if(!(end<=this.entityinput[i].start_offset||start>=this.entityinput[i].end_offset))
           {
             return false
