@@ -100,5 +100,5 @@ npm run dev
 该工具采用docker镜像进行部署，只需系统上有docker环境即可一键导入工具的镜像，无需复杂的配置步骤和系统操作，对操作系统类型没有限制，即使在不联网的环境也能正常使用。导入镜像并在工作目录下执行命令docker-compose up启动本地服务即可访问浏览器地址 http://127.0.0.1:18080/ 进行标注。
 
 # Attention
-如果只是单纯需要运行使用该工具，可通过star该项目并向本人邮箱yupianlin@aliyun.com或者yupianlin@126.com发送邮件获取docker镜像文件直接在含有docker环境的机器上运行。
+如果只是单纯需要运行使用该工具，可通过star该项目并向本人邮箱yupianlin@aliyun.com或者yupianlin@126.com发送邮件，或者加入QQ群1054082857 (MarkTool in NLP)，获取docker镜像文件直接在含有docker环境的机器上运行。
 该工具已于2020年获得软件著作权，证书号：软著登字第5885316号，如需二次开发使用则要在项目中着重标明来源！
