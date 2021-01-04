@@ -62,7 +62,6 @@ npm run dev
 (8).允许在多种系统环境上部署运行。
 
 # 标注的总框架
-![Image](https://github.com/FXLP/Images-of-FXLP/blob/main/Overall%20framework%20of%20MarkTool.png)
 
 首先，管理员需要创建所需的标注规范。如果所需的标注规范已存在则可以直接创建标注任务，否则管理员需要新建该标注规范。
 
