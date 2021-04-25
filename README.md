@@ -1,6 +1,6 @@
 # DoTAT: A Domain-oriented Text Annotation Tool 
 # East China University of Science and Technology - NLP
-# [华东理工大学-自然语言处理与医疗大数据实验室]
+# [华东理工大学-自然语言处理与大数据挖掘实验室]
 
 # Attention
 该工具已于2020年获得软件著作权，证书号：软著登字第5885316号，如需二次开发使用则要在项目中着重标明来源ECUST-NLP！
@@ -8,11 +8,17 @@
 # Notification
 在线试用版网站（a live demo website）：http://175.24.69.95/new/
 
+An administrator account:
+
+Username:ecust
+
+Password:ecustlab301
+
 A typical annotation process using DoTAT may include the following five steps:
 
 (1) Define  annotation  specifications:   The  administrator  selects  the  annotation  type  andvisually defines event types, entity types, relation types or text categories in annotation specifications.
 
-(2) Create and assign tasks: Administrator cre-ates and assigns tasks. Each task contains anannotation specification and several raw texts.It is recommended that two annotators andone reviewer are assigned to each task.
+(2) Create and assign tasks: Administrator creates and assigns tasks. Each task contains anannotation specification and several raw texts. It is recommended that two annotators andone reviewer are assigned to each task.
 
 (3) Annotate: Before the annotators interactively annotate events or entities, they can use automatic batch annotation to accelerate the speed.
 
@@ -22,10 +28,13 @@ A typical annotation process using DoTAT may include the following five steps:
 
 During the trial period, the user's task management rights and annotation specification management rights will be opened. You will need to contact us to apply for the administrator account in the future.
 
-更多最新消息请加QQ群1054082857 (MarkTool in NLP) 第一时间了解，加群时需要验证身份，已收藏该项目的GitHub帐号才会通过申请。 欢迎进行学术交流, 如需合作请私聊。 
+更多最新消息请加QQ群1054082857 (MarkTool in NLP) 第一时间了解，加群时需要验证身份，已收藏该项目的GitHub帐号才会通过申请。 欢迎进行学术交流, 如需合作请私聊。
+
+# A Short Video Demo
+https://ecust-nlp-docker.oss-cn-shanghai.aliyuncs.com/dotat_demo.mp4
 
 # Code
-后端代码地址[暂不开放]：https://github.com/sxthunder/ecust_annotation
+Back-end 后端代码地址[暂不开放]：https://github.com/sxthunder/ecust_annotation
 
 # clone the project
 git clone https://github.com/FXLP/MarkTool.git
