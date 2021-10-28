@@ -35,7 +35,7 @@ A typical annotation process using DoTAT may include the following five steps:
 
 During the trial period, the user's task management rights and annotation specification management rights will be opened. You will need to contact us to apply for the administrator account in the future.
 
-更多最新消息请加QQ群1054082857 (MarkTool in NLP) 第一时间了解，加群时需要验证身份，已收藏该项目的GitHub帐号才会通过申请。 欢迎进行学术交流, 如需合作请私聊。
+更多最新消息请加QQ群1054082857 (DoTAT) 第一时间了解，加群时需要验证身份，已收藏该项目的GitHub帐号才会通过申请。 欢迎进行学术交流, 如需合作请私聊。
 
 
 # Code
