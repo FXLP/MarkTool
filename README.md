@@ -3,16 +3,23 @@
 # [华东理工大学-自然语言处理与大数据挖掘实验室]
 
 # Attention
-该工具已于2020年获得软件著作权，证书号：软著登字第5885316号，如需二次开发使用则要在项目中着重标明来源ECUST-NLP！
+该工具已于2020年获得软件著作权登记证书，登记号：2020SR1006620，如需二次开发使用则要在项目中着重标明来源ECUST-NLP！
+
+# A Short Video Demo （演示视频）
+https://ecust-nlp-docker.oss-cn-shanghai.aliyuncs.com/dotat_demo.mp4
 
 # Notification
 在线试用版网站（a live demo website）：http://175.24.69.95/new/
 
+---------管理员帐号---------
+
 An administrator account:
 
-Username:ecust
+Username：ecust
 
-Password:ecustlab301
+Password：ecustlab301
+
+---------标注流程---------
 
 A typical annotation process using DoTAT may include the following five steps:
 
@@ -30,8 +37,6 @@ During the trial period, the user's task management rights and annotation specif
 
 更多最新消息请加QQ群1054082857 (MarkTool in NLP) 第一时间了解，加群时需要验证身份，已收藏该项目的GitHub帐号才会通过申请。 欢迎进行学术交流, 如需合作请私聊。
 
-# A Short Video Demo
-https://ecust-nlp-docker.oss-cn-shanghai.aliyuncs.com/dotat_demo.mp4
 
 # Code
 Back-end 后端代码地址[暂不开放]：https://github.com/sxthunder/ecust_annotation
