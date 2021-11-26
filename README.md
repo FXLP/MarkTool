@@ -1,15 +1,15 @@
 # DoTAT: A Domain-oriented Text Annotation Tool 
-# School of Information Science and Engineering, East China University of Science and Technology, Shanghai 200237, China
-# [华东理工大学-自然语言处理与大数据挖掘实验室]
+School of Information Science and Engineering, East China University of Science and Technology, Shanghai 200237, China
 
-# Attention
-该工具已于2020年获得软件著作权登记证书，登记号：2020SR1006620，如需二次开发使用则要在项目中着重标明来源于[华东理工大学-自然语言处理与大数据挖掘实验室]！
+[华东理工大学-自然语言处理与大数据挖掘实验室]
 
 # A Short Video Demo （简短的演示视频）
 https://ecust-nlp-docker.oss-cn-shanghai.aliyuncs.com/dotat_demo.mp4
 
+# A Live Demo Website (在线使用网站)
+http://175.24.69.95/new/
+
 # Notification
-在线试用版网站（a live demo website）：http://175.24.69.95/new/
 
 ---------管理员帐号---------
 
@@ -27,7 +27,9 @@ A typical annotation process using DoTAT may include the following five steps:
 
 (2) Create and assign tasks: Administrator creates and assigns tasks. Each task contains anannotation specification and several raw texts. It is recommended that two annotators andone reviewer are assigned to each task.
 
-(3) Annotate: Before the annotators interactively annotate events or entities, they can use automatic batch annotation to accelerate the speed.
+(3) Annotate: Before the annotators interactively annotate events or entities, they can use automatic batch annotation to accelerate the speed. The event annotation interface of DoTAT contains event list panel (top) and annotation panel (bottom), as shown in the Figure: 
+![image](https://github.com/FXLP/MyGallery/blob/main/MLEE_nested_event.PNG)
+
 
 (4) Merge and Review: The reviewer starts consistency checking and automatic merging ofthe annotated content by multiple annotators. The reviewer can visually analyze the errors according to the merged events list.  When there are too many similar errors, the reviewer can give feedback for administrator to re-definethe annotation specification.   With iterative annotation function, all exsisting annotationscan be reused.
 
@@ -37,8 +39,11 @@ During the trial period, the user's task management rights and annotation specif
 
 更多最新消息请加QQ群1054082857 (DoTAT) 第一时间了解，加群时需要验证身份，已收藏该项目的GitHub帐号才会通过申请。 
 
-欢迎进行学术交流, 如需合作请发送邮件到yupianlin@aliyun.com。
+欢迎进行学术交流, 如需合作请发送邮件(e-mail)到yupianlin@aliyun.com。
 
+
+# Attention
+该工具已于2020年获得软件著作权登记证书，登记号：2020SR1006620，如需二次开发使用则要在项目中着重标明来源于[华东理工大学-自然语言处理与大数据挖掘实验室]！
 
 # Code
 Back-end 后端代码地址[暂不开放]：https://github.com/sxthunder/ecust_annotation
