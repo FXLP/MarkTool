@@ -33,7 +33,7 @@ A typical annotation process using DoTAT may include the following five steps:
 
 (4) Merge and Review: The reviewer starts consistency checking and automatic merging ofthe annotated content by multiple annotators. The reviewer can visually analyze the errors according to the merged events list.  When there are too many similar errors, the reviewer can give feedback for administrator to re-definethe annotation specification.   With iterative annotation function, all exsisting annotationscan be reused.
 
-(5) Export results: After the review process, theannotated content can be exported by admin-istrator to a result file and saved in JSON format.
+(5) Export results: After the review process, the annotated content can be exported by admin-istrator to a result file and saved in JSON format.
 
 During the trial period, the user's task management rights and annotation specification management rights will be opened. You will need to contact us to apply for the administrator account in the future.
 
@@ -48,7 +48,7 @@ During the trial period, the user's task management rights and annotation specif
 # Code
 Back-end 后端代码地址[暂不开放]：https://github.com/sxthunder/ecust_annotation
 
-如果是本地部署的前端服务，可以将请求访问URL改为目前开放的后端服务API：http://1.15.138.236:53301/
+如果是本地部署的前端服务，可以将请求访问URL改为目前开放的后端接口(Back-end API)：http://1.15.138.236:53301/
 
 # Development Guide
 (1) clone the project: 
