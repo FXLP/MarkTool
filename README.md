@@ -9,7 +9,7 @@ https://ecust-nlp-docker.oss-cn-shanghai.aliyuncs.com/dotat_demo.mp4
 # A Live Demo Website (在线使用网站)
 http://175.24.69.95/new/
 
-# Notification
+# Notification（标注工作流程说明）
 
 ---------管理员帐号---------
 
