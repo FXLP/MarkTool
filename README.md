@@ -1,6 +1,7 @@
 # DoTAT: A Domain-oriented Text Annotation Tool 
 
 ## Congratulations on this work being accepted to the ACL 2022 demo track!
+Papers: https://www.2022.aclweb.org/papers  (System Demonstration Papers NO.1)
 
 School of Information Science and Engineering, East China University of Science and Technology, Shanghai 200237, China
 
