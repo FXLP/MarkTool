@@ -25,6 +25,10 @@ Password：ecustlab301
 
 ---------标注流程---------
 
+【腾讯文档】DoTAT用户手册
+https://docs.qq.com/doc/DTnlib2JmZVBXTmxI
+
+
 A typical annotation process using DoTAT may include the following five steps:
 
 (1) Define  annotation  specifications:   The  administrator  selects  the  annotation  type  andvisually defines event types, entity types, relation types or text categories in annotation specifications.
