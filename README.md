@@ -1,8 +1,15 @@
 # DoTAT: A Domain-oriented Text Annotation Tool 
 
-## Congratulations on this work being accepted to the ACL 2022 demo track!
-Papers: https://www.2022.aclweb.org/papers  (System Demonstration Papers NO.1)
+### Congratulations on this work being accepted to the ACL 2022 demo track! 
 
+(https://aclanthology.org/2022.acl-demo.1/)
+
+Paper: https://aclanthology.org/2022.acl-demo.1.pdf  (System Demonstration Papers NO.1)
+
+## Cite
+Yupian Lin, Tong Ruan, Ming Liang, Tingting Cai, Wen Du, and Yi Wang. 2022. DoTAT: A Domain-oriented Text Annotation Tool. In Proceedings of the 60th Annual Meeting of the Association for Computational Linguistics: System Demonstrations, pages 1–8, Dublin, Ireland. Association for Computational Linguistics.
+
+## From
 School of Information Science and Engineering, East China University of Science and Technology, Shanghai 200237, China
 
 [华东理工大学-自然语言处理与大数据挖掘实验室]
