@@ -63,7 +63,10 @@ During the trial period, the user's task management rights and annotation specif
 # Code
 Back-end 后端代码地址[暂不开放]：https://github.com/sxthunder/ecust_annotation
 
+含审核者的版本（Front-end）：https://github.com/PPzXiao/MarkTool2
+
 如果是本地部署的前端服务，可以将请求访问URL改为目前开放的后端接口(Back-end API)：http://1.15.138.236:53301/
+
 
 # Development Guide
 (1) clone the project: 
